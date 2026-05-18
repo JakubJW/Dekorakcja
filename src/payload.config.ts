@@ -20,6 +20,8 @@ import { Pages } from '@/collections/Pages'
 import { Users } from '@/collections/Users'
 import { Footer } from '@/globals/Footer'
 import { Header } from '@/globals/Header'
+import { Inquiries } from './collections/Inquiries'
+import { Rentables } from './collections/Rentables'
 import { plugins } from './plugins'
 
 const filename = fileURLToPath(import.meta.url)
@@ -37,7 +39,7 @@ export default buildConfig({
     },
     user: Users.slug,
   },
-  collections: [Users, Pages, Categories, Media],
+  collections: [Users, Pages, Categories, Media, Inquiries, Rentables],
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',

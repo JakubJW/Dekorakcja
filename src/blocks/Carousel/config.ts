@@ -31,6 +31,10 @@ export const Carousel: Block = {
           label: 'Products',
           value: 'products',
         },
+        {
+          label: 'Pizda',
+          value: 'rentables',
+        },
       ],
     },
     {

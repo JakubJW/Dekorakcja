@@ -2,11 +2,11 @@
 
 import { Message } from '@/components/Message'
 import { Button } from '@/components/ui/button'
+import { Address } from '@/payload-types'
+import { useCart, usePayments } from '@payloadcms/plugin-ecommerce/client/react'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { useRouter } from 'next/navigation'
-import React, { useCallback, FormEvent } from 'react'
-import { useCart, usePayments } from '@payloadcms/plugin-ecommerce/client/react'
-import { Address } from '@/payload-types'
+import React, { FormEvent, useCallback } from 'react'
 
 type Props = {
   customerEmail?: string
@@ -135,7 +135,7 @@ export const CheckoutForm: React.FC<Props> = ({
   return (
     <form onSubmit={handleSubmit}>
       {error && <Message error={error} />}
-      <PaymentElement />
+      <PaymentElement options={{ layout: 'accordion' }} />
       <div className="mt-8 flex gap-4">
         <Button disabled={!stripe || isLoading} type="submit" variant="default">
           {isLoading ? 'Loading...' : 'Pay now'}

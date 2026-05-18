@@ -1,0 +1,43 @@
+services:
+  payload:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/home/node/app
+      - /home/node/app/node_modules
+    working_dir: /home/node/app
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+
+  payload-build:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    ports:
+      - '3000:3000'
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    profiles:
+      - prod
+
+  postgres:
+    restart: always
+    image: postgres:17-alpine
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: payload
+
+volumes:
+  pgdata:

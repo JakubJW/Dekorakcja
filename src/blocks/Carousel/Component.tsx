@@ -1,4 +1,4 @@
-import type { Product, CarouselBlock as CarouselBlockProps } from '@/payload-types'
+import type { CarouselBlock as CarouselBlockProps, Product } from '@/payload-types'
 
 import configPromise from '@payload-config'
 import { DefaultDocumentIDType, getPayload } from 'payload'
@@ -50,7 +50,7 @@ export const CarouselBlock: React.FC<
   if (!products?.length) return null
 
   return (
-    <div className=" w-full pb-6 pt-1">
+    <div className=" w-full pb-6 pt-1 container ">
       <CarouselClient products={products} />
     </div>
   )

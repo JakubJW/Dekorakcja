@@ -2,7 +2,6 @@ import { CallToAction } from '@/blocks/CallToAction/config'
 import { Content } from '@/blocks/Content/config'
 import { MediaBlock } from '@/blocks/MediaBlock/config'
 import { generatePreviewPath } from '@/utilities/generatePreviewPath'
-import { CollectionOverride } from '@payloadcms/plugin-ecommerce/types'
 import {
   MetaDescriptionField,
   MetaImageField,
@@ -17,13 +16,16 @@ import {
   InlineToolbarFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
-import { DefaultDocumentIDType, slugField, Where } from 'payload'
+import { CollectionConfig, DefaultDocumentIDType, slugField, Where } from 'payload'
 
-export const ProductsCollection: CollectionOverride = ({ defaultCollection }) => ({
-  ...defaultCollection,
+export const Rentables: CollectionConfig = {
+  slug: 'rentables',
+  labels: {
+    singular: 'Produkt',
+    plural: 'Produkty',
+  },
   admin: {
-    ...defaultCollection?.admin,
-    group: 'Sklep',
+    group: 'Wypożyczalnia',
     defaultColumns: ['title', 'enableVariants', '_status', 'variants.variants'],
     livePreview: {
       url: ({ data, req }) =>
@@ -42,7 +44,6 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
     useAsTitle: 'title',
   },
   defaultPopulate: {
-    ...defaultCollection?.defaultPopulate,
     title: true,
     slug: true,
     variantOptions: true,
@@ -143,7 +144,6 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
         },
         {
           fields: [
-            ...defaultCollection.fields,
             {
               name: 'relatedProducts',
               type: 'relationship',
@@ -210,4 +210,4 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
     },
     slugField(),
   ],
-})
+}
