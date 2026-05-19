@@ -1,11 +1,16 @@
-name: Deploy Dev
+name: "Deploy dev"
 
 on:
+  workflow_dispatch: 
   push:
     branches: [dev]
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
+    environment: development
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
@@ -22,7 +27,7 @@ jobs:
         run: vercel env pull .env.local --token ${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.DEV_VERCEL_PROJECT_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Run migrations
         run: npx payload migrate
@@ -34,4 +39,4 @@ jobs:
         run: vercel deploy --prebuilt --token ${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.DEV_VERCEL_PROJECT_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
