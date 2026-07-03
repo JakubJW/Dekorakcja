@@ -1,7 +1,8 @@
-import type { GlobalConfig } from 'payload'
+import type { GlobalConfig } from 'payload';
 
-import { adminOnly } from '@/access/adminOnly'
-import { link } from '@/fields/link'
+import { adminOnly } from '@/access/adminOnly';
+import { link } from '@/fields/link';
+import { revalidatePath } from 'next/cache';
 
 export const Header: GlobalConfig = {
   slug: 'header',
@@ -21,4 +22,11 @@ export const Header: GlobalConfig = {
       maxRows: 6,
     },
   ],
+  hooks: {
+    afterChange: [(data) => {
+      if (data.global) {
+        revalidatePath('/', 'layout')
+      }
+    }],
+  },
 }
