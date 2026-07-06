@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useAuth } from '@/providers/Auth'
-import { useTheme } from '@/providers/Theme'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import Link from 'next/link'
@@ -34,7 +33,6 @@ export const CheckoutPage: React.FC = () => {
   const router = useRouter()
   const { cart } = useCart()
   const [error, setError] = useState<null | string>(null)
-  const { theme } = useTheme()
   /**
    * State to manage the email input for guest checkout.
    */
@@ -313,12 +311,11 @@ export const CheckoutPage: React.FC = () => {
                       colorPrimary: '#858585',
                       gridColumnSpacing: '20px',
                       gridRowSpacing: '20px',
-                      colorBackground: theme === 'dark' ? '#0a0a0a' : cssVariables.colors.base0,
+                      colorBackground: cssVariables.colors.base0,
                       colorDanger: cssVariables.colors.error500,
                       colorDangerText: cssVariables.colors.error500,
-                      colorIcon:
-                        theme === 'dark' ? cssVariables.colors.base0 : cssVariables.colors.base1000,
-                      colorText: theme === 'dark' ? '#858585' : cssVariables.colors.base1000,
+                      colorIcon: cssVariables.colors.base1000,
+                      colorText: cssVariables.colors.base1000,
                       colorTextPlaceholder: '#858585',
                       fontFamily: 'Geist, sans-serif',
                       fontSizeBase: '16px',
