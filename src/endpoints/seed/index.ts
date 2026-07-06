@@ -537,38 +537,60 @@ export const seed = async ({
     payload.updateGlobal({
       slug: 'footer',
       data: {
-        navItems: [
-          {
-            link: {
-              type: 'custom',
-              label: 'Admin',
-              url: '/admin',
+        description: 'Krótki opis firmy lub misji, wyświetlany w stopce.',
+        navGroup1: {
+          header: 'Sklep',
+          links: [
+            {
+              link: {
+                type: 'custom',
+                label: 'Admin',
+                url: '/admin',
+              },
             },
-          },
-          {
-            link: {
-              type: 'custom',
-              label: 'Find my order',
-              url: '/find-order',
+            {
+              link: {
+                type: 'custom',
+                label: 'Find my order',
+                url: '/find-order',
+              },
             },
-          },
-          {
-            link: {
-              type: 'custom',
-              label: 'Source Code',
-              newTab: true,
-              url: 'https://github.com/payloadcms/payload/tree/3.x/templates/website',
+          ],
+        },
+        navGroup2: {
+          header: 'Zasoby',
+          links: [
+            {
+              link: {
+                type: 'custom',
+                label: 'Source Code',
+                newTab: true,
+                url: 'https://github.com/payloadcms/payload/tree/3.x/templates/website',
+              },
             },
-          },
-          {
-            link: {
-              type: 'custom',
-              label: 'Payload',
-              newTab: true,
-              url: 'https://payloadcms.com/',
+            {
+              link: {
+                type: 'custom',
+                label: 'Payload',
+                newTab: true,
+                url: 'https://payloadcms.com/',
+              },
             },
-          },
-        ],
+          ],
+        },
+        contactGroup: {
+          header: 'Kontakt',
+          links: [
+            {
+              contactType: 'email',
+              value: 'hello@example.com',
+            },
+            {
+              contactType: 'phone',
+              value: '+48 123 456 789',
+            },
+          ],
+        },
       },
     }),
   ])

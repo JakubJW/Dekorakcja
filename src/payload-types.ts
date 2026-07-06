@@ -1936,21 +1936,60 @@ export interface Header {
  */
 export interface Footer {
   id: number;
-  navItems?:
-    | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?: {
-            relationTo: 'pages';
-            value: number | Page;
-          } | null;
-          url?: string | null;
-          label: string;
-        };
-        id?: string | null;
-      }[]
-    | null;
+  /**
+   * Short paragraph shown under the logo in the footer.
+   */
+  description?: string | null;
+  navGroup1?: {
+    header?: string | null;
+    links?:
+      | {
+          link: {
+            type?: ('reference' | 'custom') | null;
+            newTab?: boolean | null;
+            reference?: {
+              relationTo: 'pages';
+              value: number | Page;
+            } | null;
+            url?: string | null;
+            label: string;
+          };
+          id?: string | null;
+        }[]
+      | null;
+  };
+  navGroup2?: {
+    header?: string | null;
+    links?:
+      | {
+          link: {
+            type?: ('reference' | 'custom') | null;
+            newTab?: boolean | null;
+            reference?: {
+              relationTo: 'pages';
+              value: number | Page;
+            } | null;
+            url?: string | null;
+            label: string;
+          };
+          id?: string | null;
+        }[]
+      | null;
+  };
+  contactGroup?: {
+    header?: string | null;
+    links?:
+      | {
+          contactType?: ('email' | 'phone') | null;
+          /**
+           * Optional display override; defaults to the value.
+           */
+          label?: string | null;
+          value: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1982,19 +2021,57 @@ export interface HeaderSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
-  navItems?:
+  description?: T;
+  navGroup1?:
     | T
     | {
-        link?:
+        header?: T;
+        links?:
           | T
           | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                    label?: T;
+                  };
+              id?: T;
             };
-        id?: T;
+      };
+  navGroup2?:
+    | T
+    | {
+        header?: T;
+        links?:
+          | T
+          | {
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    reference?: T;
+                    url?: T;
+                    label?: T;
+                  };
+              id?: T;
+            };
+      };
+  contactGroup?:
+    | T
+    | {
+        header?: T;
+        links?:
+          | T
+          | {
+              contactType?: T;
+              label?: T;
+              value?: T;
+              id?: T;
+            };
       };
   updatedAt?: T;
   createdAt?: T;

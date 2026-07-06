@@ -60,7 +60,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TYPE "public"."enum_transactions_status" AS ENUM('pending', 'succeeded', 'failed', 'cancelled', 'expired', 'refunded');
   CREATE TYPE "public"."enum_transactions_currency" AS ENUM('USD');
   CREATE TYPE "public"."enum_header_nav_items_link_type" AS ENUM('reference', 'custom');
-  CREATE TYPE "public"."enum_footer_nav_items_link_type" AS ENUM('reference', 'custom');
+  CREATE TYPE "public"."enum_footer_nav_group1_links_link_type" AS ENUM('reference', 'custom');
+  CREATE TYPE "public"."enum_footer_nav_group2_links_link_type" AS ENUM('reference', 'custom');
+  CREATE TYPE "public"."enum_footer_contact_group_links_contact_type" AS ENUM('email', 'phone');
   CREATE TABLE "users_roles" (
   	"order" integer NOT NULL,
   	"parent_id" integer NOT NULL,
@@ -1121,18 +1123,41 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"pages_id" integer
   );
   
-  CREATE TABLE "footer_nav_items" (
+  CREATE TABLE "footer_nav_group1_links" (
   	"_order" integer NOT NULL,
   	"_parent_id" integer NOT NULL,
   	"id" varchar PRIMARY KEY NOT NULL,
-  	"link_type" "enum_footer_nav_items_link_type" DEFAULT 'reference',
+  	"link_type" "enum_footer_nav_group1_links_link_type" DEFAULT 'reference',
   	"link_new_tab" boolean,
   	"link_url" varchar,
   	"link_label" varchar NOT NULL
   );
   
+  CREATE TABLE "footer_nav_group2_links" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"link_type" "enum_footer_nav_group2_links_link_type" DEFAULT 'reference',
+  	"link_new_tab" boolean,
+  	"link_url" varchar,
+  	"link_label" varchar NOT NULL
+  );
+  
+  CREATE TABLE "footer_contact_group_links" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"contact_type" "enum_footer_contact_group_links_contact_type" DEFAULT 'email',
+  	"label" varchar,
+  	"value" varchar NOT NULL
+  );
+  
   CREATE TABLE "footer" (
   	"id" serial PRIMARY KEY NOT NULL,
+  	"description" varchar,
+  	"nav_group1_header" varchar,
+  	"nav_group2_header" varchar,
+  	"contact_group_header" varchar,
   	"updated_at" timestamp(3) with time zone,
   	"created_at" timestamp(3) with time zone
   );
@@ -1293,7 +1318,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "header_nav_items" ADD CONSTRAINT "header_nav_items_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."header"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "header_rels" ADD CONSTRAINT "header_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."header"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "header_rels" ADD CONSTRAINT "header_rels_pages_fk" FOREIGN KEY ("pages_id") REFERENCES "public"."pages"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "footer_nav_items" ADD CONSTRAINT "footer_nav_items_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."footer"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "footer_nav_group1_links" ADD CONSTRAINT "footer_nav_group1_links_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."footer"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "footer_nav_group2_links" ADD CONSTRAINT "footer_nav_group2_links_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."footer"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "footer_contact_group_links" ADD CONSTRAINT "footer_contact_group_links_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."footer"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "footer_rels" ADD CONSTRAINT "footer_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."footer"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "footer_rels" ADD CONSTRAINT "footer_rels_pages_fk" FOREIGN KEY ("pages_id") REFERENCES "public"."pages"("id") ON DELETE cascade ON UPDATE no action;
   CREATE INDEX "users_roles_order_idx" ON "users_roles" USING btree ("order");
@@ -1640,8 +1667,12 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "header_rels_parent_idx" ON "header_rels" USING btree ("parent_id");
   CREATE INDEX "header_rels_path_idx" ON "header_rels" USING btree ("path");
   CREATE INDEX "header_rels_pages_id_idx" ON "header_rels" USING btree ("pages_id");
-  CREATE INDEX "footer_nav_items_order_idx" ON "footer_nav_items" USING btree ("_order");
-  CREATE INDEX "footer_nav_items_parent_id_idx" ON "footer_nav_items" USING btree ("_parent_id");
+  CREATE INDEX "footer_nav_group1_links_order_idx" ON "footer_nav_group1_links" USING btree ("_order");
+  CREATE INDEX "footer_nav_group1_links_parent_id_idx" ON "footer_nav_group1_links" USING btree ("_parent_id");
+  CREATE INDEX "footer_nav_group2_links_order_idx" ON "footer_nav_group2_links" USING btree ("_order");
+  CREATE INDEX "footer_nav_group2_links_parent_id_idx" ON "footer_nav_group2_links" USING btree ("_parent_id");
+  CREATE INDEX "footer_contact_group_links_order_idx" ON "footer_contact_group_links" USING btree ("_order");
+  CREATE INDEX "footer_contact_group_links_parent_id_idx" ON "footer_contact_group_links" USING btree ("_parent_id");
   CREATE INDEX "footer_rels_order_idx" ON "footer_rels" USING btree ("order");
   CREATE INDEX "footer_rels_parent_idx" ON "footer_rels" USING btree ("parent_id");
   CREATE INDEX "footer_rels_path_idx" ON "footer_rels" USING btree ("path");
@@ -1743,7 +1774,9 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "header_nav_items" CASCADE;
   DROP TABLE "header" CASCADE;
   DROP TABLE "header_rels" CASCADE;
-  DROP TABLE "footer_nav_items" CASCADE;
+  DROP TABLE "footer_nav_group1_links" CASCADE;
+  DROP TABLE "footer_nav_group2_links" CASCADE;
+  DROP TABLE "footer_contact_group_links" CASCADE;
   DROP TABLE "footer" CASCADE;
   DROP TABLE "footer_rels" CASCADE;
   DROP TYPE "public"."enum_users_roles";
@@ -1804,5 +1837,7 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TYPE "public"."enum_transactions_status";
   DROP TYPE "public"."enum_transactions_currency";
   DROP TYPE "public"."enum_header_nav_items_link_type";
-  DROP TYPE "public"."enum_footer_nav_items_link_type";`)
+  DROP TYPE "public"."enum_footer_nav_group1_links_link_type";
+  DROP TYPE "public"."enum_footer_nav_group2_links_link_type";
+  DROP TYPE "public"."enum_footer_contact_group_links_contact_type";`)
 }
