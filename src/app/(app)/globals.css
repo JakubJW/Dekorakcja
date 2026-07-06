@@ -175,14 +175,6 @@
   }
 }
 
-html {
-  opacity: 0;
-}
-
-html[data-theme='light'] {
-  opacity: initial;
-}
-
 a,
 input,
 button {
