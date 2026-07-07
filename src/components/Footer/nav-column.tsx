@@ -12,13 +12,21 @@ export function FooterNavColumn({ header, links }: Props) {
 
   return (
     <div>
-      {header ? <h3 className="mb-4 font-medium text-white/60 uppercase tracking-[1.2px]">{header}</h3> : null}
+      {header ? (
+        <h3 className="mb-4 font-sans font-medium text-white/60 uppercase tracking-[1.2px]">
+          {header}
+        </h3>
+      ) : null}
       <nav>
         <ul className="flex flex-col gap-2">
           {links.map((item) => {
             return (
               <li key={item.id}>
-                <CMSLink appearance="link" {...item.link} className='text-white/40 hover:text-white' />
+                <CMSLink
+                  appearance="link"
+                  {...item.link}
+                  className="text-white/40 hover:text-white"
+                />
               </li>
             )
           })}

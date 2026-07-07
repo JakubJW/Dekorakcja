@@ -101,8 +101,8 @@ export default {
         },
       },
       fontFamily: {
-        mono: ['var(--font-geist-mono)'],
-        sans: ['var(--font-geist-sans)'],
+        sans: ['var(--font-montserrat)'],
+        serif: ['var(--font-playfair)'],
       },
       keyframes: {
         fadeIn: {

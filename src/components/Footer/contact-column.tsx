@@ -1,6 +1,5 @@
 import type { Footer } from '@/payload-types'
 
-
 interface Props {
   header?: null | string
   links?: NonNullable<Footer['contactGroup']>['links']
@@ -11,7 +10,11 @@ export function FooterContactColumn({ header, links }: Props) {
 
   return (
     <div>
-      {header ? <h3 className="mb-4 font-medium text-white/60 uppercase tracking-[1.2px]">{header}</h3> : null}
+      {header ? (
+        <h3 className="mb-4 font-sans font-medium text-white/60 uppercase tracking-[1.2px]">
+          {header}
+        </h3>
+      ) : null}
       <ul className="flex flex-col gap-2">
         {links.map((item) => {
           const href =
