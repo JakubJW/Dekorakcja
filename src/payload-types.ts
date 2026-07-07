@@ -489,6 +489,7 @@ export interface Page {
     | ThreeItemGridBlock
     | BannerBlock
     | FormBlock
+    | FAQBlock
   )[];
   meta?: {
     title?: string | null;
@@ -877,6 +878,37 @@ export interface Form {
     | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FAQBlock".
+ */
+export interface FAQBlock {
+  heading: string;
+  faqs?:
+    | {
+        question: string;
+        answer: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'faq';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1299,6 +1331,7 @@ export interface PagesSelect<T extends boolean = true> {
         threeItemGrid?: T | ThreeItemGridBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
+        faq?: T | FAQBlockSelect<T>;
       };
   meta?:
     | T
@@ -1428,6 +1461,22 @@ export interface FormBlockSelect<T extends boolean = true> {
   form?: T;
   enableIntro?: T;
   introContent?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FAQBlock_select".
+ */
+export interface FAQBlockSelect<T extends boolean = true> {
+  heading?: T;
+  faqs?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
   id?: T;
   blockName?: T;
 }

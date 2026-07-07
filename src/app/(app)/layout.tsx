@@ -5,8 +5,7 @@ import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { Providers } from '@/providers'
-import { GeistMono } from 'geist/font/mono'
-import { GeistSans } from 'geist/font/sans'
+import { Montserrat, Playfair_Display } from 'next/font/google'
 import './globals.css'
 
 /* const { SITE_NAME, TWITTER_CREATOR, TWITTER_SITE } = process.env
@@ -36,10 +35,23 @@ const twitterSite = TWITTER_SITE ? ensureStartsWith(TWITTER_SITE, 'https://') : 
     }),
 } */
 
+const montserrat = Montserrat({
+  subsets: ['latin', 'latin-ext'], // dodaj latin-ext dla polskich znaków
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-montserrat', // <- to jest kluczowe
+  display: 'swap',
+})
+const playfairDisplay = Playfair_Display({
+  subsets: ['latin', 'latin-ext'],
+  weight: ['400', '600', '700'],
+  variable: '--font-playfair',
+  display: 'swap',
+})
+
 export default async function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
-      className={[GeistSans.variable, GeistMono.variable].filter(Boolean).join(' ')}
+      className={[playfairDisplay.variable, montserrat.variable].filter(Boolean).join(' ')}
       lang="en"
       suppressHydrationWarning
     >
