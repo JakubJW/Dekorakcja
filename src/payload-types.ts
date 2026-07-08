@@ -491,6 +491,7 @@ export interface Page {
     | FormBlock
     | FAQBlock
     | CustomerReviewsBlock
+    | NumberedListsBlock
   )[];
   meta?: {
     title?: string | null;
@@ -931,6 +932,26 @@ export interface CustomerReviewsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "NumberedListsBlock".
+ */
+export interface NumberedListsBlock {
+  lists?:
+    | {
+        heading: string;
+        points: {
+          heading: string;
+          paragraph: string;
+          id?: string | null;
+        }[];
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'numberedLists';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "variants".
  */
 export interface Variant {
@@ -1352,6 +1373,7 @@ export interface PagesSelect<T extends boolean = true> {
         formBlock?: T | FormBlockSelect<T>;
         faq?: T | FAQBlockSelect<T>;
         reviews?: T | CustomerReviewsBlockSelect<T>;
+        numberedLists?: T | NumberedListsBlockSelect<T>;
       };
   meta?:
     | T
@@ -1512,6 +1534,27 @@ export interface CustomerReviewsBlockSelect<T extends boolean = true> {
         customer?: T;
         score?: T;
         content?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "NumberedListsBlock_select".
+ */
+export interface NumberedListsBlockSelect<T extends boolean = true> {
+  lists?:
+    | T
+    | {
+        heading?: T;
+        points?:
+          | T
+          | {
+              heading?: T;
+              paragraph?: T;
+              id?: T;
+            };
         id?: T;
       };
   id?: T;
