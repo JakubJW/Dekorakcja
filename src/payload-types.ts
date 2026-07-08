@@ -490,6 +490,7 @@ export interface Page {
     | BannerBlock
     | FormBlock
     | FAQBlock
+    | CustomerReviewsBlock
   )[];
   meta?: {
     title?: string | null;
@@ -909,6 +910,24 @@ export interface FAQBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'faq';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CustomerReviewsBlock".
+ */
+export interface CustomerReviewsBlock {
+  heading: string;
+  reviews?:
+    | {
+        customer: string;
+        score: number;
+        content: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'reviews';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1332,6 +1351,7 @@ export interface PagesSelect<T extends boolean = true> {
         banner?: T | BannerBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
         faq?: T | FAQBlockSelect<T>;
+        reviews?: T | CustomerReviewsBlockSelect<T>;
       };
   meta?:
     | T
@@ -1475,6 +1495,23 @@ export interface FAQBlockSelect<T extends boolean = true> {
     | {
         question?: T;
         answer?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CustomerReviewsBlock_select".
+ */
+export interface CustomerReviewsBlockSelect<T extends boolean = true> {
+  heading?: T;
+  reviews?:
+    | T
+    | {
+        customer?: T;
+        score?: T;
+        content?: T;
         id?: T;
       };
   id?: T;

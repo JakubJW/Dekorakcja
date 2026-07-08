@@ -37,7 +37,7 @@ const twitterSite = TWITTER_SITE ? ensureStartsWith(TWITTER_SITE, 'https://') : 
 
 const montserrat = Montserrat({
   subsets: ['latin', 'latin-ext'], // dodaj latin-ext dla polskich znaków
-  weight: ['400', '500', '600', '700'],
+  weight: ['300', '400', '500', '600', '700'],
   variable: '--font-montserrat', // <- to jest kluczowe
   display: 'swap',
 })
