@@ -8,6 +8,7 @@ import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { ThreeItemGridBlock } from '@/blocks/ThreeItemGrid/Component'
 import { CustomerReviewsBlock } from './CustomerReviews/Component'
 import { FAQBlock } from './Faq/Component'
+import { NumberedListsBlock } from './NumberedListsBlock/Component'
 
 export const blockComponents = {
   archive: ArchiveBlock,
@@ -20,4 +21,5 @@ export const blockComponents = {
   threeItemGrid: ThreeItemGridBlock,
   faq: FAQBlock,
   reviews: CustomerReviewsBlock,
+  numberedLists: NumberedListsBlock,
 }
