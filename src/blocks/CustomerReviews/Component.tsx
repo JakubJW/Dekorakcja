@@ -12,15 +12,13 @@ export const CustomerReviewsBlock: React.FC<
     <section className="bg-[#F7F3EE] py-20">
       <div className="container mx-auto space-y-12">
         <h3 className="text-primary text-center text-3xl">{heading}</h3>
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-6">
           {reviews.map((review) => (
             <div key={review?.id} className="shadow-2xs p-6 bg-white rounded-2xl space-y-4">
               <Quote className="size-4 text-secondary" />
-              <div>
-                <p className="italic font-light text-primary leading-relaxed">
-                  &quot;{review.content}&quot;
-                </p>
-              </div>
+              <p className="italic font-light text-primary leading-relaxed">
+                &quot;{review.content}&quot;
+              </p>
               <div className="flex gap-4 border-t pt-6">
                 <div className="bg-card text-secondary inline-flex font-bold text-sm uppercase rounded-full size-10 items-center justify-center">
                   {getInitials(review.customer)}

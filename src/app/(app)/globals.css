@@ -56,6 +56,16 @@
     padding-inline: 1rem;
   }
 
+  .hero {
+    h1 {
+      @apply text-3xl md:text-6xl md:leading-normal mb-4;
+    }
+
+    p {
+      @apply text-base;
+    }
+  }
+
   @variant sm {
     .container {
       max-width: var(--breakpoint-sm);
