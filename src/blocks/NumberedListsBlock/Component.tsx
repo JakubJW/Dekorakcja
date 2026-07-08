@@ -10,7 +10,7 @@ export const NumberedListsBlock: React.FC<
   return (
     <section className="py-20 bg-[url(/assets/Vector.svg)] bg-cover">
       <div className="container mx-auto">
-        <div className="grid grid-cols-2 gap-16">
+        <div className="grid md:grid-cols-2 gap-16">
           {lists.map((list) => (
             <div key={list.id} className="text-primary space-y-12">
               <div className="flex items-center gap-4">

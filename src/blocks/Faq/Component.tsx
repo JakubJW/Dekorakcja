@@ -10,9 +10,9 @@ export const FAQBlock: React.FC<FAQBlockProps & { id: DefaultDocumentIDType }> =
   if (!faqs?.length) return null
 
   return (
-    <div className="max-w-3xl mx-auto space-y-12">
+    <div className="container max-w-3xl mx-auto space-y-12">
       <h3 className="text-primary text-center text-3xl">{heading}</h3>
-      <div className="space-y-4">
+      <div>
         {faqs.map((faq) => (
           <Collapsible key={faq.id ?? faq.question}>
             <CollapsibleTrigger>

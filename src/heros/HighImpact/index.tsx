@@ -10,16 +10,23 @@ import { cn } from '@/utilities/cn'
 
 export const HighImpactHero: React.FC<Page['hero']> = ({ links, media, richText }) => {
   return (
-    <div className="relative -mt-16 flex items-center justify-center text-white">
+    <div className="px-4 relative -mt-16 flex items-center justify-center text-white">
       <div className="absolute w-full h-full bg-radial from-[#7A5642] to-primary opacity-80"></div>
       <div className="max-w-2xl mb-8 z-10 relative flex items-center justify-center">
-        <div className="md:text-center">
-          {richText && <RichText className="mb-6" data={richText} enableGutter={false} />}
+        <div className="text-center">
+          {richText && (
+            <RichText
+              className="hero mb-10"
+              data={richText}
+              enableProse={false}
+              enableGutter={false}
+            />
+          )}
           {Array.isArray(links) && links.length > 0 && (
-            <ul className="flex md:justify-center gap-4">
+            <ul className="flex flex-col md:flex-row md:justify-center gap-4">
               {links.map(({ link }, i) => {
                 return (
-                  <li key={i}>
+                  <li key={i} className="flex">
                     <CMSLink
                       {...link}
                       className={cn(

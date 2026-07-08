@@ -3,15 +3,15 @@
 import { cn } from '@/utilities/cn'
 import { ChevronDown } from 'lucide-react'
 import {
-    createContext,
-    useContext,
-    useEffect,
-    useRef,
-    useState,
-    type Dispatch,
-    type ReactNode,
-    type RefObject,
-    type SetStateAction,
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type ReactNode,
+  type RefObject,
+  type SetStateAction,
 } from 'react'
 
 interface CollapsibleContext {
