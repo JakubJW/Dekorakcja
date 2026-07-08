@@ -6,6 +6,7 @@ import { ContentBlock } from '@/blocks/Content/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { ThreeItemGridBlock } from '@/blocks/ThreeItemGrid/Component'
+import { CustomerReviewsBlock } from './CustomerReviews/Component'
 import { FAQBlock } from './Faq/Component'
 
 export const blockComponents = {
@@ -18,4 +19,5 @@ export const blockComponents = {
   mediaBlock: MediaBlock,
   threeItemGrid: ThreeItemGridBlock,
   faq: FAQBlock,
+  reviews: CustomerReviewsBlock,
 }

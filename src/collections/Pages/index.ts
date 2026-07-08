@@ -7,6 +7,7 @@ import { Banner } from '@/blocks/Banner/config'
 import { CallToAction } from '@/blocks/CallToAction/config'
 import { Carousel } from '@/blocks/Carousel/config'
 import { Content } from '@/blocks/Content/config'
+import { CustomerReviewsBlock } from '@/blocks/CustomerReviews/config'
 import { FAQBlock } from '@/blocks/Faq/config'
 import { FormBlock } from '@/blocks/Form/config'
 import { MediaBlock } from '@/blocks/MediaBlock/config'
@@ -97,7 +98,8 @@ export const Pages: CollectionConfig = {
                 ThreeItemGrid,
                 Banner,
                 FormBlock,
-                FAQBlock
+                FAQBlock,
+                CustomerReviewsBlock,
               ],
               required: true,
             },
