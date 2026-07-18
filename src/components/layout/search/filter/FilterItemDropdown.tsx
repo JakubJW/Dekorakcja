@@ -1,8 +1,8 @@
 'use client'
 
-import { ChevronDownIcon } from 'lucide-react'
+import { ArrowUpDown } from 'lucide-react'
 import { usePathname, useSearchParams } from 'next/navigation'
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import type { ListItem } from '.'
 
@@ -40,17 +40,17 @@ export function FilterItemDropdown({ list }: { list: ListItem[] }) {
   return (
     <div className="relative" ref={ref}>
       <div
-        className="flex w-full items-center justify-between rounded border border-black/30 px-4 py-2 text-sm dark:border-white/30"
+        className="flex items-center justify-between border rounded-full px-4 py-2 text-sm"
         onClick={() => {
           setOpenSelect(!openSelect)
         }}
       >
+        <ArrowUpDown className="size-4" />
         <div>{active}</div>
-        <ChevronDownIcon className="h-4" />
       </div>
       {openSelect && (
         <div
-          className="absolute z-40 w-full rounded-b-md bg-white p-4 shadow-md dark:bg-black"
+          className="absolute z-40 w-full rounded-md bg-white p-4 shadow-md"
           onClick={() => {
             setOpenSelect(false)
           }}

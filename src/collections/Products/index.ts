@@ -17,7 +17,7 @@ import {
   InlineToolbarFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
-import { DefaultDocumentIDType, slugField, Where } from 'payload'
+import { DefaultDocumentIDType, Where, slugField } from 'payload'
 
 export const ProductsCollection: CollectionOverride = ({ defaultCollection }) => ({
   ...defaultCollection,
@@ -199,14 +199,15 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
       ],
     },
     {
-      name: 'categories',
+      name: 'occasions',
+      label: 'Okazje',
       type: 'relationship',
       admin: {
         position: 'sidebar',
-        sortOptions: 'title',
+        sortOptions: 'name',
       },
       hasMany: true,
-      relationTo: 'categories',
+      relationTo: 'occasions',
     },
     slugField(),
   ],

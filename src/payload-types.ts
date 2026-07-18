@@ -78,6 +78,7 @@ export interface Config {
     media: Media;
     inquiries: Inquiry;
     rentables: Rentable;
+    occasions: Occasion;
     forms: Form;
     'form-submissions': FormSubmission;
     addresses: Address;
@@ -113,6 +114,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
     rentables: RentablesSelect<false> | RentablesSelect<true>;
+    occasions: OccasionsSelect<false> | OccasionsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     addresses: AddressesSelect<false> | AddressesSelect<true>;
@@ -312,7 +314,7 @@ export interface Product {
     image?: (number | null) | Media;
     description?: string | null;
   };
-  categories?: (number | Category)[] | null;
+  occasions?: (number | Occasion)[] | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -973,6 +975,21 @@ export interface Variant {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "occasions".
+ */
+export interface Occasion {
+  id: number;
+  name: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "transactions".
  */
 export interface Transaction {
@@ -1221,6 +1238,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'rentables';
         value: number | Rentable;
+      } | null)
+    | ({
+        relationTo: 'occasions';
+        value: number | Occasion;
       } | null)
     | ({
         relationTo: 'forms';
@@ -1638,6 +1659,17 @@ export interface RentablesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "occasions_select".
+ */
+export interface OccasionsSelect<T extends boolean = true> {
+  name?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "forms_select".
  */
 export interface FormsSelect<T extends boolean = true> {
@@ -1882,7 +1914,7 @@ export interface ProductsSelect<T extends boolean = true> {
         image?: T;
         description?: T;
       };
-  categories?: T;
+  occasions?: T;
   generateSlug?: T;
   slug?: T;
   updatedAt?: T;

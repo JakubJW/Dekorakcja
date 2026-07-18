@@ -10,6 +10,7 @@ import {
   UnorderedListFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
+import { pl } from '@payloadcms/translations/languages/pl'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -21,6 +22,7 @@ import { Users } from '@/collections/Users'
 import { Footer } from '@/globals/Footer'
 import { Header } from '@/globals/Header'
 import { Inquiries } from './collections/Inquiries'
+import { Occasions } from './collections/Occasions'
 import { Rentables } from './collections/Rentables'
 import { plugins } from './plugins'
 
@@ -28,6 +30,11 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
+  i18n: {
+    supportedLanguages: {
+      pl,
+    },
+  },
   admin: {
     components: {
       // The `BeforeLogin` component renders a message that you see while logging into your admin panel.
@@ -39,7 +46,7 @@ export default buildConfig({
     },
     user: Users.slug,
   },
-  collections: [Users, Pages, Categories, Media, Inquiries, Rentables],
+  collections: [Users, Pages, Categories, Media, Inquiries, Rentables, Occasions],
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',

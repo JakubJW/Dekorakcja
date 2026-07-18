@@ -1,10 +1,10 @@
-import type { Product, Variant } from '@/payload-types'
+import type { Product } from '@/payload-types'
 
-import Link from 'next/link'
-import React from 'react'
-import clsx from 'clsx'
 import { Media } from '@/components/Media'
 import { Price } from '@/components/Price'
+import clsx from 'clsx'
+import Link from 'next/link'
+import React from 'react'
 
 type Props = {
   product: Partial<Product>
@@ -36,11 +36,9 @@ export const ProductGridItem: React.FC<Props> = ({ product }) => {
     <Link className="relative inline-block h-full w-full group" href={`/products/${product.slug}`}>
       {image ? (
         <Media
-          className={clsx(
-            'relative aspect-square object-cover border rounded-2xl p-8 bg-primary-foreground',
-          )}
+          className={clsx('relative aspect-square object-cover rounded-t-2xl')}
           height={80}
-          imgClassName={clsx('h-full w-full object-cover rounded-2xl', {
+          imgClassName={clsx('h-full w-full object-cover rounded-t-2xl', {
             'transition duration-300 ease-in-out group-hover:scale-102': true,
           })}
           resource={image}
@@ -48,14 +46,10 @@ export const ProductGridItem: React.FC<Props> = ({ product }) => {
         />
       ) : null}
 
-      <div className="font-mono text-primary/50 group-hover:text-primary flex justify-between items-center mt-4">
-        <div>{title}</div>
+      <div className="text-primary/50 group-hover:text-primary flex justify-between items-center mt-4">
+        <div className="text-sm">{title}</div>
 
-        {typeof price === 'number' && (
-          <div className="">
-            <Price amount={price} />
-          </div>
-        )}
+        {typeof price === 'number' && <Price amount={price} />}
       </div>
     </Link>
   )

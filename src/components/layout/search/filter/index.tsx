@@ -2,8 +2,8 @@ import type { SortFilterItem } from '@/lib/constants'
 
 import React, { Suspense } from 'react'
 
-import { FilterItemDropdown } from './FilterItemDropdown'
 import { FilterItem } from './FilterItem'
+import { FilterItemDropdown } from './FilterItemDropdown'
 export type ListItem = PathFilterItem | SortFilterItem
 export type PathFilterItem = { path: string; title: string }
 
@@ -21,9 +21,7 @@ export function FilterList({ list, title }: { list: ListItem[]; title?: string }
   return (
     <React.Fragment>
       <nav>
-        {title ? (
-          <h3 className="text-xs mb-2 text-neutral-500 dark:text-neutral-400">{title}</h3>
-        ) : null}
+        {title ? <h3 className="mb-4 text-primary">{title}</h3> : null}
         <ul className="hidden md:block">
           <Suspense fallback={null}>
             <FilterItemList list={list} />
