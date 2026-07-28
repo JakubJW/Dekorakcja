@@ -8,7 +8,6 @@ import { Suspense } from 'react'
 import type { Header } from '@/payload-types'
 import { MobileMenu } from './MobileMenu'
 
-import { LogoIcon } from '@/components/icons/logo'
 import { cn } from '@/utilities/cn'
 import { usePathname } from 'next/navigation'
 
@@ -22,44 +21,40 @@ export function HeaderClient({ header }: Props) {
 
   return (
     <div className="relative z-20 border-b">
-      <nav className="flex items-center md:items-end justify-between container pt-2">
+      <nav className="flex py-2 container">
         <div className="block flex-none md:hidden">
           <Suspense fallback={null}>
             <MobileMenu menu={menu} />
           </Suspense>
         </div>
-        <div className="flex w-full items-end justify-between">
-          <div className="flex w-full items-end gap-6 md:w-1/3">
-            <Link className="flex w-full items-center justify-center pt-4 pb-4 md:w-auto" href="/">
-              <LogoIcon className="w-6 h-auto" />
-            </Link>
-            {menu.length ? (
-              <ul className="hidden gap-4 text-sm md:flex md:items-center">
-                {menu.map((item) => (
-                  <li key={item.id}>
-                    <CMSLink
-                      {...item.link}
-                      size={'clear'}
-                      className={cn('relative navLink', {
-                        active:
-                          item.link.url && item.link.url !== '/'
-                            ? pathname.includes(item.link.url)
-                            : false,
-                      })}
-                      appearance="nav"
-                    />
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </div>
+        <Link
+          className="flex w-full items-center justify-center md:w-auto font-serif text-xl text-primary"
+          href="/"
+        >
+          Dekorakcja
+        </Link>
+        {menu.length ? (
+          <ul className="hidden gap-4 text-sm md:flex md:items-center mx-auto">
+            {menu.map((item) => (
+              <li key={item.id}>
+                <CMSLink
+                  {...item.link}
+                  size={'clear'}
+                  className={cn('relative font-sans text-sm pb-5 uppercase tracking-[1.4px]', {
+                    active:
+                      item.link.url && item.link.url !== '/'
+                        ? pathname.includes(item.link.url)
+                        : false,
+                  })}
+                />
+              </li>
+            ))}
+          </ul>
+        ) : null}
 
-          <div className="flex justify-end md:w-1/3 gap-4">
-            <Suspense fallback={<OpenCartButton />}>
-              <Cart />
-            </Suspense>
-          </div>
-        </div>
+        <Suspense fallback={<OpenCartButton />}>
+          <Cart />
+        </Suspense>
       </nav>
     </div>
   )

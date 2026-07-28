@@ -33,10 +33,13 @@ export const ProductGridItem: React.FC<Props> = ({ product }) => {
     gallery?.[0]?.image && typeof gallery[0]?.image !== 'string' ? gallery[0]?.image : false
 
   return (
-    <Link className="relative inline-block h-full w-full group" href={`/products/${product.slug}`}>
+    <Link
+      className="relative bg-white flex flex-col h-full w-full group shadow-xs hover:shadow-sm rounded-2xl overflow-hidden"
+      href={`/products/${product.slug}`}
+    >
       {image ? (
         <Media
-          className={clsx('relative aspect-square object-cover rounded-t-2xl')}
+          className={clsx('relative aspect-square object-cover overflow-hidden')}
           height={80}
           imgClassName={clsx('h-full w-full object-cover rounded-t-2xl', {
             'transition duration-300 ease-in-out group-hover:scale-102': true,
@@ -46,10 +49,12 @@ export const ProductGridItem: React.FC<Props> = ({ product }) => {
         />
       ) : null}
 
-      <div className="text-primary/50 group-hover:text-primary flex justify-between items-center mt-4">
-        <div className="text-sm">{title}</div>
+      <div className="flex flex-col grow justify-between p-6">
+        <div className="text-lg mb-2 text-primary line-clamp-2 text-ellipsis" title={title}>
+          {title}
+        </div>
 
-        {typeof price === 'number' && <Price amount={price} />}
+        {typeof price === 'number' && <Price amount={price} className="text-secondary" />}
       </div>
     </Link>
   )

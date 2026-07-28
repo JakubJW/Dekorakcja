@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
-
+@plugin "@tailwindcss/typography";
 @config '../../../tailwind.config.mjs';
 
 @custom-variant sm (@media (width >= theme(--breakpoint-sm)));
@@ -23,8 +23,6 @@
     font-family: var(--font-playfair), serif;
   }
 }
-
-@plugin "@tailwindcss/typography";
 
 @source inline("lg:col-span-4");
 @source inline("lg:col-span-6");
@@ -191,5 +189,5 @@
 a,
 input,
 button {
-  @apply focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 dark:focus-visible:ring-neutral-600 dark:focus-visible:ring-offset-neutral-900;
+  @apply focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50;
 }

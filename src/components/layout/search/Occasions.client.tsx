@@ -16,16 +16,16 @@ export const OccasionItem: React.FC<Props> = ({ occasion }) => {
   const searchParams = useSearchParams()
 
   const isActive = useMemo(() => {
-    return searchParams.get('okazja') === String(occasion.id)
+    return searchParams.getAll('okazja').includes(String(occasion.id))
   }, [occasion.id, searchParams])
 
   const setQuery = useCallback(() => {
     const params = new URLSearchParams(searchParams.toString())
 
     if (isActive) {
-      params.delete('okazja')
+      params.delete('okazja', String(occasion.id))
     } else {
-      params.set('okazja', String(occasion.id))
+      params.append('okazja', String(occasion.id))
     }
 
     const newParams = params.toString()
@@ -34,7 +34,7 @@ export const OccasionItem: React.FC<Props> = ({ occasion }) => {
   }, [occasion.id, isActive, pathname, router, searchParams])
 
   return (
-    <Label htmlFor={`okazja-${occasion.id}`} className="font-sans">
+    <Label htmlFor={`okazja-${occasion.id}`} className="font-sans text-primary">
       <Checkbox id={`okazja-${occasion.id}`} onCheckedChange={setQuery} checked={isActive} />
       {occasion.name}
     </Label>

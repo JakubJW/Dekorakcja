@@ -7,7 +7,7 @@ import clsx from 'clsx'
 import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
 
-import type { ListItem, PathFilterItem as PathFilterItemType } from '.'
+import type { ListItem, PathFilterItem as PathFilterItemType } from './FilterList'
 
 function PathFilterItem({ item }: { item: PathFilterItemType }) {
   const pathname = usePathname()
@@ -19,7 +19,7 @@ function PathFilterItem({ item }: { item: PathFilterItemType }) {
   newParams.delete('q')
 
   return (
-    <li className="mt-2 flex text-black" key={item.title}>
+    <li className="mt-2 flex whitespace-pre" key={item.title}>
       <DynamicTag
         className={clsx('w-full text-sm underline-offset-4 hover:underline', {
           'underline underline-offset-4': active,
@@ -47,7 +47,7 @@ function SortFilterItem({ item }: { item: SortFilterItemType }) {
   const DynamicTag = active ? 'p' : Link
 
   return (
-    <li className="mt-2 flex text-sm text-black" key={item.title}>
+    <li className="mt-2 flex text-sm whitespace-pre" key={item.title}>
       <DynamicTag
         className={clsx('w-full hover:underline hover:underline-offset-4', {
           'underline underline-offset-4': active,

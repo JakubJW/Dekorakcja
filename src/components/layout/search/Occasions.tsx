@@ -16,7 +16,6 @@ async function OccasionList() {
   return (
     <div>
       <h3 className="mb-4 text-primary">Okazja</h3>
-
       <ul className="space-y-2">
         {occasions.docs.map((occasion) => {
           return (
