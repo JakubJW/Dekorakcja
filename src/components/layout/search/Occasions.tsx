@@ -3,25 +3,24 @@ import clsx from 'clsx'
 import { getPayload } from 'payload'
 import { Suspense } from 'react'
 
-import { CategoryItem } from './Categories.client'
+import { OccasionItem } from './Occasions.client'
 
-async function CategoryList() {
+async function OccasionList() {
   const payload = await getPayload({ config: configPromise })
 
-  const categories = await payload.find({
-    collection: 'categories',
-    sort: 'title',
+  const occasions = await payload.find({
+    collection: 'occasions',
+    sort: 'name',
   })
 
   return (
     <div>
-      <h3 className="text-xs mb-2 text-neutral-500 dark:text-neutral-400">Category</h3>
-
-      <ul>
-        {categories.docs.map((category) => {
+      <h3 className="mb-4 text-primary">Okazja</h3>
+      <ul className="space-y-2">
+        {occasions.docs.map((occasion) => {
           return (
-            <li key={category.id}>
-              <CategoryItem category={category} />
+            <li key={occasion.id}>
+              <OccasionItem occasion={occasion} />
             </li>
           )
         })}
@@ -31,10 +30,10 @@ async function CategoryList() {
 }
 
 const skeleton = 'mb-3 h-4 w-5/6 animate-pulse rounded'
-const activeAndTitles = 'bg-neutral-800 dark:bg-neutral-300'
-const items = 'bg-neutral-400 dark:bg-neutral-700'
+const activeAndTitles = 'bg-neutral-800'
+const items = 'bg-neutral-400'
 
-export function Categories() {
+export function Occasions() {
   return (
     <Suspense
       fallback={
@@ -52,7 +51,7 @@ export function Categories() {
         </div>
       }
     >
-      <CategoryList />
+      <OccasionList />
     </Suspense>
   )
 }

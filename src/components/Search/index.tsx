@@ -5,6 +5,7 @@ import { createUrl } from '@/utilities/createUrl'
 import { SearchIcon } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import React from 'react'
+import { Input } from '../ui/input'
 
 type Props = {
   className?: string
@@ -27,18 +28,18 @@ export const Search: React.FC<Props> = ({ className }) => {
       newParams.delete('q')
     }
 
-    router.push(createUrl('/shop', newParams))
+    router.push(createUrl('/sklep', newParams))
   }
 
   return (
-    <form className={cn('relative w-full', className)} onSubmit={onSubmit}>
-      <input
+    <form className={cn('relative', className)} onSubmit={onSubmit}>
+      <Input
         autoComplete="off"
-        className="w-full rounded-lg border bg-white px-4 py-2 text-sm text-black placeholder:text-neutral-500 dark:border-neutral-800 dark:bg-black dark:text-white dark:placeholder:text-neutral-400"
         defaultValue={searchParams?.get('q') || ''}
+        className="rounded-full pr-8"
         key={searchParams?.get('q')}
         name="search"
-        placeholder="Search for products..."
+        placeholder="Wyszukaj..."
         type="text"
       />
       <div className="absolute right-0 top-0 mr-3 flex h-full items-center">

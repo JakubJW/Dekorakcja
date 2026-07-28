@@ -15,7 +15,7 @@ type Props = {
 }
 
 export default async function ShopPage({ searchParams }: Props) {
-  const { q: searchValue, sort, category } = await searchParams
+  const { q: searchValue, sort, okazja } = await searchParams
   const payload = await getPayload({ config: configPromise })
 
   const products = await payload.find({
@@ -26,11 +26,11 @@ export default async function ShopPage({ searchParams }: Props) {
       title: true,
       slug: true,
       gallery: true,
-      categories: true,
+      occasions: true,
       priceInUSD: true,
     },
     ...(sort ? { sort } : { sort: 'title' }),
-    ...(searchValue || category
+    ...(searchValue || okazja
       ? {
           where: {
             and: [
@@ -48,20 +48,20 @@ export default async function ShopPage({ searchParams }: Props) {
                             like: searchValue,
                           },
                         },
-                        {
-                          description: {
-                            like: searchValue,
-                          },
-                        },
+                        // {
+                        //   description: {
+                        //     like: searchValue,
+                        //   },
+                        // },
                       ],
                     },
                   ]
                 : []),
-              ...(category
+              ...(okazja
                 ? [
                     {
-                      categories: {
-                        contains: category,
+                      occasions: {
+                        contains: okazja,
                       },
                     },
                   ]
@@ -91,9 +91,9 @@ export default async function ShopPage({ searchParams }: Props) {
 
       {products?.docs.length > 0 ? (
         <Grid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.docs.map((product) => {
-            return <ProductGridItem key={product.id} product={product} />
-          })}
+          {products.docs.map((product) => (
+            <ProductGridItem key={product.id} product={product} />
+          ))}
         </Grid>
       ) : null}
     </div>

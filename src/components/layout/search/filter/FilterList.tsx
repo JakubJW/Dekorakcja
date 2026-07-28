@@ -1,18 +1,19 @@
 'use client'
 
-import { ChevronDownIcon } from 'lucide-react'
+import type { SortFilterItem } from '@/lib/constants'
+import { ArrowUpDown } from 'lucide-react'
 import { usePathname, useSearchParams } from 'next/navigation'
-import React, { useEffect, useRef, useState } from 'react'
-
-import type { ListItem } from '.'
-
+import { useEffect, useRef, useState } from 'react'
 import { FilterItem } from './FilterItem'
 
-export function FilterItemDropdown({ list }: { list: ListItem[] }) {
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+export type ListItem = PathFilterItem | SortFilterItem
+export type PathFilterItem = { path: string; title: string }
+
+export function FilterList({ list }: { list: ListItem[] }) {
   const [active, setActive] = useState('')
   const [openSelect, setOpenSelect] = useState(false)
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -38,26 +39,30 @@ export function FilterItemDropdown({ list }: { list: ListItem[] }) {
   }, [pathname, list, searchParams])
 
   return (
-    <div className="relative" ref={ref}>
+    <div className="relative flex-1" ref={ref}>
       <div
-        className="flex w-full items-center justify-between rounded border border-black/30 px-4 py-2 text-sm dark:border-white/30"
+        className="flex justify-between cursor-pointer items-center gap-2 border rounded-full px-4 py-2 text-sm"
         onClick={() => {
           setOpenSelect(!openSelect)
         }}
       >
         <div>{active}</div>
-        <ChevronDownIcon className="h-4" />
+        <ArrowUpDown className="size-4" />
       </div>
       {openSelect && (
         <div
-          className="absolute z-40 w-full rounded-b-md bg-white p-4 shadow-md dark:bg-black"
+          className="absolute z-40 w-full min-w-min rounded-md bg-white p-4 shadow-md"
           onClick={() => {
             setOpenSelect(false)
           }}
         >
-          {list.map((item: ListItem, i) => (
-            <FilterItem item={item} key={i} />
-          ))}
+          <nav>
+            <ul>
+              {list.map((item: ListItem, i) => (
+                <FilterItem item={item} key={i} />
+              ))}
+            </ul>
+          </nav>
         </div>
       )}
     </div>

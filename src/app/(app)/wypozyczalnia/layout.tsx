@@ -1,5 +1,5 @@
 import { Categories } from '@/components/layout/search/Categories'
-import { FilterList } from '@/components/layout/search/filter'
+import { FilterList } from '@/components/layout/search/filter/FilterList'
 import { Search } from '@/components/Search'
 import { sorting } from '@/lib/constants'
 import React, { Suspense } from 'react'
