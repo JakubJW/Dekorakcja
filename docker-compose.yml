@@ -7,7 +7,7 @@ services:
       - '3000:3000'
     volumes:
       - .:/home/node/app
-      - /home/node/app/node_modules
+      - node_modules:/home/node/app/node_modules
     working_dir: /home/node/app
     depends_on:
       - postgres
@@ -42,3 +42,4 @@ services:
 
 volumes:
   pgdata:
+  node_modules:
