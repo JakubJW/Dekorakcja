@@ -1,13 +1,13 @@
-import type { Product } from '@/payload-types'
 
 import { Media } from '@/components/Media'
 import { Price } from '@/components/Price'
+import { PopulatedProduct } from '@/utilities/normalizeProduct'
 import clsx from 'clsx'
 import Link from 'next/link'
 import React from 'react'
 
 type Props = {
-  product: Partial<Product>
+  product: Partial<PopulatedProduct>
 }
 
 export const ProductGridItem: React.FC<Props> = ({ product }) => {
@@ -15,7 +15,7 @@ export const ProductGridItem: React.FC<Props> = ({ product }) => {
 
   let price = priceInUSD
 
-  const variants = product.variants?.docs
+  const variants = product.variants
 
   if (variants && variants.length > 0) {
     const variant = variants[0]

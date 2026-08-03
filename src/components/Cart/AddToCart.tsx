@@ -1,41 +1,20 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import type { Product, Variant } from '@/payload-types'
-
+import { useProduct } from '@/providers/ProductProvider'
+import { PopulatedProduct } from '@/utilities/normalizeProduct'
 import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
 import clsx from 'clsx'
-import { useSearchParams } from 'next/navigation'
 import React, { useCallback, useMemo } from 'react'
 import { toast } from 'sonner'
+
 type Props = {
-  product: Product
+  product: PopulatedProduct
 }
 
 export function AddToCart({ product }: Props) {
   const { addItem, cart, isLoading } = useCart()
-  const searchParams = useSearchParams()
-
-  const variants = product.variants?.docs || []
-
-  const selectedVariant = useMemo<Variant | undefined>(() => {
-    if (product.enableVariants && variants.length) {
-      const variantId = searchParams.get('variant')
-
-      const validVariant = variants.find((variant) => {
-        if (typeof variant === 'object') {
-          return String(variant.id) === variantId
-        }
-        return String(variant) === variantId
-      })
-
-      if (validVariant && typeof validVariant === 'object') {
-        return validVariant
-      }
-    }
-
-    return undefined
-  }, [product.enableVariants, searchParams, variants])
+  const { selectedVariant } = useProduct()
 
   const addToCart = useCallback(
     (e: React.FormEvent<HTMLButtonElement>) => {
