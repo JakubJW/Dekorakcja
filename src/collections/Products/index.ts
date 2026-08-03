@@ -97,6 +97,7 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
                     condition: (data) => {
                       return data?.enableVariants === true && data?.variantTypes?.length > 0
                     },
+                    allowCreate: false,
                   },
                   filterOptions: ({ data }) => {
                     if (data?.enableVariants && data?.variantTypes?.length) {

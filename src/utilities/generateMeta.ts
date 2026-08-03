@@ -1,18 +1,23 @@
 import type { Metadata } from 'next'
 
-import type { Page, Product } from '../payload-types'
+import type { Media, Page, Product } from '../payload-types'
 
 import { getMediaURL } from './getMediaURL'
 import { mergeOpenGraph } from './mergeOpenGraph'
 
-export const generateMeta = async (args: { doc: Page | Product }): Promise<Metadata> => {
-  const { doc } = args || {}
+export const generateMeta = async (args: {
+  doc: Page | Product
+  fallbackImage?: Media
+  robots?: { index: boolean }
+}): Promise<Metadata> => {
+  const { doc, fallbackImage, robots } = args || {}
 
-  const ogImage =
-    typeof doc?.meta?.image === 'object' &&
-    doc.meta.image !== null &&
-    'url' in doc.meta.image &&
-    getMediaURL(doc.meta.image.url)
+  const metaImage =
+    typeof doc?.meta?.image === 'object' && doc.meta.image !== null && 'url' in doc.meta.image
+      ? doc.meta.image
+      : fallbackImage
+
+  const ogImage = metaImage?.url && getMediaURL(metaImage.url)
 
   return {
     description: doc?.meta?.description,
@@ -33,5 +38,17 @@ export const generateMeta = async (args: { doc: Page | Product }): Promise<Metad
       url: Array.isArray(doc?.slug) ? doc?.slug.join('/') : '/',
     }),
     title: doc?.meta?.title || doc?.title || 'Payload Ecommerce Template',
+    ...(robots
+      ? {
+          robots: {
+            follow: robots.index,
+            googleBot: {
+              follow: robots.index,
+              index: robots.index,
+            },
+            index: robots.index,
+          },
+        }
+      : {}),
   }
 }

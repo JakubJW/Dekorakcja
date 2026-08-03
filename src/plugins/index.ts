@@ -3,7 +3,7 @@ import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
-import { Plugin } from 'payload'
+import { Field, NumberField, Plugin } from 'payload'
 
 import { stripeAdapter } from '@payloadcms/plugin-ecommerce/payments/stripe'
 
@@ -173,10 +173,38 @@ export const plugins: Plugin[] = [
     products: {
       productsCollectionOverride: ProductsCollection,
       variants: {
+        variantTypesCollectionOverride: ({ defaultCollection }) => ({
+          ...defaultCollection,
+          fields: [...defaultCollection.fields],
+        }),
+        variantOptionsCollectionOverride: ({ defaultCollection }) => ({
+          ...defaultCollection,
+          fields: [...defaultCollection.fields],
+        }),
         variantsCollectionOverride: ({ defaultCollection }) => ({
           ...defaultCollection,
           fields: [
-            ...defaultCollection.fields,
+            ...defaultCollection.fields.flatMap((field): Field[] => {
+              if ('name' in field && field.name === 'inventory') {
+                const inventoryField = field as NumberField
+                return [
+                  {
+                    name: 'useInventory',
+                    label: 'Włącz magazyn',
+                    type: 'checkbox',
+                  },
+                  {
+                    ...inventoryField,
+                    admin: {
+                      ...inventoryField.admin,
+                      condition: (_data: unknown, siblingData: { useInventory?: boolean }) =>
+                        siblingData.useInventory === true,
+                    },
+                  },
+                ]
+              }
+              return [field]
+            }),
             {
               name: 'customField',
               label: 'Custom Field',

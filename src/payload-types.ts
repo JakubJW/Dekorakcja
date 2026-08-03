@@ -964,6 +964,7 @@ export interface Variant {
   title?: string | null;
   product: number | Product;
   options: (number | VariantOption)[];
+  useInventory?: boolean | null;
   inventory?: number | null;
   priceInUSDEnabled?: boolean | null;
   priceInUSD?: number | null;
@@ -1845,6 +1846,7 @@ export interface VariantsSelect<T extends boolean = true> {
   title?: T;
   product?: T;
   options?: T;
+  useInventory?: T;
   inventory?: T;
   priceInUSDEnabled?: T;
   priceInUSD?: T;
