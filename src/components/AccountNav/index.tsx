@@ -18,12 +18,12 @@ export const AccountNav: React.FC<Props> = ({ className }) => {
         <li>
           <Button asChild variant="link">
             <Link
-              href="/account"
+              href="/konto"
               className={clsx('text-primary/50 hover:text-primary hover:no-underline', {
-                'text-primary': pathname === '/account',
+                'text-primary': pathname === '/konto',
               })}
             >
-              Account settings
+              Ustawienia konta
             </Link>
           </Button>
         </li>
@@ -31,12 +31,12 @@ export const AccountNav: React.FC<Props> = ({ className }) => {
         <li>
           <Button asChild variant="link">
             <Link
-              href="/account/addresses"
+              href="/konto/adresy"
               className={clsx('text-primary/50 hover:text-primary hover:no-underline', {
-                'text-primary': pathname === '/account/addresses',
+                'text-primary': pathname === '/konto/adresy',
               })}
             >
-              Addresses
+              Adresy
             </Link>
           </Button>
         </li>
@@ -46,10 +46,10 @@ export const AccountNav: React.FC<Props> = ({ className }) => {
             asChild
             variant="link"
             className={clsx('text-primary/50 hover:text-primary hover:no-underline', {
-              'text-primary': pathname === '/orders' || pathname.includes('/orders'),
+              'text-primary': pathname === '/zamowienia' || pathname.includes('/zamowienia'),
             })}
           >
-            <Link href="/orders">Orders</Link>
+            <Link href="/zamowienia">Zamówienia</Link>
           </Button>
         </li>
       </ul>
@@ -63,7 +63,7 @@ export const AccountNav: React.FC<Props> = ({ className }) => {
           'text-primary': pathname === '/logout',
         })}
       >
-        <Link href="/logout">Log out</Link>
+        <Link href="/logout">Wyloguj się</Link>
       </Button>
     </div>
   )
