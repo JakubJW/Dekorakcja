@@ -1,15 +1,15 @@
 'use client'
+
 import { Cart } from '@/components/Cart'
 import { OpenCartButton } from '@/components/Cart/OpenCart'
 import { CMSLink } from '@/components/Link'
-import Link from 'next/link'
-import { Suspense } from 'react'
-
 import type { Header } from '@/payload-types'
-import { MobileMenu } from './MobileMenu'
-
 import { cn } from '@/utilities/cn'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { Suspense } from 'react'
+import { AccountButton } from './AccountButton'
+import { MobileMenu } from './MobileMenu'
 
 type Props = {
   header: Header
@@ -51,7 +51,7 @@ export function HeaderClient({ header }: Props) {
             ))}
           </ul>
         ) : null}
-
+        <AccountButton />
         <Suspense fallback={<OpenCartButton />}>
           <Cart />
         </Suspense>
