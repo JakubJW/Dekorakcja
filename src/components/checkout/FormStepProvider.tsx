@@ -4,7 +4,8 @@ import { createContext, useContext, useState } from 'react'
 
 export enum FORM_STEP {
   PERSONAL_DATA = 'personal_data',
-  SHIPPING_AND_PAYMENT = 'shipping_and_payment',
+  SHIPPING = 'shipping',
+  PAYMENT = 'platnosc',
   SUMMARY = 'summary',
 }
 

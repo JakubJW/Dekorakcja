@@ -108,6 +108,20 @@ export const plugins: Plugin[] = [
       isAdmin,
       isDocumentOwner,
     },
+    addresses: {
+      addressesCollectionOverride: ({ defaultCollection }) => ({
+        ...defaultCollection,
+        fields: defaultCollection.fields.filter((field) => {
+          if (
+            'name' in field &&
+            field.name !== 'title' &&
+            field.name !== 'billing_address_company'
+          ) {
+            return field
+          }
+        }),
+      }),
+    },
     customers: {
       slug: 'users',
     },

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 import { AddressListing } from '@/components/addresses/AddressListing'
-import { CreateAddressForm } from '@/components/addresses/CreateAddressModal'
+import { CreateAddressModal } from '@/components/addresses/CreateAddressModal'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import configPromise from '@payload-config'
 import { headers as getHeaders } from 'next/headers.js'
@@ -28,7 +28,7 @@ export default async function AddressesPage() {
           <AddressListing />
         </div>
 
-        <CreateAddressForm />
+        <CreateAddressModal />
       </div>
     </>
   )

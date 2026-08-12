@@ -1,26 +1,14 @@
 'use client'
 
-import React from 'react'
-import type { Address } from '@/payload-types'
 import { CreateAddressModal } from '@/components/addresses/CreateAddressModal'
+import type { Address } from '@/payload-types'
+import React from 'react'
 
 type Props = {
   address: Partial<Omit<Address, 'country'>> & { country?: string } // Allow address to be partial and entirely optional as this is entirely for display purposes
-  /**
-   * Completely override the default actions
-   */
   actions?: React.ReactNode
-  /**
-   * Insert elements before the actions
-   */
   beforeActions?: React.ReactNode
-  /**
-   * Insert elements after the actions
-   */
   afterActions?: React.ReactNode
-  /**
-   * Hide all actions
-   */
   hideActions?: boolean
 }
 
@@ -39,7 +27,6 @@ export const AddressItem: React.FC<Props> = ({
     <div className="flex items-center">
       <div className="grow">
         <p className="font-medium">
-          {address.title && <span>{address.title} </span>}
           {address.firstName} {address.lastName}
         </p>
         <p>{address.company && <span>{address.company} </span>}</p>

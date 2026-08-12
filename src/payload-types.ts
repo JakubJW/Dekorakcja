@@ -79,6 +79,7 @@ export interface Config {
     inquiries: Inquiry;
     rentables: Rentable;
     occasions: Occasion;
+    'organization-addresses': OrganizationAddress;
     forms: Form;
     'form-submissions': FormSubmission;
     addresses: Address;
@@ -99,6 +100,7 @@ export interface Config {
       orders: 'orders';
       cart: 'carts';
       addresses: 'addresses';
+      organization_addresses: 'organization-addresses';
     };
     variantTypes: {
       options: 'variantOptions';
@@ -115,6 +117,7 @@ export interface Config {
     inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
     rentables: RentablesSelect<false> | RentablesSelect<true>;
     occasions: OccasionsSelect<false> | OccasionsSelect<true>;
+    'organization-addresses': OrganizationAddressesSelect<false> | OrganizationAddressesSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     addresses: AddressesSelect<false> | AddressesSelect<true>;
@@ -206,6 +209,11 @@ export interface User {
   };
   addresses?: {
     docs?: (number | Address)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  organization_addresses?: {
+    docs?: (number | OrganizationAddress)[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
@@ -1061,7 +1069,6 @@ export interface Cart {
 export interface Address {
   id: number;
   customer?: (number | null) | User;
-  title?: string | null;
   firstName?: string | null;
   lastName?: string | null;
   company?: string | null;
@@ -1112,6 +1119,23 @@ export interface Address {
     | 'SE'
     | 'CH';
   phone?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "organization-addresses".
+ */
+export interface OrganizationAddress {
+  id: number;
+  customer: number | User;
+  nip: string;
+  organization: string;
+  addressLine1: string;
+  addressLine2?: string | null;
+  city: string;
+  postalCode: string;
+  country: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -1245,6 +1269,10 @@ export interface PayloadLockedDocument {
         value: number | Occasion;
       } | null)
     | ({
+        relationTo: 'organization-addresses';
+        value: number | OrganizationAddress;
+      } | null)
+    | ({
         relationTo: 'forms';
         value: number | Form;
       } | null)
@@ -1336,6 +1364,7 @@ export interface UsersSelect<T extends boolean = true> {
   orders?: T;
   cart?: T;
   addresses?: T;
+  organization_addresses?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -1671,6 +1700,22 @@ export interface OccasionsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "organization-addresses_select".
+ */
+export interface OrganizationAddressesSelect<T extends boolean = true> {
+  customer?: T;
+  nip?: T;
+  organization?: T;
+  addressLine1?: T;
+  addressLine2?: T;
+  city?: T;
+  postalCode?: T;
+  country?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "forms_select".
  */
 export interface FormsSelect<T extends boolean = true> {
@@ -1824,7 +1869,6 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
  */
 export interface AddressesSelect<T extends boolean = true> {
   customer?: T;
-  title?: T;
   firstName?: T;
   lastName?: T;
   company?: T;

@@ -9,8 +9,12 @@ const formSteps = [
     key: FORM_STEP.PERSONAL_DATA,
   },
   {
-    label: 'Dostawa i płatność',
-    key: FORM_STEP.SHIPPING_AND_PAYMENT,
+    label: 'Dostawa',
+    key: FORM_STEP.SHIPPING,
+  },
+  {
+    label: 'Płatność',
+    key: FORM_STEP.PAYMENT,
   },
   {
     label: 'Podsumowanie',

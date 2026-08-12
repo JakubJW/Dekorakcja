@@ -1,3 +1,5 @@
+import { usePaymentData } from '@/components/checkout/PaymentDataProvider'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -8,81 +10,96 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Address, Config } from '@/payload-types'
+import { useAuth } from '@/providers/Auth'
 import {
   defaultCountries as supportedCountries,
   useAddresses,
 } from '@payloadcms/plugin-ecommerce/client/react'
-import { deepMergeSimple } from 'payload/shared'
-import { Ref, useCallback } from 'react'
-import { useForm } from 'react-hook-form'
+import { useImperativeHandle, useMemo } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { FormError } from '../FormError'
 import { FormItem } from '../FormItem'
 
-type AddressFormValues = {
+export type AddressFormValues = {
   firstName?: string | null
   lastName?: string | null
   phone?: string | null
   addressLine1?: string | null
   addressLine2?: string | null
   city?: string | null
-  country: string
+  country?: string
   postalCode?: string | null
+  submitAddress: boolean
 }
 
 type Props = {
-  addressID?: Config['db']['defaultIDType']
+  existingAddressId?: Config['db']['defaultIDType']
   initialData?: Omit<Address, 'country' | 'id' | 'updatedAt' | 'createdAt'> & { country?: string }
-  callback?: (data: Partial<Address>) => void
-  skipSubmission?: boolean
-  formRef?: Ref<HTMLFormElement>
+  allowAddressSave?: boolean
 }
 
-export const AddressForm: React.FC<Props> = ({
-  addressID,
-  initialData,
-  callback,
-  skipSubmission,
-  formRef,
-}) => {
+export type FormHandle<T> = {
+  submit: () => Promise<T | null>
+}
+
+export const AddressForm: React.FC<Props> = ({ existingAddressId, initialData }) => {
+  const { user } = useAuth()
+  const {
+    personalData: { billingFormRef },
+  } = usePaymentData()
+  const { createAddress, updateAddress } = useAddresses()
+
+  const values = useMemo<AddressFormValues>(
+    () => ({
+      ...initialData,
+      submitAddress: false,
+    }),
+    [initialData],
+  )
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
+    control,
   } = useForm<AddressFormValues>({
-    defaultValues: initialData,
+    values,
   })
 
-  const { createAddress, updateAddress } = useAddresses()
+  useImperativeHandle(
+    billingFormRef,
+    () => ({
+      submit: () =>
+        new Promise((resolve) => {
+          handleSubmit(
+            (data) => {
+              const shouldCreate = data.submitAddress && !existingAddressId
+              const shouldUpdate = data.submitAddress && existingAddressId
 
-  const onSubmit = useCallback(
-    async (data: AddressFormValues) => {
-      const newData = deepMergeSimple(initialData || {}, data)
+              if (shouldCreate) {
+                createAddress(data)
+              } else if (shouldUpdate) {
+                updateAddress(existingAddressId, data)
+              }
 
-      if (!skipSubmission) {
-        if (!addressID) {
-          return await createAddress(newData)
-        }
-
-        return await updateAddress(addressID, newData)
-      }
-
-      if (callback) {
-        callback(newData)
-      }
-    },
-    [initialData, skipSubmission, callback, addressID, updateAddress, createAddress],
+              resolve(data)
+            },
+            () => resolve(null),
+          )()
+        }),
+    }),
+    [existingAddressId],
   )
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} ref={formRef}>
-      <div className="grid grid-cols-2 gap-4 mb-8">
+    <form>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
         <FormItem>
           <Label htmlFor="firstName">Imię*</Label>
           <Input
             id="firstName"
             autoComplete="given-name"
-            {...register('firstName', { required: 'First name is required.' })}
+            {...register('firstName', { required: 'Imię jest wymagane.' })}
           />
           {errors.firstName && <FormError message={errors.firstName.message} />}
         </FormItem>
@@ -91,7 +108,7 @@ export const AddressForm: React.FC<Props> = ({
           <Input
             autoComplete="family-name"
             id="lastName"
-            {...register('lastName', { required: 'Last name is required.' })}
+            {...register('lastName', { required: 'Nazwisko jest wymagane.' })}
           />
           {errors.lastName && <FormError message={errors.lastName.message} />}
         </FormItem>
@@ -105,7 +122,7 @@ export const AddressForm: React.FC<Props> = ({
           <Input
             id="addressLine1"
             autoComplete="address-line1"
-            {...register('addressLine1', { required: 'Ulica is required.' })}
+            {...register('addressLine1', { required: 'Ulica jest wymagana.' })}
           />
           {errors.addressLine1 && <FormError message={errors.addressLine1.message} />}
         </FormItem>
@@ -119,7 +136,7 @@ export const AddressForm: React.FC<Props> = ({
           <Input
             id="city"
             autoComplete="address-level2"
-            {...register('city', { required: 'City is required.' })}
+            {...register('city', { required: 'Miasto jest wymagane.' })}
           />
           {errors.city && <FormError message={errors.city.message} />}
         </FormItem>
@@ -127,45 +144,66 @@ export const AddressForm: React.FC<Props> = ({
           <Label htmlFor="postalCode">Kod pocztowy*</Label>
           <Input
             id="postalCode"
-            {...register('postalCode', { required: 'Postal code is required.' })}
+            {...register('postalCode', { required: 'Kod pocztowy jest wymagany.' })}
           />
           {errors.postalCode && <FormError message={errors.postalCode.message} />}
         </FormItem>
         <FormItem>
           <Label htmlFor="country">Kraj*</Label>
-          <Select
-            {...register('country', {
-              required: 'Country is required.',
-            })}
-            onValueChange={(value) => {
-              setValue('country', value, { shouldValidate: true })
-            }}
-            required
-            defaultValue={initialData?.country || ''}
-          >
-            <SelectTrigger id="country" className="w-full">
-              <SelectValue placeholder="Wybierz kraj" />
-            </SelectTrigger>
-            <SelectContent>
-              {supportedCountries.map((country) => {
-                const value = typeof country === 'string' ? country : country.value
-                const label =
-                  typeof country === 'string'
-                    ? country
-                    : typeof country.label === 'string'
-                      ? country.label
-                      : value
+          <Controller
+            name="country"
+            control={control}
+            rules={{ required: 'Kraj jest wymagany.' }}
+            render={({ field }) => (
+              <Select
+                onValueChange={field.onChange}
+                value={field.value}
+                required
+                defaultValue={values.country ?? 'PL'}
+              >
+                <SelectTrigger id="country" className="w-full">
+                  <SelectValue placeholder="Wybierz kraj" />
+                </SelectTrigger>
+                <SelectContent>
+                  {supportedCountries.map((country) => {
+                    const value = typeof country === 'string' ? country : country.value
+                    const label =
+                      typeof country === 'string'
+                        ? country
+                        : typeof country.label === 'string'
+                          ? country.label
+                          : value
+                    return (
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
+                    )
+                  })}
+                </SelectContent>
+              </Select>
+            )}
+          />
 
-                return (
-                  <SelectItem key={value} value={value}>
-                    {label}
-                  </SelectItem>
-                )
-              })}
-            </SelectContent>
-          </Select>
           {errors.country && <FormError message={errors.country.message} />}
         </FormItem>
+        {user && (
+          <Controller
+            name="submitAddress"
+            control={control}
+            render={({ field }) => (
+              <FormItem className="md:col-span-1 lg:col-span-2">
+                <Label htmlFor="submitAddress">
+                  <Checkbox
+                    id="submitAddress"
+                    onCheckedChange={field.onChange}
+                    checked={field.value}
+                  />
+                  Zapisz adres na moim koncie
+                </Label>
+              </FormItem>
+            )}
+          />
+        )}
       </div>
     </form>
   )

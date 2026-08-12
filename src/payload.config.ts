@@ -23,6 +23,7 @@ import { Footer } from '@/globals/Footer'
 import { Header } from '@/globals/Header'
 import { Inquiries } from './collections/Inquiries'
 import { Occasions } from './collections/Occasions'
+import { OrganizationAddresses } from './collections/OrganizationAddresses'
 import { Rentables } from './collections/Rentables'
 import { plugins } from './plugins'
 
@@ -46,7 +47,16 @@ export default buildConfig({
     },
     user: Users.slug,
   },
-  collections: [Users, Pages, Categories, Media, Inquiries, Rentables, Occasions],
+  collections: [
+    Users,
+    Pages,
+    Categories,
+    Media,
+    Inquiries,
+    Rentables,
+    Occasions,
+    OrganizationAddresses,
+  ],
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
