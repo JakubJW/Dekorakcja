@@ -6,12 +6,12 @@ import { loadStripe } from '@stripe/stripe-js'
 import Link from 'next/link'
 import React, { Suspense } from 'react'
 import { CartItems } from './CartItems'
+import { useCheckoutData } from './CheckoutDataProvider'
 import { FORM_STEP, useFormStep } from './FormStepProvider'
 import { Payment } from './FormSteps/Payment'
 import { PersonalDataFormStep } from './FormSteps/PersonalData'
 import { Shipping } from './FormSteps/Shipping'
 import { Summary } from './FormSteps/Summary'
-import { usePaymentData } from './PaymentDataProvider'
 import { Stepper } from './Stepper/Stepper'
 
 const apiKey = `${process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}`
@@ -19,7 +19,7 @@ const stripe = loadStripe(apiKey)
 
 export const CheckoutPage: React.FC = () => {
   const { cart } = useCart()
-  const { isProcessingPayment, paymentData } = usePaymentData()
+  const { isProcessingPayment, paymentData } = useCheckoutData()
   const { currentStep } = useFormStep()
 
   const cartIsEmpty = !cart || !cart.items || !cart.items.length

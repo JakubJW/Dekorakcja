@@ -1,4 +1,3 @@
-
 import { Media } from '@/components/Media'
 import { Price } from '@/components/Price'
 import { PopulatedProduct } from '@/utilities/normalizeProduct'
@@ -11,9 +10,9 @@ type Props = {
 }
 
 export const ProductGridItem: React.FC<Props> = ({ product }) => {
-  const { gallery, priceInUSD, title } = product
+  const { gallery, priceInPLN, title } = product
 
-  let price = priceInUSD
+  let price = priceInPLN
 
   const variants = product.variants
 
@@ -22,10 +21,10 @@ export const ProductGridItem: React.FC<Props> = ({ product }) => {
     if (
       variant &&
       typeof variant === 'object' &&
-      variant?.priceInUSD &&
-      typeof variant.priceInUSD === 'number'
+      variant?.priceInPLN &&
+      typeof variant.priceInPLN === 'number'
     ) {
-      price = variant.priceInUSD
+      price = variant.priceInPLN
     }
   }
 

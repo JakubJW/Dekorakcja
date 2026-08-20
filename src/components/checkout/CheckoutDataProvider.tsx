@@ -1,6 +1,6 @@
 'use client'
 
-import type { Address, OrganizationAddress } from '@/payload-types'
+import type { Address, OrganizationAddress, ShippingMethod } from '@/payload-types'
 import { createContext, RefObject, useContext, useEffect, useRef, useState } from 'react'
 import { AddressFormValues, FormHandle } from '../forms/AddressForm'
 import type { CompanyFormValues } from './PersonalData/organization/OrganizationForm'
@@ -18,28 +18,35 @@ type PersonalDataStep = {
   companyFormRef: RefObject<FormHandle<CompanyFormValues> | null>
 }
 
-type PaymentDataContext = {
-  personalData: PersonalDataStep
-  paymentData: Record<string, unknown> | null
-  setPaymentData: (data: Record<string, unknown> | null) => void
+type ShippingDataStep = {
+  shippingMethods: ShippingMethod[]
   shippingAddress?: Partial<Address>
   setShippingAddress: React.Dispatch<React.SetStateAction<Partial<Address> | undefined>>
   billingAddressSameAsShipping: boolean
   setBillingAddressSameAsShipping: (state: boolean) => void
+}
+
+type CheckoutDataContext = {
+  personalData: PersonalDataStep
+  shippingData: ShippingDataStep
+  paymentData: Record<string, unknown> | null
+  setPaymentData: (data: Record<string, unknown> | null) => void
   isProcessingPayment: boolean
   setProcessingPayment: (state: boolean) => void
 }
 
-const Context = createContext({} as PaymentDataContext)
+const Context = createContext({} as CheckoutDataContext)
 
 export const PaymentDataProvider = ({
   children,
   addresses,
   organizationAddresses,
+  shippingMethods,
 }: {
   children: React.ReactNode
   addresses: Address[]
   organizationAddresses: OrganizationAddress[]
+  shippingMethods: ShippingMethod[]
 }) => {
   const [email, setEmail] = useState<string | undefined>(undefined)
   const [organizationAddress, setOrganizationAddress] = useState<
@@ -89,12 +96,15 @@ export const PaymentDataProvider = ({
           billingFormRef,
           companyFormRef,
         },
+        shippingData: {
+          shippingMethods,
+          billingAddressSameAsShipping,
+          setBillingAddressSameAsShipping,
+          shippingAddress,
+          setShippingAddress,
+        },
         paymentData,
         setPaymentData,
-        billingAddressSameAsShipping,
-        setBillingAddressSameAsShipping,
-        shippingAddress,
-        setShippingAddress,
         isProcessingPayment,
         setProcessingPayment,
       }}
@@ -104,9 +114,9 @@ export const PaymentDataProvider = ({
   )
 }
 
-type UsePaymentData = () => PaymentDataContext // eslint-disable-line no-unused-vars
+type useCheckoutData = () => CheckoutDataContext // eslint-disable-line no-unused-vars
 
-export const usePaymentData: UsePaymentData = () => {
+export const useCheckoutData: useCheckoutData = () => {
   const ctx = useContext(Context)
   if (!ctx) throw new Error('usePaymentData must be called within PaymentDataProvider')
   return ctx

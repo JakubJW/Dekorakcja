@@ -18,7 +18,7 @@ import { defaultCountries as supportedCountries } from '@payloadcms/plugin-ecomm
 import { Info } from 'lucide-react'
 import { useImperativeHandle, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { usePaymentData } from '../../PaymentDataProvider'
+import { useCheckoutData } from '../../CheckoutDataProvider'
 
 export type CompanyFormValues = {
   nip?: string | null
@@ -53,7 +53,7 @@ export const OrganizationForm: React.FC<Props> = ({ initialData }) => {
 
   const {
     personalData: { companyFormRef },
-  } = usePaymentData()
+  } = useCheckoutData()
   const {
     register,
     handleSubmit,

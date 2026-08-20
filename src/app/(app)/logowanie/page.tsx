@@ -2,13 +2,12 @@ import type { Metadata } from 'next'
 
 import { RenderParams } from '@/components/RenderParams'
 import Link from 'next/link'
-import React from 'react'
 
-import { headers as getHeaders } from 'next/headers'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
 import { LoginForm } from '@/components/forms/LoginForm'
+import configPromise from '@payload-config'
+import { headers as getHeaders } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { getPayload } from 'payload'
 
 export default async function Login() {
   const headers = await getHeaders()
@@ -16,7 +15,7 @@ export default async function Login() {
   const { user } = await payload.auth({ headers })
 
   if (user) {
-    redirect(`/account?warning=${encodeURIComponent('You are already logged in.')}`)
+    redirect(`/konto?warning=${encodeURIComponent('You are already logged in.')}`)
   }
 
   return (
@@ -36,10 +35,10 @@ export default async function Login() {
 }
 
 export const metadata: Metadata = {
-  description: 'Login or create an account to get started.',
+  description: 'Zaloguj się lub utwórz konto.',
   openGraph: {
-    title: 'Login',
-    url: '/login',
+    title: 'Logowanie',
+    url: '/logowanie',
   },
-  title: 'Login',
+  title: 'Logowanie',
 }

@@ -1,12 +1,12 @@
 'use client'
 
 import { AddressForm } from '@/components/forms/AddressForm'
-import { usePaymentData } from '../PaymentDataProvider'
+import { useCheckoutData } from '../CheckoutDataProvider'
 
 export const BillingAddressSection: React.FC = () => {
   const {
     personalData: { billingAddress },
-  } = usePaymentData()
+  } = useCheckoutData()
 
   return (
     <div className="space-y-2">

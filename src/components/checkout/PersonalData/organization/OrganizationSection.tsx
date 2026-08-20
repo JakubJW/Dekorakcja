@@ -1,12 +1,12 @@
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
-import { usePaymentData } from '../../PaymentDataProvider'
+import { useCheckoutData } from '../../CheckoutDataProvider'
 import { OrganizationForm } from './OrganizationForm'
 
 export const OrganizationSection = () => {
   const {
     personalData: { buyAsOrganization, setBuyAsOrganization, organizationAddress },
-  } = usePaymentData()
+  } = useCheckoutData()
 
   return (
     <div>

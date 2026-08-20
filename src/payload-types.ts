@@ -80,6 +80,7 @@ export interface Config {
     rentables: Rentable;
     occasions: Occasion;
     'organization-addresses': OrganizationAddress;
+    'shipping-methods': ShippingMethod;
     forms: Form;
     'form-submissions': FormSubmission;
     addresses: Address;
@@ -118,6 +119,7 @@ export interface Config {
     rentables: RentablesSelect<false> | RentablesSelect<true>;
     occasions: OccasionsSelect<false> | OccasionsSelect<true>;
     'organization-addresses': OrganizationAddressesSelect<false> | OrganizationAddressesSelect<true>;
+    'shipping-methods': ShippingMethodsSelect<false> | ShippingMethodsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     addresses: AddressesSelect<false> | AddressesSelect<true>;
@@ -268,7 +270,7 @@ export interface Order {
   transactions?: (number | Transaction)[] | null;
   status?: OrderStatus;
   amount?: number | null;
-  currency?: 'USD' | null;
+  currency?: 'PLN' | null;
   accessToken?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -311,8 +313,8 @@ export interface Product {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
-  priceInUSDEnabled?: boolean | null;
-  priceInUSD?: number | null;
+  priceInPLNEnabled?: boolean | null;
+  priceInPLN?: number | null;
   relatedProducts?: (number | Product)[] | null;
   meta?: {
     title?: string | null;
@@ -974,8 +976,8 @@ export interface Variant {
   options: (number | VariantOption)[];
   useInventory?: boolean | null;
   inventory?: number | null;
-  priceInUSDEnabled?: boolean | null;
-  priceInUSD?: number | null;
+  priceInPLNEnabled?: boolean | null;
+  priceInPLN?: number | null;
   customField?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -1035,7 +1037,7 @@ export interface Transaction {
   order?: (number | null) | Order;
   cart?: (number | null) | Cart;
   amount?: number | null;
-  currency?: 'USD' | null;
+  currency?: 'PLN' | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1058,7 +1060,7 @@ export interface Cart {
   purchasedAt?: string | null;
   status?: ('active' | 'purchased' | 'abandoned') | null;
   subtotal?: number | null;
-  currency?: 'USD' | null;
+  currency?: 'PLN' | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1201,6 +1203,25 @@ export interface Rentable {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shipping-methods".
+ */
+export interface ShippingMethod {
+  id: number;
+  type: 'courier' | 'locker';
+  name: string;
+  price: number;
+  enabled?: boolean | null;
+  sortOrder?: number | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
@@ -1271,6 +1292,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'organization-addresses';
         value: number | OrganizationAddress;
+      } | null)
+    | ({
+        relationTo: 'shipping-methods';
+        value: number | ShippingMethod;
       } | null)
     | ({
         relationTo: 'forms';
@@ -1716,6 +1741,21 @@ export interface OrganizationAddressesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shipping-methods_select".
+ */
+export interface ShippingMethodsSelect<T extends boolean = true> {
+  type?: T;
+  name?: T;
+  price?: T;
+  enabled?: T;
+  sortOrder?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "forms_select".
  */
 export interface FormsSelect<T extends boolean = true> {
@@ -1892,8 +1932,8 @@ export interface VariantsSelect<T extends boolean = true> {
   options?: T;
   useInventory?: T;
   inventory?: T;
-  priceInUSDEnabled?: T;
-  priceInUSD?: T;
+  priceInPLNEnabled?: T;
+  priceInPLN?: T;
   customField?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1950,8 +1990,8 @@ export interface ProductsSelect<T extends boolean = true> {
   enableVariants?: T;
   variantTypes?: T;
   variants?: T;
-  priceInUSDEnabled?: T;
-  priceInUSD?: T;
+  priceInPLNEnabled?: T;
+  priceInPLN?: T;
   relatedProducts?: T;
   meta?:
     | T

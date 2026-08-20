@@ -1,4 +1,4 @@
-import { usePaymentData } from '@/components/checkout/PaymentDataProvider'
+import { useCheckoutData } from '@/components/checkout/CheckoutDataProvider'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -46,7 +46,7 @@ export const AddressForm: React.FC<Props> = ({ existingAddressId, initialData })
   const { user } = useAuth()
   const {
     personalData: { billingFormRef },
-  } = usePaymentData()
+  } = useCheckoutData()
   const { createAddress, updateAddress } = useAddresses()
 
   const values = useMemo<AddressFormValues>(

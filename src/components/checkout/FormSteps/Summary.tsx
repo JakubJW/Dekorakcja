@@ -1,9 +1,9 @@
-import { usePaymentData } from '../PaymentDataProvider'
+import { useCheckoutData } from '../CheckoutDataProvider'
 
 export const Summary = () => {
   const {
     personalData: { billingAddress, companyData, email, buyAsCompany },
-  } = usePaymentData()
+  } = useCheckoutData()
 
   return (
     <div className="space-y-2">

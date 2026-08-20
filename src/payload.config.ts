@@ -15,16 +15,17 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 
-import { Categories } from '@/collections/Categories'
-import { Media } from '@/collections/Media'
-import { Pages } from '@/collections/Pages'
-import { Users } from '@/collections/Users'
+import { Categories } from '@/collections/categories'
+import { Media } from '@/collections/media'
+import { Pages } from '@/collections/pages'
+import { Users } from '@/collections/users'
 import { Footer } from '@/globals/Footer'
 import { Header } from '@/globals/Header'
-import { Inquiries } from './collections/Inquiries'
-import { Occasions } from './collections/Occasions'
-import { OrganizationAddresses } from './collections/OrganizationAddresses'
-import { Rentables } from './collections/Rentables'
+import { Inquiries } from './collections/inquiries'
+import { Occasions } from './collections/occasions'
+import { OrganizationAddresses } from './collections/organization-addresses'
+import { Rentables } from './collections/rentables'
+import { ShippingMethods } from './collections/shipping-methods'
 import { plugins } from './plugins'
 
 const filename = fileURLToPath(import.meta.url)
@@ -56,6 +57,7 @@ export default buildConfig({
     Rentables,
     Occasions,
     OrganizationAddresses,
+    ShippingMethods,
   ],
   db: postgresAdapter({
     pool: {

@@ -2,12 +2,12 @@
 
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { usePaymentData } from '../PaymentDataProvider'
+import { useCheckoutData } from '../CheckoutDataProvider'
 
 export const EmailField: React.FC = () => {
   const {
     personalData: { email, setEmail },
-  } = usePaymentData()
+  } = useCheckoutData()
 
   return (
     <div className="space-y-2">

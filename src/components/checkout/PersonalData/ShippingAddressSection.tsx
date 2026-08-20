@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { CheckoutAddresses } from '../CheckoutAddresses'
-import { usePaymentData } from '../PaymentDataProvider'
+import { usePaymentData } from '../CheckoutDataProvider'
 
 export const ShippingAddressSection: React.FC = () => {
   const {

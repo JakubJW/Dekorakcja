@@ -50,7 +50,7 @@ export const Rentables: CollectionConfig = {
     variants: true,
     enableVariants: true,
     gallery: true,
-    priceInUSD: true,
+    priceInPLN: true,
     inventory: true,
     meta: true,
   },

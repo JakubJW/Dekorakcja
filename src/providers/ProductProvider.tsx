@@ -42,10 +42,10 @@ export const ProductProvider = ({
     const hasVariants = product.enableVariants && product.variants.length
 
     if (!selectedVariant || !hasVariants) {
-      return product.priceInUSD || 0
+      return product.priceInPLN || 0
     }
 
-    return selectedVariant.priceInUSD || 0
+    return selectedVariant.priceInPLN || 0
   }, [selectedVariant, product])
 
   return (

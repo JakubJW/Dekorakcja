@@ -1,6 +1,6 @@
+import { PaymentDataProvider } from '@/components/checkout/CheckoutDataProvider'
 import { CheckoutPage } from '@/components/checkout/CheckoutPage'
 import { FormStepProvider } from '@/components/checkout/FormStepProvider'
-import { PaymentDataProvider } from '@/components/checkout/PaymentDataProvider'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import configPromise from '@payload-config'
 import type { Metadata } from 'next'
@@ -26,6 +26,14 @@ export default async function Checkout() {
         })
         .then((res) => res.docs)
     : []
+
+  const shippingMethods = await payload
+    .find({
+      collection: 'shipping-methods',
+      depth: 0,
+      sort: 'sortOrder',
+    })
+    .then((res) => res.docs)
 
   const addresses = user
     ? await payload
@@ -69,7 +77,11 @@ export default async function Checkout() {
 
       <h1 className="sr-only">Checkout</h1>
 
-      <PaymentDataProvider addresses={addresses} organizationAddresses={organizationAddresses}>
+      <PaymentDataProvider
+        addresses={addresses}
+        organizationAddresses={organizationAddresses}
+        shippingMethods={shippingMethods}
+      >
         <FormStepProvider>
           <CheckoutPage />
         </FormStepProvider>

@@ -34,84 +34,84 @@ export const CheckoutForm: React.FC<Props> = ({
       setIsLoading(true)
       setProcessingPayment(true)
 
-      if (stripe && elements) {
-        try {
-          const returnUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/checkout/confirm-order${customerEmail ? `?email=${customerEmail}` : ''}`
+      if (!stripe || !elements) return
 
-          const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
-            confirmParams: {
-              return_url: returnUrl,
-              payment_method_data: {
-                billing_details: {
-                  email: customerEmail,
-                  phone: billingAddress?.phone,
-                  address: {
-                    line1: billingAddress?.addressLine1,
-                    line2: billingAddress?.addressLine2,
-                    city: billingAddress?.city,
-                    state: billingAddress?.state,
-                    postal_code: billingAddress?.postalCode,
-                    country: billingAddress?.country,
-                  },
+      try {
+        const returnUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/checkout/confirm-order${customerEmail ? `?email=${customerEmail}` : ''}`
+
+        const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
+          confirmParams: {
+            return_url: returnUrl,
+            payment_method_data: {
+              billing_details: {
+                email: customerEmail,
+                phone: billingAddress?.phone,
+                address: {
+                  line1: billingAddress?.addressLine1,
+                  line2: billingAddress?.addressLine2,
+                  city: billingAddress?.city,
+                  state: billingAddress?.state,
+                  postal_code: billingAddress?.postalCode,
+                  country: billingAddress?.country,
                 },
               },
             },
-            elements,
-            redirect: 'if_required',
-          })
+          },
+          elements,
+          redirect: 'if_required',
+        })
 
-          if (paymentIntent && paymentIntent.status === 'succeeded') {
-            try {
-              const confirmResult = await confirmOrder('stripe', {
-                additionalData: {
-                  paymentIntentID: paymentIntent.id,
-                  ...(customerEmail ? { customerEmail } : {}),
-                },
-              })
+        if (paymentIntent && paymentIntent.status === 'succeeded') {
+          try {
+            const confirmResult = await confirmOrder('stripe', {
+              additionalData: {
+                paymentIntentID: paymentIntent.id,
+                ...(customerEmail ? { customerEmail } : {}),
+              },
+            })
 
-              if (
-                confirmResult &&
-                typeof confirmResult === 'object' &&
-                'orderID' in confirmResult &&
-                confirmResult.orderID
-              ) {
-                const accessToken =
-                  'accessToken' in confirmResult ? (confirmResult.accessToken as string) : ''
-                const queryParams = new URLSearchParams()
+            if (
+              confirmResult &&
+              typeof confirmResult === 'object' &&
+              'orderID' in confirmResult &&
+              confirmResult.orderID
+            ) {
+              const accessToken =
+                'accessToken' in confirmResult ? (confirmResult.accessToken as string) : ''
+              const queryParams = new URLSearchParams()
 
-                if (customerEmail) {
-                  queryParams.set('email', customerEmail)
-                }
-                if (accessToken) {
-                  queryParams.set('accessToken', accessToken)
-                }
-
-                const queryString = queryParams.toString()
-                const redirectUrl = `/orders/${confirmResult.orderID}${queryString ? `?${queryString}` : ''}`
-
-                // Clear the cart after successful payment
-                clearCart()
-
-                // Redirect to order confirmation page
-                router.push(redirectUrl)
+              if (customerEmail) {
+                queryParams.set('email', customerEmail)
               }
-            } catch (err) {
-              console.log({ err })
-              const msg = err instanceof Error ? err.message : 'Something went wrong.'
-              setError(`Error while confirming order: ${msg}`)
-              setIsLoading(false)
+              if (accessToken) {
+                queryParams.set('accessToken', accessToken)
+              }
+
+              const queryString = queryParams.toString()
+              const redirectUrl = `/zamowienia/${confirmResult.orderID}${queryString ? `?${queryString}` : ''}`
+
+              // Clear the cart after successful payment
+              clearCart()
+
+              // Redirect to order confirmation page
+              router.push(redirectUrl)
             }
-          }
-          if (stripeError?.message) {
-            setError(stripeError.message)
+          } catch (err) {
+            console.log({ err })
+            const msg = err instanceof Error ? err.message : 'Something went wrong.'
+            setError(`Error while confirming order: ${msg}`)
             setIsLoading(false)
           }
-        } catch (err) {
-          const msg = err instanceof Error ? err.message : 'Something went wrong.'
-          setError(`Error while submitting payment: ${msg}`)
-          setIsLoading(false)
-          setProcessingPayment(false)
         }
+        if (stripeError?.message) {
+          setError(stripeError.message)
+          setIsLoading(false)
+        }
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : 'Something went wrong.'
+        setError(`Error while submitting payment: ${msg}`)
+        setIsLoading(false)
+        setProcessingPayment(false)
       }
     },
     [
@@ -135,10 +135,12 @@ export const CheckoutForm: React.FC<Props> = ({
   return (
     <form onSubmit={handleSubmit}>
       {error && <Message error={error} />}
-      <PaymentElement options={{ layout: 'accordion' }} />
+      <PaymentElement
+        options={{ layout: 'tabs', defaultValues: { billingDetails: { email: customerEmail } } }}
+      />
       <div className="mt-8 flex gap-4">
         <Button disabled={!stripe || isLoading} type="submit" variant="default">
-          {isLoading ? 'Loading...' : 'Pay now'}
+          {isLoading ? 'Ładowanie...' : 'Potwierdź płatność'}
         </Button>
       </div>
     </form>

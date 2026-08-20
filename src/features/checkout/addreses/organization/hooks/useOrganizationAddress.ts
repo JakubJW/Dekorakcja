@@ -22,7 +22,8 @@ export const useOrganizationAddresses = () => {
 
   const getMany = async (customerId: number) => {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/organization-addresses?where[customer][equals]=${customerId}&depth=0`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/organization-addresses?where[customer
+      ][equals]=${customerId}&depth=0`,
       {
         headers: {
           'Content-Type': 'application/json',

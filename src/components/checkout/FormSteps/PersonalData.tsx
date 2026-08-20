@@ -4,8 +4,8 @@ import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/providers/Auth'
 import { useCallback } from 'react'
+import { useCheckoutData } from '../CheckoutDataProvider'
 import { FORM_STEP, useFormStep } from '../FormStepProvider'
-import { usePaymentData } from '../PaymentDataProvider'
 import { BillingAddressSection } from '../PersonalData/BillingAddressSection'
 import { EmailField } from '../PersonalData/EmailField'
 import { LoginPrompt } from '../PersonalData/LoginPrompt'
@@ -23,7 +23,7 @@ export const PersonalDataFormStep = () => {
       companyFormRef,
       billingFormRef,
     },
-  } = usePaymentData()
+  } = useCheckoutData()
   const { setCurrentStep } = useFormStep()
 
   const handleNextStep = useCallback(async () => {
@@ -70,7 +70,7 @@ export const PersonalDataFormStep = () => {
             await handleNextStep()
           }}
         >
-          Przejdź do płatności
+          Przejdź do dostawy
         </Button>
       )}
       {/* {!paymentData?.['clientSecret'] && error && (
