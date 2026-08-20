@@ -13,6 +13,17 @@ export const Providers: React.FC<{
       <SonnerProvider />
       <EcommerceProvider
         enableVariants={true}
+        currenciesConfig={{
+          defaultCurrency: 'PLN',
+          supportedCurrencies: [
+            {
+              code: 'PLN',
+              label: 'PLN',
+              symbol: 'zł',
+              decimals: 2,
+            },
+          ],
+        }}
         api={{
           cartsFetchQuery: {
             depth: 2,

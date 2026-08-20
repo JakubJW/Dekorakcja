@@ -1,18 +1,17 @@
 import { ecommercePlugin } from '@payloadcms/plugin-ecommerce'
+import { stripeAdapter } from '@payloadcms/plugin-ecommerce/payments/stripe'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import { Field, NumberField, Plugin } from 'payload'
 
-import { stripeAdapter } from '@payloadcms/plugin-ecommerce/payments/stripe'
-
 import { adminOnlyFieldAccess } from '@/access/adminOnlyFieldAccess'
 import { adminOrPublishedStatus } from '@/access/adminOrPublishedStatus'
 import { customerOnlyFieldAccess } from '@/access/customerOnlyFieldAccess'
 import { isAdmin } from '@/access/isAdmin'
 import { isDocumentOwner } from '@/access/isDocumentOwner'
-import { ProductsCollection } from '@/collections/Products'
+import { ProductsCollection } from '@/collections/products'
 import { Page, Product } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
 import { s3Storage } from '@payloadcms/storage-s3'
@@ -101,12 +100,37 @@ export const plugins: Plugin[] = [
     },
   }),
   ecommercePlugin({
+    currencies: {
+      defaultCurrency: 'PLN',
+      supportedCurrencies: [
+        {
+          code: 'PLN',
+          label: 'PLN',
+          symbol: 'zł',
+          decimals: 2,
+        },
+      ],
+    },
     access: {
       adminOnlyFieldAccess,
       adminOrPublishedStatus,
       customerOnlyFieldAccess,
       isAdmin,
       isDocumentOwner,
+    },
+    addresses: {
+      addressesCollectionOverride: ({ defaultCollection }) => ({
+        ...defaultCollection,
+        fields: defaultCollection.fields.filter((field) => {
+          if (
+            'name' in field &&
+            field.name !== 'title' &&
+            field.name !== 'billing_address_company'
+          ) {
+            return field
+          }
+        }),
+      }),
     },
     customers: {
       slug: 'users',

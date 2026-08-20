@@ -1,11 +1,54 @@
-import type { Metadata } from 'next'
-
-import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
-import React, { Fragment } from 'react'
-
+import { PaymentDataProvider } from '@/components/checkout/CheckoutDataProvider'
 import { CheckoutPage } from '@/components/checkout/CheckoutPage'
+import { FormStepProvider } from '@/components/checkout/FormStepProvider'
+import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
+import configPromise from '@payload-config'
+import type { Metadata } from 'next'
+import { headers as getHeaders } from 'next/headers'
+import { getPayload } from 'payload'
+import { Fragment } from 'react'
 
-export default function Checkout() {
+export default async function Checkout() {
+  const headers = await getHeaders()
+  const payload = await getPayload({ config: configPromise })
+  const { user } = await payload.auth({ headers })
+
+  const organizationAddresses = user
+    ? await payload
+        .find({
+          collection: 'organization-addresses',
+          depth: 0,
+          where: {
+            customer: {
+              equals: user ? user.id : null,
+            },
+          },
+        })
+        .then((res) => res.docs)
+    : []
+
+  const shippingMethods = await payload
+    .find({
+      collection: 'shipping-methods',
+      depth: 0,
+      sort: 'sortOrder',
+    })
+    .then((res) => res.docs)
+
+  const addresses = user
+    ? await payload
+        .find({
+          collection: 'addresses',
+          depth: 0,
+          where: {
+            customer: {
+              equals: user ? user.id : null,
+            },
+          },
+        })
+        .then((res) => res.docs)
+    : []
+
   return (
     <div className="container min-h-[90vh] flex">
       {!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY && (
@@ -34,7 +77,15 @@ export default function Checkout() {
 
       <h1 className="sr-only">Checkout</h1>
 
-      <CheckoutPage />
+      <PaymentDataProvider
+        addresses={addresses}
+        organizationAddresses={organizationAddresses}
+        shippingMethods={shippingMethods}
+      >
+        <FormStepProvider>
+          <CheckoutPage />
+        </FormStepProvider>
+      </PaymentDataProvider>
     </div>
   )
 }

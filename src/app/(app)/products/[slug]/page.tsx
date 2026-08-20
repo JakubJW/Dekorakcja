@@ -46,7 +46,7 @@ const queryProductBySlug = async ({ slug }: { slug: string }) => {
     populate: {
       variants: {
         title: true,
-        priceInUSD: true,
+        priceInPLN: true,
         inventory: true,
         options: true,
       },
@@ -58,15 +58,15 @@ const queryProductBySlug = async ({ slug }: { slug: string }) => {
 
 const getMaxVariantPrice = (product: PopulatedProduct) => {
   if (!product.enableVariants || !product.variants.length) {
-    return product.priceInUSD
+    return product.priceInPLN
   }
 
   return product.variants.reduce((max, variant) => {
-    if (variant.priceInUSD && max && variant.priceInUSD > max) {
-      return variant.priceInUSD
+    if (variant.priceInPLN && max && variant.priceInPLN > max) {
+      return variant.priceInPLN
     }
     return max
-  }, product.priceInUSD)
+  }, product.priceInPLN)
 }
 
 const hasAvailableStock = (product: PopulatedProduct) => {

@@ -43,11 +43,6 @@ export function Occasions() {
           <div className={clsx(skeleton, items)} />
           <div className={clsx(skeleton, items)} />
           <div className={clsx(skeleton, items)} />
-          <div className={clsx(skeleton, items)} />
-          <div className={clsx(skeleton, items)} />
-          <div className={clsx(skeleton, items)} />
-          <div className={clsx(skeleton, items)} />
-          <div className={clsx(skeleton, items)} />
         </div>
       }
     >

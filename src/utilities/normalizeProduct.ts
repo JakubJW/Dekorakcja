@@ -21,7 +21,7 @@ export type PopulatedGalleryItem = Omit<GalleryItem, 'variantOption' | 'image'> 
 }
 export type ProductListItem = Pick<
   Product,
-  'id' | 'title' | 'slug' | 'priceInUSD' | 'occasions'
+  'id' | 'title' | 'slug' | 'priceInPLN' | 'occasions'
 > & {
   gallery: PopulatedGalleryItem[]
 }

@@ -27,7 +27,7 @@ export default async function ShopPage({ searchParams }: Props) {
       title: true,
       slug: true,
       gallery: true,
-      priceInUSD: true,
+      priceInPLN: true,
     },
     ...(sort ? { sort } : { sort: 'title' }),
     ...(searchValue || category

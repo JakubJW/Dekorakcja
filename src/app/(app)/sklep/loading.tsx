@@ -8,7 +8,7 @@ export default function Loading() {
         .map((_, index) => {
           return (
             <div
-              className="animate-pulse bg-neutral-100 dark:bg-neutral-900 w-full h-full aspect-square rounded-2xl"
+              className="animate-pulse bg-neutral-100 w-full h-full aspect-square rounded-2xl"
               key={index}
             />
           )
