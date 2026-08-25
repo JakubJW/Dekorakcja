@@ -29,7 +29,7 @@ export const PersonalDataFormStep = () => {
   const handleNextStep = useCallback(async () => {
     const [billingData, organizationData] = await Promise.all([
       billingFormRef.current?.submit(),
-      buyAsOrganization ? companyFormRef.current?.submit() : Promise.resolve(null),
+      buyAsOrganization ? companyFormRef.current?.submit() : Promise.resolve(undefined),
     ])
 
     if (!billingData || (buyAsOrganization && !organizationData)) {

@@ -1,6 +1,6 @@
 'use client'
 
-import { AddressForm } from '@/components/forms/AddressForm'
+import { AddressForm, AddressFormValues } from '@/components/forms/AddressForm'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -10,16 +10,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Address } from '@/payload-types'
 import { DefaultDocumentIDType } from 'payload'
 import React, { useState } from 'react'
 
 type Props = {
   addressID?: DefaultDocumentIDType
-  initialData?: Partial<Omit<Address, 'country'>> & { country?: string }
+  initialData?: AddressFormValues
   buttonText?: string
   modalTitle?: string
-  callback?: (address: Partial<Address>) => void
+  callback?: (address: AddressFormValues) => void
   skipSubmission?: boolean
   disabled?: boolean
 }
@@ -42,7 +41,7 @@ export const CreateAddressModal: React.FC<Props> = ({
     setOpen(false)
   }
 
-  const handleCallback = (data: Partial<Address>) => {
+  const handleCallback = (data: AddressFormValues) => {
     closeModal()
 
     if (callback) {
@@ -62,10 +61,10 @@ export const CreateAddressModal: React.FC<Props> = ({
         </DialogHeader>
 
         <AddressForm
-          addressID={addressID}
+          // addressID={addressID}
           initialData={initialData}
-          callback={handleCallback}
-          skipSubmission={skipSubmission}
+          // callback={handleCallback}
+          // skipSubmission={skipSubmission}
         />
       </DialogContent>
     </Dialog>

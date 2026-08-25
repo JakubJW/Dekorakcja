@@ -3,25 +3,27 @@
 import type { Address, OrganizationAddress, ShippingMethod } from '@/payload-types'
 import { createContext, RefObject, useContext, useEffect, useRef, useState } from 'react'
 import { AddressFormValues, FormHandle } from '../forms/AddressForm'
-import type { CompanyFormValues } from './PersonalData/organization/OrganizationForm'
+import type { OrganizationFormValues } from './PersonalData/organization/OrganizationForm'
 
 type PersonalDataStep = {
   email?: string
   setEmail: (value: string) => void
   buyAsOrganization: boolean
   setBuyAsOrganization: (value: boolean) => void
-  organizationAddress?: Partial<CompanyFormValues>
-  setOrganizationAddress: (value: Partial<CompanyFormValues>) => void
-  billingAddress?: Partial<Address>
-  setBillingAddress: React.Dispatch<React.SetStateAction<Partial<Address> | undefined>>
+  organizationAddress?: Omit<OrganizationFormValues, 'submitOrganizationAddress'>
+  setOrganizationAddress: (
+    value: Omit<OrganizationFormValues, 'submitOrganizationAddress'> | undefined,
+  ) => void
+  billingAddress?: AddressFormValues
+  setBillingAddress: (value: AddressFormValues | undefined) => void
   billingFormRef: RefObject<FormHandle<AddressFormValues> | null>
-  companyFormRef: RefObject<FormHandle<CompanyFormValues> | null>
+  companyFormRef: RefObject<FormHandle<OrganizationFormValues> | null>
 }
 
 type ShippingDataStep = {
   shippingMethods: ShippingMethod[]
-  shippingAddress?: Partial<Address>
-  setShippingAddress: React.Dispatch<React.SetStateAction<Partial<Address> | undefined>>
+  shippingAddress?: AddressFormValues
+  setShippingAddress: (value: AddressFormValues | undefined) => void
   billingAddressSameAsShipping: boolean
   setBillingAddressSameAsShipping: (state: boolean) => void
 }
@@ -50,16 +52,16 @@ export const PaymentDataProvider = ({
 }) => {
   const [email, setEmail] = useState<string | undefined>(undefined)
   const [organizationAddress, setOrganizationAddress] = useState<
-    Partial<CompanyFormValues> | undefined
+    Omit<OrganizationFormValues, 'submitOrganizationAddress'> | undefined
   >(undefined)
   const [paymentData, setPaymentData] = useState<null | Record<string, unknown>>(null)
-  const [shippingAddress, setShippingAddress] = useState<Partial<Address> | undefined>()
-  const [billingAddress, setBillingAddress] = useState<Partial<Address> | undefined>()
+  const [shippingAddress, setShippingAddress] = useState<AddressFormValues | undefined>()
+  const [billingAddress, setBillingAddress] = useState<AddressFormValues | undefined>()
   const [billingAddressSameAsShipping, setBillingAddressSameAsShipping] = useState(true)
   const [isProcessingPayment, setProcessingPayment] = useState(false)
   const [buyAsOrganization, setBuyAsOrganization] = useState(false)
   const billingFormRef = useRef<FormHandle<AddressFormValues>>(null)
-  const companyFormRef = useRef<FormHandle<CompanyFormValues>>(null)
+  const companyFormRef = useRef<FormHandle<OrganizationFormValues>>(null)
 
   useEffect(() => {
     if (!billingAddress && addresses.length) {
@@ -118,6 +120,6 @@ type useCheckoutData = () => CheckoutDataContext // eslint-disable-line no-unuse
 
 export const useCheckoutData: useCheckoutData = () => {
   const ctx = useContext(Context)
-  if (!ctx) throw new Error('usePaymentData must be called within PaymentDataProvider')
+  if (!ctx) throw new Error('useCheckoutData must be called within CheckoutDataProvider')
   return ctx
 }

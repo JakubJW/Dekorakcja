@@ -1,18 +1,16 @@
-'use client'
-
 import { Message } from '@/components/Message'
 import { Button } from '@/components/ui/button'
-import { Address } from '@/payload-types'
 import { useCart, usePayments } from '@payloadcms/plugin-ecommerce/client/react'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { useRouter } from 'next/navigation'
 import React, { FormEvent, useCallback } from 'react'
+import { AddressFormValues } from '../AddressForm'
 
 type Props = {
   customerEmail?: string
-  billingAddress?: Partial<Address>
-  shippingAddress?: Partial<Address>
-  setProcessingPayment: React.Dispatch<React.SetStateAction<boolean>>
+  billingAddress?: AddressFormValues
+  shippingAddress?: AddressFormValues
+  setProcessingPayment: (value: boolean) => void
 }
 
 export const CheckoutForm: React.FC<Props> = ({
@@ -50,7 +48,6 @@ export const CheckoutForm: React.FC<Props> = ({
                   line1: billingAddress?.addressLine1,
                   line2: billingAddress?.addressLine2,
                   city: billingAddress?.city,
-                  state: billingAddress?.state,
                   postal_code: billingAddress?.postalCode,
                   country: billingAddress?.country,
                 },
@@ -123,7 +120,6 @@ export const CheckoutForm: React.FC<Props> = ({
       billingAddress?.addressLine1,
       billingAddress?.addressLine2,
       billingAddress?.city,
-      billingAddress?.state,
       billingAddress?.postalCode,
       billingAddress?.country,
       confirmOrder,

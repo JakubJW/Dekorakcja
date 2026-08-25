@@ -30,9 +30,9 @@ export const Shipping = () => {
   const { initiatePayment } = usePayments()
   const { setCurrentStep } = useFormStep()
 
-  const handleBillingAddressSameAsShipping = (val: boolean) => {
-    setBillingAddressSameAsShipping(val)
-    if (!val) return
+  const handleBillingAddressSameAsShipping = (value: boolean) => {
+    setBillingAddressSameAsShipping(value)
+    if (!value) return
     setShippingAddress(billingAddress)
   }
 
@@ -59,8 +59,8 @@ export const Shipping = () => {
           errorMessage = 'One or more items in your cart are out of stock.'
         }
 
-        setError(errorMessage)
-        toast.error(errorMessage)
+        // setError(errorMessage)
+        // toast.error(errorMessage)
       }
     },
     [billingAddress, shippingAddress],

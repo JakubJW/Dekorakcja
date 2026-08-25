@@ -6,7 +6,6 @@ export enum FORM_STEP {
   PERSONAL_DATA = 'personal_data',
   SHIPPING = 'shipping',
   PAYMENT = 'platnosc',
-  SUMMARY = 'summary',
 }
 
 type FormStepContext = {

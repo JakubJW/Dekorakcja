@@ -1,35 +1,34 @@
 'use client'
 
-import { FORM_STEP, useFormStep } from '../FormStepProvider'
+import { FORM_STEP } from '../FormStepProvider'
+import { Payment } from '../FormSteps/Payment'
+import { PersonalDataFormStep } from '../FormSteps/PersonalData'
+import { Shipping } from '../FormSteps/Shipping'
 import { Step } from './Step'
 
-const formSteps = [
-  {
-    label: 'Twoje dane',
-    key: FORM_STEP.PERSONAL_DATA,
-  },
-  {
-    label: 'Dostawa',
-    key: FORM_STEP.SHIPPING,
-  },
-  {
-    label: 'Płatność',
-    key: FORM_STEP.PAYMENT,
-  },
-  {
-    label: 'Podsumowanie',
-    key: FORM_STEP.SUMMARY,
-  },
-] as const
+interface StepConfig {
+  component: React.ComponentType
+  label: string
+}
+
+export const STEP_ORDER: FORM_STEP[] = [
+  FORM_STEP.PERSONAL_DATA,
+  FORM_STEP.SHIPPING,
+  FORM_STEP.PAYMENT,
+]
+
+export const STEPS: Record<FORM_STEP, StepConfig> = {
+  [FORM_STEP.PERSONAL_DATA]: { component: PersonalDataFormStep, label: 'Dane osobowe' },
+  [FORM_STEP.SHIPPING]: { component: Shipping, label: 'Dostawa' },
+  [FORM_STEP.PAYMENT]: { component: Payment, label: 'Płatność' },
+}
 
 export const Stepper = () => {
-  const { currentStep } = useFormStep()
-
   return (
     <div>
       <ol className="flex w-full justify-between">
-        {formSteps.map((step, index) => (
-          <Step key={index} label={step.label} stepKey={step.key} index={index} />
+        {STEP_ORDER.map((step, index) => (
+          <Step key={index} label={STEPS[step].label} stepKey={step} index={index} />
         ))}
       </ol>
     </div>

@@ -16,18 +16,18 @@ import { OrganizationAddress } from '@/payload-types'
 import { useAuth } from '@/providers/Auth'
 import { defaultCountries as supportedCountries } from '@payloadcms/plugin-ecommerce/client/react'
 import { Info } from 'lucide-react'
-import { useImperativeHandle, useMemo } from 'react'
+import { useImperativeHandle } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useCheckoutData } from '../../CheckoutDataProvider'
 
-export type CompanyFormValues = {
-  nip?: string | null
-  organization?: string | null
-  addressLine1?: string | null
+export type OrganizationFormValues = {
+  nip: string
+  organization: string
+  addressLine1: string
   addressLine2?: string | null
-  city?: string | null
-  country?: string
-  postalCode?: string | null
+  city: string
+  country: string
+  postalCode: string
   submitOrganizationAddress: boolean
 }
 
@@ -43,14 +43,6 @@ type Props = {
 export const OrganizationForm: React.FC<Props> = ({ initialData }) => {
   const { user } = useAuth()
 
-  const values = useMemo<CompanyFormValues>(
-    () => ({
-      ...initialData,
-      submitOrganizationAddress: false,
-    }),
-    [initialData],
-  )
-
   const {
     personalData: { companyFormRef },
   } = useCheckoutData()
@@ -59,16 +51,19 @@ export const OrganizationForm: React.FC<Props> = ({ initialData }) => {
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm<CompanyFormValues>({
-    defaultValues: initialData,
+    watch,
+  } = useForm<OrganizationFormValues>({
+    defaultValues: { ...initialData, submitOrganizationAddress: false },
   })
+
+  const country = watch('country')
 
   useImperativeHandle(companyFormRef, () => ({
     submit: () =>
       new Promise((resolve) => {
         handleSubmit(
           (data) => resolve(data),
-          () => resolve(null),
+          () => resolve(undefined),
         )()
       }),
   }))
@@ -142,7 +137,7 @@ export const OrganizationForm: React.FC<Props> = ({ initialData }) => {
                   onValueChange={field.onChange}
                   value={field.value}
                   required
-                  defaultValue={values.country ?? 'PL'}
+                  defaultValue={country ?? 'PL'}
                 >
                   <SelectTrigger id="country" className="w-full">
                     <SelectValue placeholder="Kraj" />
