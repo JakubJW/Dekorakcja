@@ -1,14 +1,7 @@
 'use client'
 
 import { Price } from '@/components/Price'
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
 import { ShoppingCart } from 'lucide-react'
 import Image from 'next/image'
@@ -46,9 +39,7 @@ export function CartModal() {
 
       <SheetContent className="flex flex-col">
         <SheetHeader>
-          <SheetTitle>My Cart</SheetTitle>
-
-          <SheetDescription>Manage your cart here, add items to view the total.</SheetDescription>
+          <SheetTitle className="font-sans">Koszyk</SheetTitle>
         </SheetHeader>
 
         {!cart || cart?.items?.length === 0 ? (
@@ -113,9 +104,9 @@ export function CartModal() {
                         </div>
                         <Link
                           className="z-30 flex flex-row space-x-4"
-                          href={`/products/${(item.product as Product)?.slug}`}
+                          href={`/produkty/${(item.product as Product)?.slug}`}
                         >
-                          <div className="relative h-16 w-16 cursor-pointer overflow-hidden rounded-md border border-neutral-300 bg-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+                          <div className="relative h-16 w-16 cursor-pointer overflow-hidden rounded-md border border-neutral-300 bg-neutral-300">
                             {image?.url && (
                               <Image
                                 alt={image?.alt || product?.title || ''}
@@ -130,7 +121,7 @@ export function CartModal() {
                           <div className="flex flex-1 flex-col text-base">
                             <span className="leading-tight">{product?.title}</span>
                             {isVariant && variant ? (
-                              <p className="text-sm text-neutral-500 dark:text-neutral-400 capitalize">
+                              <p className="text-xs text-neutral-500 tracking-widest">
                                 {variant.options
                                   ?.map((option: any) => {
                                     if (typeof option === 'object') return option.label
@@ -163,20 +154,17 @@ export function CartModal() {
               </ul>
 
               <div className="px-4">
-                <div className="py-4 text-sm text-neutral-500 dark:text-neutral-400">
+                <div className="py-4 text-sm text-neutral-500">
                   {typeof cart?.subtotal === 'number' && (
-                    <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1 dark:border-neutral-700">
-                      <p>Total</p>
-                      <Price
-                        amount={cart?.subtotal}
-                        className="text-right text-base text-black dark:text-white"
-                      />
+                    <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1">
+                      <p>Suma</p>
+                      <Price amount={cart?.subtotal} className="text-right text-base text-black" />
                     </div>
                   )}
 
                   <Button asChild>
                     <Link className="w-full" href="/checkout">
-                      Proceed to Checkout
+                      Złóz zamówienie
                     </Link>
                   </Button>
                 </div>

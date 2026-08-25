@@ -89,15 +89,16 @@ export const seed = async ({
 
   // clear the database
   await Promise.all(
-    globals.map((global) =>
-      payload.updateGlobal({
-        slug: 'footer',
-        data: {},
-        depth: 0,
-        context: {
-          disableRevalidate: true,
-        },
-      }),
+    globals.map(
+      (global) =>
+        payload.updateGlobal({
+          slug: 'footer',
+          data: {},
+          depth: 0,
+          context: {
+            disableRevalidate: true,
+          },
+        }),
 
       payload.updateGlobal({
         slug: 'header',
@@ -106,7 +107,7 @@ export const seed = async ({
         context: {
           disableRevalidate: true,
         },
-      })
+      }),
     ),
   )
 
@@ -344,8 +345,8 @@ export const seed = async ({
     collection: 'addresses',
     depth: 0,
     data: {
-      customer: customer.id,
       ...(baseAddressUSData as Address),
+      customer: customer.id,
     },
   })
 
@@ -353,8 +354,8 @@ export const seed = async ({
     collection: 'addresses',
     depth: 0,
     data: {
-      customer: customer.id,
       ...(baseAddressUKData as Address),
+      customer: customer.id,
     },
   })
 

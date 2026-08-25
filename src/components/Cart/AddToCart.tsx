@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button'
 import { useProduct } from '@/providers/ProductProvider'
 import { PopulatedProduct } from '@/utilities/normalizeProduct'
 import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
-import clsx from 'clsx'
 import React, { useCallback, useMemo } from 'react'
 import { toast } from 'sonner'
 
@@ -24,7 +23,7 @@ export function AddToCart({ product }: Props) {
         product: product.id,
         variant: selectedVariant?.id ?? undefined,
       }).then(() => {
-        toast.success('Item added to cart.')
+        toast.success('Produkt dodany do koszyka')
       })
     },
     [addItem, product, selectedVariant],
@@ -75,16 +74,13 @@ export function AddToCart({ product }: Props) {
 
   return (
     <Button
-      aria-label="Add to cart"
+      aria-label="Dodaj do koszyka"
       variant={'outline'}
-      className={clsx({
-        'hover:opacity-90': true,
-      })}
       disabled={disabled || isLoading}
       onClick={addToCart}
       type="submit"
     >
-      Add To Cart
+      Dodaj do koszyka
     </Button>
   )
 }

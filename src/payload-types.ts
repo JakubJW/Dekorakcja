@@ -1070,15 +1070,13 @@ export interface Cart {
  */
 export interface Address {
   id: number;
-  customer?: (number | null) | User;
-  firstName?: string | null;
-  lastName?: string | null;
-  company?: string | null;
-  addressLine1?: string | null;
+  customer: number | User;
+  firstName: string;
+  lastName: string;
+  addressLine1: string;
   addressLine2?: string | null;
-  city?: string | null;
-  state?: string | null;
-  postalCode?: string | null;
+  city: string;
+  postalCode: string;
   country:
     | 'US'
     | 'GB'
@@ -1120,7 +1118,7 @@ export interface Address {
     | 'ES'
     | 'SE'
     | 'CH';
-  phone?: string | null;
+  phone: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -1911,11 +1909,9 @@ export interface AddressesSelect<T extends boolean = true> {
   customer?: T;
   firstName?: T;
   lastName?: T;
-  company?: T;
   addressLine1?: T;
   addressLine2?: T;
   city?: T;
-  state?: T;
   postalCode?: T;
   country?: T;
   phone?: T;

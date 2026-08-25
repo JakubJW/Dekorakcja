@@ -29,14 +29,13 @@ export const AddressItem: React.FC<Props> = ({
         <p className="font-medium">
           {address.firstName} {address.lastName}
         </p>
-        <p>{address.company && <span>{address.company} </span>}</p>
         <p>{address.phone && <span>{address.phone}</span>}</p>
         <p>
           {address.addressLine1}
           {address.addressLine2 && <>, {address.addressLine2}</>}
         </p>
         <p>
-          {address.city}, {address.state} {address.postalCode}
+          {address.city}, {address.postalCode}
         </p>
         <p>{address.country}</p>
       </div>
@@ -51,6 +50,7 @@ export const AddressItem: React.FC<Props> = ({
               {address.id && (
                 <CreateAddressModal
                   addressID={address.id}
+                  //@ts-ignore
                   initialData={address}
                   buttonText={'Edit'}
                   modalTitle={'Edit address'}

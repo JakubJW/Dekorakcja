@@ -15,31 +15,34 @@ import {
   defaultCountries as supportedCountries,
   useAddresses,
 } from '@payloadcms/plugin-ecommerce/client/react'
-import { useImperativeHandle, useMemo } from 'react'
+import { useImperativeHandle } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { FormError } from '../FormError'
 import { FormItem } from '../FormItem'
 
 export type AddressFormValues = {
-  firstName?: string | null
-  lastName?: string | null
-  phone?: string | null
-  addressLine1?: string | null
+  id?: number
+  firstName: string
+  lastName: string
+  phone: string
+  addressLine1: string
   addressLine2?: string | null
-  city?: string | null
-  country?: string
-  postalCode?: string | null
-  submitAddress: boolean
+  city: string
+  country: string
+  postalCode: string
+  submitAddress?: boolean
 }
 
 type Props = {
   existingAddressId?: Config['db']['defaultIDType']
-  initialData?: Omit<Address, 'country' | 'id' | 'updatedAt' | 'createdAt'> & { country?: string }
+  initialData?: Omit<Address, 'country' | 'id' | 'updatedAt' | 'createdAt' | 'customer'> & {
+    country: string
+  }
   allowAddressSave?: boolean
 }
 
 export type FormHandle<T> = {
-  submit: () => Promise<T | null>
+  submit: () => Promise<T | undefined>
 }
 
 export const AddressForm: React.FC<Props> = ({ existingAddressId, initialData }) => {
@@ -49,22 +52,17 @@ export const AddressForm: React.FC<Props> = ({ existingAddressId, initialData })
   } = useCheckoutData()
   const { createAddress, updateAddress } = useAddresses()
 
-  const values = useMemo<AddressFormValues>(
-    () => ({
-      ...initialData,
-      submitAddress: false,
-    }),
-    [initialData],
-  )
-
   const {
     register,
     handleSubmit,
     formState: { errors },
     control,
+    watch,
   } = useForm<AddressFormValues>({
-    values,
+    defaultValues: initialData,
   })
+
+  const country = watch('country')
 
   useImperativeHandle(
     billingFormRef,
@@ -84,7 +82,7 @@ export const AddressForm: React.FC<Props> = ({ existingAddressId, initialData })
 
               resolve(data)
             },
-            () => resolve(null),
+            () => resolve(undefined),
           )()
         }),
     }),
@@ -159,7 +157,7 @@ export const AddressForm: React.FC<Props> = ({ existingAddressId, initialData })
                 onValueChange={field.onChange}
                 value={field.value}
                 required
-                defaultValue={values.country ?? 'PL'}
+                defaultValue={country ?? 'PL'}
               >
                 <SelectTrigger id="country" className="w-full">
                   <SelectValue placeholder="Wybierz kraj" />

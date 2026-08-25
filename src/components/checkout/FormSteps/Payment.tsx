@@ -2,22 +2,25 @@ import { CheckoutForm } from '@/components/forms/CheckoutForm'
 import { Button } from '@/components/ui/button'
 import { cssVariables } from '@/cssVariables'
 import { Elements } from '@stripe/react-stripe-js'
-import Stripe from 'stripe'
+import { loadStripe } from '@stripe/stripe-js'
 import { useCheckoutData } from '../CheckoutDataProvider'
 
-export const Payment = ({ stripe }: { stripe: Promise<Stripe | null> }) => {
+const apiKey = `${process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}`
+const stripe = loadStripe(apiKey)
+
+export const Payment = () => {
   const {
-    error,
     personalData: { email, billingAddress },
     paymentData,
     setProcessingPayment,
     setPaymentData,
   } = useCheckoutData()
 
+  if (!stripe || !paymentData) return <div></div>
+
   return (
     <div className="pb-16">
       <h2 className="font-medium text-2xl mb-6">Płatność</h2>
-      {error && <p>{`Error: ${error}`}</p>}
       <Elements
         stripe={stripe}
         options={{

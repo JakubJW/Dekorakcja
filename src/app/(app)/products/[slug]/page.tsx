@@ -134,7 +134,7 @@ export default async function ProductPage({ params }: Args) {
           <Button asChild variant="ghost" className="mb-4">
             <Link href="/sklep">
               <ChevronLeftIcon />
-              All products
+              Wszystkie produkty
             </Link>
           </Button>
           <div className="flex flex-col gap-12 lg:flex-row lg:gap-8">
