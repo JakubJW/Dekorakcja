@@ -1,5 +1,3 @@
-'use client'
-
 import { FORM_STEP } from '../FormStepProvider'
 import { Payment } from '../FormSteps/Payment'
 import { PersonalDataFormStep } from '../FormSteps/PersonalData'
@@ -25,12 +23,10 @@ export const STEPS: Record<FORM_STEP, StepConfig> = {
 
 export const Stepper = () => {
   return (
-    <div>
-      <ol className="flex w-full justify-between">
-        {STEP_ORDER.map((step, index) => (
-          <Step key={index} label={STEPS[step].label} stepKey={step} index={index} />
-        ))}
-      </ol>
-    </div>
+    <ol className="flex w-full my-8 justify-between">
+      {STEP_ORDER.map((step, index) => (
+        <Step key={index} label={STEPS[step].label} stepKey={step} index={index} />
+      ))}
+    </ol>
   )
 }

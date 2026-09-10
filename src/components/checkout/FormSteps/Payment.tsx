@@ -1,14 +1,15 @@
 import { CheckoutForm } from '@/components/forms/CheckoutForm'
-import { Button } from '@/components/ui/button'
 import { cssVariables } from '@/cssVariables'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import { useCheckoutData } from '../CheckoutDataProvider'
+import { useFormStep } from '../FormStepProvider'
 
 const apiKey = `${process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}`
 const stripe = loadStripe(apiKey)
 
 export const Payment = () => {
+  const { setCurrentStep } = useFormStep()
   const {
     personalData: { email, billingAddress },
     paymentData,
@@ -53,9 +54,6 @@ export const Payment = () => {
             billingAddress={billingAddress}
             setProcessingPayment={setProcessingPayment}
           />
-          <Button variant="ghost" className="self-start" onClick={() => setPaymentData(null)}>
-            Anuluj płatność
-          </Button>
         </div>
       </Elements>
     </div>

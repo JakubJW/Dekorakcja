@@ -1,15 +1,17 @@
+import { useCheckoutData } from '@/components/checkout/CheckoutDataProvider'
+import { FORM_STEP, useFormStep } from '@/components/checkout/FormStepProvider'
 import { Message } from '@/components/Message'
 import { Button } from '@/components/ui/button'
+import { DomainAddress } from '@/features/addresses/domain/types'
 import { useCart, usePayments } from '@payloadcms/plugin-ecommerce/client/react'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { useRouter } from 'next/navigation'
 import React, { FormEvent, useCallback } from 'react'
-import { AddressFormValues } from '../AddressForm'
 
 type Props = {
   customerEmail?: string
-  billingAddress?: AddressFormValues
-  shippingAddress?: AddressFormValues
+  billingAddress?: DomainAddress
+  shippingAddress?: DomainAddress
   setProcessingPayment: (value: boolean) => void
 }
 
@@ -20,6 +22,8 @@ export const CheckoutForm: React.FC<Props> = ({
 }) => {
   const stripe = useStripe()
   const elements = useElements()
+  const { setCurrentStep } = useFormStep()
+  const { setPaymentData } = useCheckoutData()
   const [error, setError] = React.useState<null | string>(null)
   const [isLoading, setIsLoading] = React.useState(false)
   const router = useRouter()
@@ -134,7 +138,17 @@ export const CheckoutForm: React.FC<Props> = ({
       <PaymentElement
         options={{ layout: 'tabs', defaultValues: { billingDetails: { email: customerEmail } } }}
       />
-      <div className="mt-8 flex gap-4">
+      <div className="mt-8 flex justify-between">
+        <Button
+          variant="link"
+          size="clear"
+          onClick={() => {
+            setCurrentStep(FORM_STEP.SHIPPING)
+            setPaymentData(null)
+          }}
+        >
+          Anuluj płatność
+        </Button>
         <Button disabled={!stripe || isLoading} type="submit" variant="default">
           {isLoading ? 'Ładowanie...' : 'Potwierdź płatność'}
         </Button>

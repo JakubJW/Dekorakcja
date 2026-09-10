@@ -17,15 +17,20 @@ export const Step = ({ label, stepKey, index }: StepProps) => {
 
   return (
     <li
-      className={cn('flex gap-2 cursor-pointer', isActive ? ' ' : ' ')}
+      className={cn(
+        'flex items-center flex-1 gap-2 cursor-pointer after:content-[""] after:grow after:h-[4px] after:bg-muted last:after:content-none last:flex-0',
+        isActive ? ' ' : ' ',
+      )}
       onClick={() => setCurrentStep(stepKey)}
     >
-      <div className={cn('rounded-full size-6 relative', isActive ? 'border' : 'bg-muted')}>
+      <div
+        className={cn('rounded-full shrink-0 size-8 relative', isActive ? 'border' : 'bg-muted')}
+      >
         <span className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-sm">
           {index + 1}
         </span>
       </div>
-      <p>{label}</p>
+      <p className="text-sm font-semibold tracking-[0.7]">{label}</p>
     </li>
   )
 }

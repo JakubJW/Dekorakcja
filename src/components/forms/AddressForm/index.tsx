@@ -1,4 +1,3 @@
-import { useCheckoutData } from '@/components/checkout/CheckoutDataProvider'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -9,148 +8,102 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Address, Config } from '@/payload-types'
-import { useAuth } from '@/providers/Auth'
-import {
-  defaultCountries as supportedCountries,
-  useAddresses,
-} from '@payloadcms/plugin-ecommerce/client/react'
-import { useImperativeHandle } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { defaultCountries as supportedCountries } from '@payloadcms/plugin-ecommerce/client/react'
+import { Controller, UseFormReturn } from 'react-hook-form'
 import { FormError } from '../FormError'
 import { FormItem } from '../FormItem'
-
-export type AddressFormValues = {
-  id?: number
-  firstName: string
-  lastName: string
-  phone: string
-  addressLine1: string
-  addressLine2?: string | null
-  city: string
-  country: string
-  postalCode: string
-  submitAddress?: boolean
-}
+import { TCreateAddressFormSchema, TUpdateAddressFormSchema } from './addressFormSchema'
 
 type Props = {
-  existingAddressId?: Config['db']['defaultIDType']
-  initialData?: Omit<Address, 'country' | 'id' | 'updatedAt' | 'createdAt' | 'customer'> & {
-    country: string
-  }
   allowAddressSave?: boolean
+  form: UseFormReturn<TCreateAddressFormSchema | TUpdateAddressFormSchema>
 }
 
 export type FormHandle<T> = {
   submit: () => Promise<T | undefined>
 }
 
-export const AddressForm: React.FC<Props> = ({ existingAddressId, initialData }) => {
-  const { user } = useAuth()
-  const {
-    personalData: { billingFormRef },
-  } = useCheckoutData()
-  const { createAddress, updateAddress } = useAddresses()
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    control,
-    watch,
-  } = useForm<AddressFormValues>({
-    defaultValues: initialData,
-  })
-
-  const country = watch('country')
-
-  useImperativeHandle(
-    billingFormRef,
-    () => ({
-      submit: () =>
-        new Promise((resolve) => {
-          handleSubmit(
-            (data) => {
-              const shouldCreate = data.submitAddress && !existingAddressId
-              const shouldUpdate = data.submitAddress && existingAddressId
-
-              if (shouldCreate) {
-                createAddress(data)
-              } else if (shouldUpdate) {
-                updateAddress(existingAddressId, data)
-              }
-
-              resolve(data)
-            },
-            () => resolve(undefined),
-          )()
-        }),
-    }),
-    [existingAddressId],
-  )
+export const AddressForm: React.FC<Props> = ({ form, allowAddressSave }) => {
+  const country = form.watch('country')
 
   return (
     <form>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-4">
         <FormItem>
           <Label htmlFor="firstName">Imię*</Label>
           <Input
             id="firstName"
             autoComplete="given-name"
-            {...register('firstName', { required: 'Imię jest wymagane.' })}
+            {...form.register('firstName', { required: 'Imię jest wymagane.' })}
           />
-          {errors.firstName && <FormError message={errors.firstName.message} />}
+          {form.formState.errors.firstName && (
+            <FormError message={form.formState.errors.firstName.message} />
+          )}
         </FormItem>
         <FormItem>
           <Label htmlFor="lastName">Nazwisko*</Label>
           <Input
             autoComplete="family-name"
             id="lastName"
-            {...register('lastName', { required: 'Nazwisko jest wymagane.' })}
+            {...form.register('lastName', { required: 'Nazwisko jest wymagane.' })}
           />
-          {errors.lastName && <FormError message={errors.lastName.message} />}
+          {form.formState.errors.lastName && (
+            <FormError message={form.formState.errors.lastName.message} />
+          )}
         </FormItem>
         <FormItem>
           <Label htmlFor="phone">Nr telefonu</Label>
-          <Input type="tel" id="phone" autoComplete="mobile tel" {...register('phone')} />
-          {errors.phone && <FormError message={errors.phone.message} />}
+          <Input type="tel" id="phone" autoComplete="mobile tel" {...form.register('phone')} />
+          {form.formState.errors.phone && (
+            <FormError message={form.formState.errors.phone.message} />
+          )}
         </FormItem>
         <FormItem>
           <Label htmlFor="addressLine1">Ulica*</Label>
           <Input
             id="addressLine1"
             autoComplete="address-line1"
-            {...register('addressLine1', { required: 'Ulica jest wymagana.' })}
+            {...form.register('addressLine1', { required: 'Ulica jest wymagana.' })}
           />
-          {errors.addressLine1 && <FormError message={errors.addressLine1.message} />}
+          {form.formState.errors.addressLine1 && (
+            <FormError message={form.formState.errors.addressLine1.message} />
+          )}
         </FormItem>
         <FormItem>
           <Label htmlFor="addressLine2">Nr domu/mieszkania</Label>
-          <Input id="addressLine2" autoComplete="address-line2" {...register('addressLine2')} />
-          {errors.addressLine2 && <FormError message={errors.addressLine2.message} />}
+          <Input
+            id="addressLine2"
+            autoComplete="address-line2"
+            {...form.register('addressLine2')}
+          />
+          {form.formState.errors.addressLine2 && (
+            <FormError message={form.formState.errors.addressLine2.message} />
+          )}
         </FormItem>
         <FormItem>
           <Label htmlFor="city">Miasto*</Label>
           <Input
             id="city"
             autoComplete="address-level2"
-            {...register('city', { required: 'Miasto jest wymagane.' })}
+            {...form.register('city', { required: 'Miasto jest wymagane.' })}
           />
-          {errors.city && <FormError message={errors.city.message} />}
+          {form.formState.errors.city && <FormError message={form.formState.errors.city.message} />}
         </FormItem>
         <FormItem>
           <Label htmlFor="postalCode">Kod pocztowy*</Label>
           <Input
             id="postalCode"
-            {...register('postalCode', { required: 'Kod pocztowy jest wymagany.' })}
+            {...form.register('postalCode', { required: 'Kod pocztowy jest wymagany.' })}
           />
-          {errors.postalCode && <FormError message={errors.postalCode.message} />}
+          {form.formState.errors.postalCode && (
+            <FormError message={form.formState.errors.postalCode.message} />
+          )}
         </FormItem>
         <FormItem>
           <Label htmlFor="country">Kraj*</Label>
           <Controller
             name="country"
-            control={control}
+            control={form.control}
             rules={{ required: 'Kraj jest wymagany.' }}
             render={({ field }) => (
               <Select
@@ -182,12 +135,14 @@ export const AddressForm: React.FC<Props> = ({ existingAddressId, initialData })
             )}
           />
 
-          {errors.country && <FormError message={errors.country.message} />}
+          {form.formState.errors.country && (
+            <FormError message={form.formState.errors.country.message} />
+          )}
         </FormItem>
-        {user && (
+        {allowAddressSave && (
           <Controller
             name="submitAddress"
-            control={control}
+            control={form.control}
             render={({ field }) => (
               <FormItem className="md:col-span-1 lg:col-span-2">
                 <Label htmlFor="submitAddress">

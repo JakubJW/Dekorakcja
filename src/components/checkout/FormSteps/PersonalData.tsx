@@ -6,14 +6,13 @@ import { useAuth } from '@/providers/Auth'
 import { useCallback } from 'react'
 import { useCheckoutData } from '../CheckoutDataProvider'
 import { FORM_STEP, useFormStep } from '../FormStepProvider'
-import { BillingAddressSection } from '../PersonalData/BillingAddressSection'
+import { BillingAddress } from '../PersonalData/BillingAddress'
 import { EmailField } from '../PersonalData/EmailField'
 import { LoginPrompt } from '../PersonalData/LoginPrompt'
 import { OrganizationSection } from '../PersonalData/organization/OrganizationSection'
 
 export const PersonalDataFormStep = () => {
   const { user } = useAuth()
-
   const {
     paymentData,
     personalData: {
@@ -57,14 +56,14 @@ export const PersonalDataFormStep = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 flex flex-col">
       {!user && <LoginPrompt />}
       {!user && <EmailField />}
-      <BillingAddressSection />
+      <BillingAddress />
       <OrganizationSection />
       {!paymentData && (
         <Button
-          className="self-start"
+          className="self-end"
           onClick={async (e) => {
             e.preventDefault()
             await handleNextStep()
