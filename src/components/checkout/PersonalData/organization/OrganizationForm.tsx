@@ -12,32 +12,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { OrganizationAddress } from '@/payload-types'
+import { DomainOrganizationAddress } from '@/features/addresses/domain/types'
 import { useAuth } from '@/providers/Auth'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { defaultCountries as supportedCountries } from '@payloadcms/plugin-ecommerce/client/react'
 import { Info } from 'lucide-react'
 import { useImperativeHandle } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useCheckoutData } from '../../CheckoutDataProvider'
-
-export type OrganizationFormValues = {
-  nip: string
-  organization: string
-  addressLine1: string
-  addressLine2?: string | null
-  city: string
-  country: string
-  postalCode: string
-  submitOrganizationAddress: boolean
-}
+import { createOrganizationAddressFormSchema } from './organizationAddressFormSchema'
 
 type Props = {
-  initialData?: Omit<
-    OrganizationAddress,
-    'country' | 'id' | 'updatedAt' | 'createdAt' | 'customer'
-  > & {
-    country?: string
-  }
+  initialData?: DomainOrganizationAddress
 }
 
 export const OrganizationForm: React.FC<Props> = ({ initialData }) => {
@@ -46,22 +32,17 @@ export const OrganizationForm: React.FC<Props> = ({ initialData }) => {
   const {
     personalData: { companyFormRef },
   } = useCheckoutData()
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    control,
-    watch,
-  } = useForm<OrganizationFormValues>({
+  const form = useForm({
+    resolver: zodResolver(createOrganizationAddressFormSchema),
     defaultValues: { ...initialData, submitOrganizationAddress: false },
   })
 
-  const country = watch('country')
+  const country = form.watch('country')
 
   useImperativeHandle(companyFormRef, () => ({
     submit: () =>
       new Promise((resolve) => {
-        handleSubmit(
+        form.handleSubmit(
           (data) => resolve(data),
           () => resolve(undefined),
         )()
@@ -83,53 +64,67 @@ export const OrganizationForm: React.FC<Props> = ({ initialData }) => {
             <Input
               id="NIP"
               autoComplete="given-name"
-              {...register('nip', { required: 'NIP jest wymagany.' })}
+              {...form.register('nip', { required: 'NIP jest wymagany.' })}
             />
-            {errors.nip && <FormError message={errors.nip.message} />}
+            {form.formState.errors.nip && <FormError message={form.formState.errors.nip.message} />}
           </FormItem>
           <FormItem>
             <Label htmlFor="organization">Nazwa firmy*</Label>
             <Input
               autoComplete="company"
               id="organization"
-              {...register('organization', { required: 'Last name is required.' })}
+              {...form.register('organization', { required: 'Last name is required.' })}
             />
-            {errors.organization && <FormError message={errors.organization.message} />}
+            {form.formState.errors.organization && (
+              <FormError message={form.formState.errors.organization.message} />
+            )}
           </FormItem>
           <FormItem>
             <Label htmlFor="addressLine1">Ulica*</Label>
             <Input
               id="addressLine1"
               autoComplete="address-line1"
-              {...register('addressLine1', { required: 'Ulica is required.' })}
+              {...form.register('addressLine1', { required: 'Ulica is required.' })}
             />
-            {errors.addressLine1 && <FormError message={errors.addressLine1.message} />}
+            {form.formState.errors.addressLine1 && (
+              <FormError message={form.formState.errors.addressLine1.message} />
+            )}
           </FormItem>
           <FormItem>
             <Label htmlFor="addressLine2">Nr domu/mieszkania</Label>
-            <Input id="addressLine2" autoComplete="address-line2" {...register('addressLine2')} />
-            {errors.addressLine2 && <FormError message={errors.addressLine2.message} />}
+            <Input
+              id="addressLine2"
+              autoComplete="address-line2"
+              {...form.register('addressLine2')}
+            />
+            {form.formState.errors.addressLine2 && (
+              <FormError message={form.formState.errors.addressLine2.message} />
+            )}
           </FormItem>
           <FormItem>
             <Label htmlFor="city">Miasto*</Label>
             <Input
               id="city"
               autoComplete="address-level2"
-              {...register('city', { required: 'City is required.' })}
+              {...form.register('city', { required: 'City is required.' })}
             />
-            {errors.city && <FormError message={errors.city.message} />}
+            {form.formState.errors.city && (
+              <FormError message={form.formState.errors.city.message} />
+            )}
           </FormItem>
           <FormItem>
             <Label htmlFor="postalCode">Kod pocztowy*</Label>
             <Input
               id="postalCode"
-              {...register('postalCode', { required: 'Postal code is required.' })}
+              {...form.register('postalCode', { required: 'Postal code is required.' })}
             />
-            {errors.postalCode && <FormError message={errors.postalCode.message} />}
+            {form.formState.errors.postalCode && (
+              <FormError message={form.formState.errors.postalCode.message} />
+            )}
           </FormItem>
           <Controller
             name="country"
-            control={control}
+            control={form.control}
             render={({ field }) => (
               <FormItem>
                 <Label htmlFor="country">Kraj*</Label>
@@ -150,7 +145,9 @@ export const OrganizationForm: React.FC<Props> = ({ initialData }) => {
                     ))}
                   </SelectContent>
                 </Select>
-                {errors.country && <FormError message={errors.country.message} />}
+                {form.formState.errors.country && (
+                  <FormError message={form.formState.errors.country.message} />
+                )}
               </FormItem>
             )}
           />
@@ -158,7 +155,10 @@ export const OrganizationForm: React.FC<Props> = ({ initialData }) => {
         {user && (
           <FormItem>
             <Label htmlFor="submitOrganizationAddress">
-              <Checkbox id="submitOrganizationAddress" {...register('submitOrganizationAddress')} />
+              <Checkbox
+                id="submitOrganizationAddress"
+                {...form.register('submitOrganizationAddress')}
+              />
               Zapisz adres na moim koncie
             </Label>
           </FormItem>

@@ -1,6 +1,6 @@
 'use client'
 
-import { AddressForm, AddressFormValues } from '@/components/forms/AddressForm'
+// import { AddressFormValues } from '@/components/forms/AddressForm'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -15,20 +15,20 @@ import React, { useState } from 'react'
 
 type Props = {
   addressID?: DefaultDocumentIDType
-  initialData?: AddressFormValues
+  // initialData?: AddressFormValues
   buttonText?: string
   modalTitle?: string
-  callback?: (address: AddressFormValues) => void
+  // callback?: (address: AddressFormValues) => void
   skipSubmission?: boolean
   disabled?: boolean
 }
 
 export const CreateAddressModal: React.FC<Props> = ({
   addressID,
-  initialData,
+  // initialData,
   buttonText = 'Add a new address',
   modalTitle = 'Add a new address',
-  callback,
+  // callback,
   skipSubmission,
   disabled,
 }) => {
@@ -41,13 +41,13 @@ export const CreateAddressModal: React.FC<Props> = ({
     setOpen(false)
   }
 
-  const handleCallback = (data: AddressFormValues) => {
-    closeModal()
+  // const handleCallback = (data: AddressFormValues) => {
+  //   closeModal()
 
-    if (callback) {
-      callback(data)
-    }
-  }
+  //   if (callback) {
+  //     callback(data)
+  //   }
+  // }
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -60,12 +60,12 @@ export const CreateAddressModal: React.FC<Props> = ({
           <DialogDescription>This address will be connected to your account.</DialogDescription>
         </DialogHeader>
 
-        <AddressForm
-          // addressID={addressID}
-          initialData={initialData}
-          // callback={handleCallback}
-          // skipSubmission={skipSubmission}
-        />
+        {/* <AddressForm
+          addressID={addressID}
+          finitialData={initialData}
+          callback={handleCallback}
+          skipSubmission={skipSubmission}
+        /> */}
       </DialogContent>
     </Dialog>
   )

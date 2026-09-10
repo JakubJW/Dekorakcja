@@ -2,6 +2,7 @@
 
 import type { User } from '@/payload-types'
 
+import { useEcommerce } from '@payloadcms/plugin-ecommerce/client/react'
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
 
 // eslint-disable-next-line no-unused-vars
@@ -34,7 +35,7 @@ const Context = createContext({} as AuthContext)
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>()
-
+  const { onLogin, onLogout } = useEcommerce()
   // used to track the single event of logging in or logging out
   // useful for `useEffect` hooks that should only run once
   const [status, setStatus] = useState<'loggedIn' | 'loggedOut' | undefined>()
@@ -58,6 +59,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (errors) throw new Error(errors[0].message)
         setUser(data?.loginUser?.user)
         setStatus('loggedIn')
+        await onLogin()
       } else {
         throw new Error('Invalid login')
       }
@@ -85,6 +87,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (errors) throw new Error(errors[0].message)
         setUser(user)
         setStatus('loggedIn')
+        await onLogin()
         return user
       }
 
@@ -107,6 +110,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (res.ok) {
         setUser(null)
         setStatus('loggedOut')
+        onLogout()
       } else {
         throw new Error('An error occurred while attempting to logout.')
       }

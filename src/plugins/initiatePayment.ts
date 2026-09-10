@@ -83,7 +83,6 @@ export const initiatePayment =
             : {}),
         }
       })
-      const shippingAddressAsString = JSON.stringify(shippingAddressFromData)
       const paymentIntent = await stripe.paymentIntents.create({
         amount,
         automatic_payment_methods: {
@@ -94,7 +93,7 @@ export const initiatePayment =
         metadata: {
           cartID: cart.id,
           cartItemsSnapshot: JSON.stringify(flattenedCart),
-          shippingAddress: shippingAddressAsString,
+          shippingAddress: JSON.stringify(shippingAddressFromData),
         },
       })
       // Create a transaction for the payment intent in the database

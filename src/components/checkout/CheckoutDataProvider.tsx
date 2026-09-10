@@ -1,29 +1,39 @@
 'use client'
 
-import type { Address, OrganizationAddress, ShippingMethod } from '@/payload-types'
+import { DomainAddress, DomainOrganizationAddress } from '@/features/addresses/domain/types'
+import type { ShippingMethod } from '@/payload-types'
 import { createContext, RefObject, useContext, useEffect, useRef, useState } from 'react'
-import { AddressFormValues, FormHandle } from '../forms/AddressForm'
-import type { OrganizationFormValues } from './PersonalData/organization/OrganizationForm'
+import { FormHandle } from '../forms/AddressForm'
+import {
+  TCreateAddressFormSchema,
+  TUpdateAddressFormSchema,
+} from '../forms/AddressForm/addressFormSchema'
+import {
+  TCreateOrganizationAddressFormSchema,
+  TUpdateOrganizationAddressFormSchema,
+} from './PersonalData/organization/organizationAddressFormSchema'
 
 type PersonalDataStep = {
   email?: string
   setEmail: (value: string) => void
   buyAsOrganization: boolean
   setBuyAsOrganization: (value: boolean) => void
-  organizationAddress?: Omit<OrganizationFormValues, 'submitOrganizationAddress'>
-  setOrganizationAddress: (
-    value: Omit<OrganizationFormValues, 'submitOrganizationAddress'> | undefined,
-  ) => void
-  billingAddress?: AddressFormValues
-  setBillingAddress: (value: AddressFormValues | undefined) => void
-  billingFormRef: RefObject<FormHandle<AddressFormValues> | null>
-  companyFormRef: RefObject<FormHandle<OrganizationFormValues> | null>
+  organizationAddress?: DomainOrganizationAddress
+  setOrganizationAddress: (value: DomainOrganizationAddress | undefined) => void
+  billingAddress?: DomainAddress
+  setBillingAddress: (value: DomainAddress | undefined) => void
+  billingFormRef: RefObject<FormHandle<TCreateAddressFormSchema | TUpdateAddressFormSchema> | null>
+  companyFormRef: RefObject<FormHandle<
+    TCreateOrganizationAddressFormSchema | TUpdateOrganizationAddressFormSchema
+  > | null>
 }
 
 type ShippingDataStep = {
   shippingMethods: ShippingMethod[]
-  shippingAddress?: AddressFormValues
-  setShippingAddress: (value: AddressFormValues | undefined) => void
+  shippingMethod?: ShippingMethod
+  setShippingMethod: (value: ShippingMethod) => void
+  shippingAddress?: DomainAddress
+  setShippingAddress: (value: DomainAddress | undefined) => void
   billingAddressSameAsShipping: boolean
   setBillingAddressSameAsShipping: (state: boolean) => void
 }
@@ -46,22 +56,27 @@ export const PaymentDataProvider = ({
   shippingMethods,
 }: {
   children: React.ReactNode
-  addresses: Address[]
-  organizationAddresses: OrganizationAddress[]
+  addresses: DomainAddress[]
+  organizationAddresses: DomainOrganizationAddress[]
   shippingMethods: ShippingMethod[]
 }) => {
   const [email, setEmail] = useState<string | undefined>(undefined)
   const [organizationAddress, setOrganizationAddress] = useState<
-    Omit<OrganizationFormValues, 'submitOrganizationAddress'> | undefined
+    DomainOrganizationAddress | undefined
   >(undefined)
   const [paymentData, setPaymentData] = useState<null | Record<string, unknown>>(null)
-  const [shippingAddress, setShippingAddress] = useState<AddressFormValues | undefined>()
-  const [billingAddress, setBillingAddress] = useState<AddressFormValues | undefined>()
-  const [billingAddressSameAsShipping, setBillingAddressSameAsShipping] = useState(true)
+  const [shippingAddress, setShippingAddress] = useState<DomainAddress | undefined>()
+  const [shippingMethod, setShippingMethod] = useState<ShippingMethod | undefined>()
+  const [billingAddress, setBillingAddress] = useState<DomainAddress | undefined>()
+  const [billingAddressSameAsShipping, setBillingAddressSameAsShipping] = useState(false)
   const [isProcessingPayment, setProcessingPayment] = useState(false)
   const [buyAsOrganization, setBuyAsOrganization] = useState(false)
-  const billingFormRef = useRef<FormHandle<AddressFormValues>>(null)
-  const companyFormRef = useRef<FormHandle<OrganizationFormValues>>(null)
+  const billingFormRef =
+    useRef<FormHandle<TCreateAddressFormSchema | TUpdateAddressFormSchema>>(null)
+  const companyFormRef =
+    useRef<FormHandle<TCreateOrganizationAddressFormSchema | TUpdateOrganizationAddressFormSchema>>(
+      null,
+    )
 
   useEffect(() => {
     if (!billingAddress && addresses.length) {
@@ -100,6 +115,8 @@ export const PaymentDataProvider = ({
         },
         shippingData: {
           shippingMethods,
+          shippingMethod,
+          setShippingMethod,
           billingAddressSameAsShipping,
           setBillingAddressSameAsShipping,
           shippingAddress,

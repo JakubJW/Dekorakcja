@@ -1,4 +1,6 @@
-import { AddressForm } from '@/components/forms/AddressForm'
+import { CreateAddressForm } from '@/components/forms/AddressForm/CreateAddressForm'
+import { UpdateAddressForm } from '@/components/forms/AddressForm/UpdateAddressForm'
+import { Price } from '@/components/Price'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -11,6 +13,7 @@ import {
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { usePayments } from '@payloadcms/plugin-ecommerce/client/react'
+import { ChevronLeft } from 'lucide-react'
 import { useCallback } from 'react'
 import { useCheckoutData } from '../CheckoutDataProvider'
 import { FORM_STEP, useFormStep } from '../FormStepProvider'
@@ -19,6 +22,8 @@ export const Shipping = () => {
   const {
     shippingData: {
       shippingMethods,
+      shippingMethod,
+      setShippingMethod,
       shippingAddress,
       billingAddressSameAsShipping,
       setBillingAddressSameAsShipping,
@@ -71,19 +76,39 @@ export const Shipping = () => {
     setCurrentStep(FORM_STEP.PAYMENT)
   }
 
-  return (
-    <div className="space-y-2">
-      <h2 className="font-medium text-2xl">Sposób dostawy</h2>
+  const handleDeliveryOptionChange = (value: string) => {
+    const selectedMethod = shippingMethods.find((method) => method.slug === value)
 
-      <RadioGroup defaultValue={shippingMethods[0].slug} className="max-w-sm">
+    if (!selectedMethod) return
+    setShippingMethod(selectedMethod)
+    //tutaj prawdopodobnie wolasz funkcje z providera, ktora ustawi w kontekscie checkoutu wybrana metode dostawy
+    //nastepnie z providera zostanie pobrana ta wartosc i powinna sie zaktualizowac cena
+    //potem metoda dostawy powinna zostac wpierdolona do ordera w bazie danych i w matadanych payment intenta w stripe
+    //nie wiem tylko w jakiej formie to przechowac - czy tak samo jak adresy czyli zdenormalizowane wartosci w kolumnach
+    //czy jako jsonb czy jako chuj wie co, foreign key (raczej lipa bo metody dostawy moga sie zmieniac a to powinien byc snapshot ku pamieci)
+
+    //juz widze ze jest lipa, bo w tabeli zamowien jest kolumna subtotal, ktora bierze sie pewnie z koszyka, a my wkoszyku nie mamy
+    //zapisanej opcji delivery
+    //ale w sumie jak masz historie zamowien, to kwota zamowienia jest z wysylka, czy to suma czesciowa i dostawa jest liczona osobno?
+  }
+
+  return (
+    <div className="space-y-6">
+      <h2 className="font-medium text-2xl">Sposób dostawy</h2>
+      <RadioGroup
+        defaultValue={shippingMethod?.slug}
+        onValueChange={(value) => handleDeliveryOptionChange(value)}
+      >
         {shippingMethods.map((method) => (
           <FieldLabel htmlFor={method.slug} key={method.id}>
-            <Field orientation="horizontal">
+            <Field orientation="horizontal" className="cursor-pointer">
               <FieldContent className="flex-row justify-between">
                 <FieldTitle>{method.name}</FieldTitle>
-                <FieldDescription>{method.price}</FieldDescription>
+                <FieldDescription>
+                  <Price as="span" amount={method.price} />
+                </FieldDescription>
               </FieldContent>
-              <RadioGroupItem value={method.slug} id={method.slug} />
+              <RadioGroupItem value={method.slug} id={method.slug} className="hidden" />
             </Field>
           </FieldLabel>
         ))}
@@ -96,16 +121,26 @@ export const Shipping = () => {
         />
         Adres dostawy taki sam, jak adres rozliczeniowy
       </Label>
-      <AddressForm initialData={shippingAddress} />
-      <Button
-        className="self-start"
-        onClick={async (e) => {
-          e.preventDefault()
-          await handleNextStep()
-        }}
-      >
-        Przejdź do płatności
-      </Button>
+      <h2 className="font-medium text-2xl">Adres dostawy</h2>
+      {shippingAddress ? (
+        <UpdateAddressForm initialData={shippingAddress} />
+      ) : (
+        <CreateAddressForm />
+      )}
+      <div className="flex justify-between">
+        <Button variant="link" size="clear" onClick={() => setCurrentStep(FORM_STEP.PERSONAL_DATA)}>
+          <ChevronLeft /> Poprzedni krok
+        </Button>
+        <Button
+          className="self-start"
+          onClick={async (e) => {
+            e.preventDefault()
+            await handleNextStep()
+          }}
+        >
+          Przejdź do płatności
+        </Button>
+      </div>
     </div>
   )
 }

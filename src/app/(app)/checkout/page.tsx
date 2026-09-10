@@ -1,6 +1,7 @@
 import { PaymentDataProvider } from '@/components/checkout/CheckoutDataProvider'
 import { CheckoutPage } from '@/components/checkout/CheckoutPage'
 import { FormStepProvider } from '@/components/checkout/FormStepProvider'
+import { mapAddressToDomain, mapOrganizationAddressToDomain } from '@/features/addresses/mapper'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import configPromise from '@payload-config'
 import type { Metadata } from 'next'
@@ -24,7 +25,7 @@ export default async function Checkout() {
             },
           },
         })
-        .then((res) => res.docs)
+        .then((res) => res.docs.map(mapOrganizationAddressToDomain))
     : []
 
   const shippingMethods = await payload
@@ -46,7 +47,7 @@ export default async function Checkout() {
             },
           },
         })
-        .then((res) => res.docs)
+        .then((res) => res.docs.map(mapAddressToDomain))
     : []
 
   return (

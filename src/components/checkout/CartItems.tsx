@@ -1,9 +1,13 @@
 import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
 import { Media } from '../Media'
 import { Price } from '../Price'
+import { useCheckoutData } from './CheckoutDataProvider'
 
 export const CartItems = () => {
   const { cart } = useCart()
+  const {
+    shippingData: { shippingMethod },
+  } = useCheckoutData()
 
   return (
     <div className="basis-full lg:basis-1/3 lg:pl-8 p-8 bg-[#F8F2F0] flex flex-col gap-8">
@@ -81,9 +85,24 @@ export const CartItems = () => {
         return null
       })}
       <hr />
-      <div className="flex justify-between items-center gap-2">
-        <span className="uppercase">Suma</span>{' '}
-        <Price className="text-3xl font-medium" amount={cart.subtotal || 0} />
+      <div>
+        {shippingMethod && (
+          <div className="flex justify-between items-center gap-2">
+            <span>Dostawa</span>
+            <Price amount={shippingMethod.price || 0} />
+          </div>
+        )}
+        <div className="flex justify-between items-center gap-2">
+          <span>Suma częściowa</span> <Price amount={cart.subtotal || 0} />
+        </div>
+        <hr className="my-4" />
+        <div className="flex justify-between items-center gap-2">
+          <span className="uppercase">Suma</span>{' '}
+          <Price
+            className="text-3xl font-medium"
+            amount={(cart.subtotal || 0) + (shippingMethod?.price || 0)}
+          />
+        </div>
       </div>
     </div>
   )

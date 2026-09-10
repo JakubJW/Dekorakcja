@@ -3,7 +3,7 @@
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
 import Link from 'next/link'
-import React from 'react'
+import React, { Suspense } from 'react'
 import { CartItems } from './CartItems'
 import { useCheckoutData } from './CheckoutDataProvider'
 import { useFormStep } from './FormStepProvider'
@@ -11,7 +11,7 @@ import { Stepper, STEPS } from './Stepper/Stepper'
 
 export const CheckoutPage: React.FC = () => {
   const { cart } = useCart()
-  const { isProcessingPayment, paymentData } = useCheckoutData()
+  const { isProcessingPayment } = useCheckoutData()
   const { currentStep } = useFormStep()
 
   const cartIsEmpty = !cart || !cart.items || !cart.items.length
@@ -39,11 +39,13 @@ export const CheckoutPage: React.FC = () => {
   const CurrentStep = STEPS[currentStep].component
 
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full flex flex-col mb-16">
       <Stepper />
-      <div className="border rounded-xl flex flex-col items-stretch justify-stretch my-8 md:flex-row grow">
+      <div className="border rounded-xl flex flex-col md:flex-row grow items-stretch justify-stretch">
         <div className="basis-full lg:basis-2/3 p-8">
-          <CurrentStep />
+          <Suspense fallback={<div>pizda</div>}>
+            <CurrentStep />
+          </Suspense>
         </div>
         <CartItems />
       </div>
