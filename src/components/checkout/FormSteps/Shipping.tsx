@@ -102,7 +102,7 @@ export const Shipping = () => {
       <h2 className="font-medium text-2xl">Sposób dostawy</h2>
       <InPostGeowidget
         onPointSelect={(point) => console.log(point.name)}
-        token={process.env.INPOST_GEOWIDGET_TOKEN!}
+        token={process.env.NEXT_PUBLIC_INPOST_GEOWIDGET_TOKEN!}
       />
       <RadioGroup
         defaultValue={shippingMethod?.slug}
