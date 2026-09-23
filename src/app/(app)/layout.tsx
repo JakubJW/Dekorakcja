@@ -6,6 +6,7 @@ import { Header } from '@/components/Header'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { Providers } from '@/providers'
 import { Montserrat, Playfair_Display } from 'next/font/google'
+import GeoWidget from '../geo-widget'
 import './globals.css'
 
 /* const { SITE_NAME, TWITTER_CREATOR, TWITTER_SITE } = process.env
@@ -49,6 +50,8 @@ const playfairDisplay = Playfair_Display({
 })
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
+  console.log(process.env.NODE_ENV)
+
   return (
     <html
       className={[playfairDisplay.variable, montserrat.variable].filter(Boolean).join(' ')}
@@ -58,6 +61,14 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       <head>
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+        <link
+          rel="stylesheet"
+          href={
+            process.env.NODE_ENV === 'development'
+              ? 'https://sandbox-easy-geowidget-sdk.easypack24.net/inpost-geowidget.css'
+              : 'https://geowidget.inpost.pl/inpost-geowidget.css'
+          }
+        />
       </head>
       <body>
         <Providers>
@@ -68,6 +79,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           <main>{children}</main>
           <Footer />
         </Providers>
+        <GeoWidget />
       </body>
     </html>
   )
