@@ -5,8 +5,8 @@ import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 
 export const metadata = {
-  description: 'Search for products in the store.',
-  title: 'Shop',
+  description: 'Search for rentables in the store.',
+  title: 'Wypozyczalnia',
 }
 
 type SearchParams = { [key: string]: string | string[] | undefined }
@@ -15,12 +15,12 @@ type Props = {
   searchParams: Promise<SearchParams>
 }
 
-export default async function ShopPage({ searchParams }: Props) {
+export default async function RenatablesPage({ searchParams }: Props) {
   const { q: searchValue, sort, category } = await searchParams
   const payload = await getPayload({ config: configPromise })
 
   const raw = await payload.find({
-    collection: 'products',
+    collection: 'rentables',
     draft: false,
     overrideAccess: false,
     select: {
@@ -34,22 +34,17 @@ export default async function ShopPage({ searchParams }: Props) {
       ? {
           where: {
             and: [
-              {
-                _status: {
-                  equals: 'published',
-                },
-              },
+              // {
+              //   _status: {
+              //     equals: 'published',
+              //   },
+              // },
               ...(searchValue
                 ? [
                     {
                       or: [
                         {
                           title: {
-                            like: searchValue,
-                          },
-                        },
-                        {
-                          description: {
                             like: searchValue,
                           },
                         },
@@ -72,6 +67,8 @@ export default async function ShopPage({ searchParams }: Props) {
       : {}),
   })
 
+  console.log(raw)
+
   const resultsText = raw.docs.length > 1 ? 'results' : 'result'
   const products = raw.docs.map((item) => ({ ...item, gallery: populateGallery(item.gallery) }))
 
@@ -93,7 +90,7 @@ export default async function ShopPage({ searchParams }: Props) {
       {products?.length > 0 ? (
         <Grid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((product) => {
-            return <ProductGridItem key={product.id} product={product} />
+            return <ProductGridItem key={product.id} product={product} path="wypozyczalnia" />
           })}
         </Grid>
       ) : null}

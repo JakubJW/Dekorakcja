@@ -31,7 +31,6 @@ export const initiatePayment =
     if (!currency) {
       throw new Error('Currency is required.')
     }
-    console.log(currency)
     if (!cart || !cart.items || cart.items.length === 0) {
       throw new Error('Cart is empty or not provided.')
     }

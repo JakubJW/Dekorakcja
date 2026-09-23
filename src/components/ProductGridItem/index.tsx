@@ -7,9 +7,10 @@ import React from 'react'
 
 type Props = {
   product: Partial<PopulatedProduct>
+  path: string
 }
 
-export const ProductGridItem: React.FC<Props> = ({ product }) => {
+export const ProductGridItem: React.FC<Props> = ({ product, path }) => {
   const { gallery, priceInPLN, title } = product
 
   let price = priceInPLN
@@ -34,7 +35,7 @@ export const ProductGridItem: React.FC<Props> = ({ product }) => {
   return (
     <Link
       className="relative bg-white flex flex-col h-full w-full group shadow-xs hover:shadow-sm rounded-2xl overflow-hidden"
-      href={`/products/${product.slug}`}
+      href={`/${path}/${product.slug}`}
     >
       {image ? (
         <Media

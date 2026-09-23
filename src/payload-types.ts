@@ -81,6 +81,7 @@ export interface Config {
     occasions: Occasion;
     'organization-addresses': OrganizationAddress;
     'shipping-methods': ShippingMethod;
+    'rent-carts': RentCart;
     forms: Form;
     'form-submissions': FormSubmission;
     addresses: Address;
@@ -120,6 +121,7 @@ export interface Config {
     occasions: OccasionsSelect<false> | OccasionsSelect<true>;
     'organization-addresses': OrganizationAddressesSelect<false> | OrganizationAddressesSelect<true>;
     'shipping-methods': ShippingMethodsSelect<false> | ShippingMethodsSelect<true>;
+    'rent-carts': RentCartsSelect<false> | RentCartsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     addresses: AddressesSelect<false> | AddressesSelect<true>;
@@ -1145,9 +1147,24 @@ export interface OrganizationAddress {
  */
 export interface Inquiry {
   id: number;
-  product: number | Rentable;
-  user: number | User;
-  status?: ('pending' | 'active' | 'completed' | 'cancelled') | null;
+  'rent-cart': number | RentCart;
+  user?: (number | null) | User;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rent-carts".
+ */
+export interface RentCart {
+  id: number;
+  customer?: (number | null) | User;
+  items?:
+    | {
+        rentable?: (number | null) | Rentable;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1294,6 +1311,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'shipping-methods';
         value: number | ShippingMethod;
+      } | null)
+    | ({
+        relationTo: 'rent-carts';
+        value: number | RentCart;
       } | null)
     | ({
         relationTo: 'forms';
@@ -1669,9 +1690,8 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "inquiries_select".
  */
 export interface InquiriesSelect<T extends boolean = true> {
-  product?: T;
+  'rent-cart'?: T;
   user?: T;
-  status?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1749,6 +1769,21 @@ export interface ShippingMethodsSelect<T extends boolean = true> {
   sortOrder?: T;
   generateSlug?: T;
   slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rent-carts_select".
+ */
+export interface RentCartsSelect<T extends boolean = true> {
+  customer?: T;
+  items?:
+    | T
+    | {
+        rentable?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }

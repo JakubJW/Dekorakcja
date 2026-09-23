@@ -13,7 +13,7 @@ export default function ShopLayout({ children }: { children: React.ReactNode }) 
           <div className="flex flex-col md:flex-row md:items-end justify-between">
             <hgroup className="mb-4">
               <h1 className="text-4xl font-medium mb-2">Sklep</h1>
-              <p className="text-sm">Elevate your celebration with our premium decor pieces.</p>
+              <p className="text-sm">Kup jakis topper czy cos ziutek</p>
             </hgroup>
             <Search />
           </div>

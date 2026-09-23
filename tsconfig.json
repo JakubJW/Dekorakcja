@@ -48,7 +48,8 @@
     "redirects.js",
     "next.config.js",
     ".next/dev/types/**/*.ts",
-    "src/plugins/initiatePayment.js"
+    "src/plugins/initiatePayment.js",
+    ".next/dev/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

@@ -20,6 +20,8 @@ import { Media } from './collections/media'
 import { Occasions } from './collections/occasions'
 import { OrganizationAddresses } from './collections/organization-addresses'
 import { Pages } from './collections/pages'
+import { RentCarts } from './collections/rent-carts'
+// import { RentCartsItems } from './collections/rent-carts-items'
 import { Rentables } from './collections/rentables'
 import { ShippingMethods } from './collections/shipping-methods'
 import { Users } from './collections/users'
@@ -57,6 +59,8 @@ export default buildConfig({
     Occasions,
     OrganizationAddresses,
     ShippingMethods,
+    RentCarts,
+    // RentCartsItems,
   ],
   db: postgresAdapter({
     pool: {

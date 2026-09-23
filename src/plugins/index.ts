@@ -14,6 +14,7 @@ import { seoPlugin } from '@payloadcms/plugin-seo'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import { s3Storage } from '@payloadcms/storage-s3'
+import crypto from 'crypto'
 import { Field, NumberField, Plugin } from 'payload'
 import { initiatePayment } from './initiatePayment'
 
@@ -278,4 +279,18 @@ export const plugins: Plugin[] = [
       },
     },
   }),
+  (config) => {
+    const usersCollection = config.collections?.find((c) => c.slug === 'users')
+    const cartField = usersCollection?.fields.find((f) => 'name' in f && f.name === 'cart') as
+      | { where?: Record<string, unknown> }
+      | undefined
+
+    if (cartField) {
+      cartField.where = {
+        purchasedAt: { exists: false },
+      }
+    }
+
+    return config
+  },
 ]

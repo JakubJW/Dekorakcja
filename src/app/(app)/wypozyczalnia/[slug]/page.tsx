@@ -1,7 +1,7 @@
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { ProductGridItem } from '@/components/ProductGridItem'
 import { Gallery } from '@/components/product/Gallery'
-import { ProductDescription } from '@/components/product/ProductDescription'
+import { RentableProductDescription } from '@/components/rentable/RentableProductDescription'
 import { Button } from '@/components/ui/button'
 import { ProductProvider } from '@/providers/ProductProvider'
 import { generateMeta } from '@/utilities/generateMeta'
@@ -27,22 +27,22 @@ const queryProductBySlug = async ({ slug }: { slug: string }) => {
   const payload = await getPayload({ config: configPromise })
 
   const result = await payload.find({
-    collection: 'products',
+    collection: 'rentables',
     depth: 3,
     draft,
     limit: 1,
     overrideAccess: draft,
     pagination: false,
-    where: {
-      and: [
-        {
-          slug: {
-            equals: slug,
-          },
-        },
-        ...(draft ? [] : [{ _status: { equals: 'published' } }]),
-      ],
-    },
+    // where: {
+    //   and: [
+    //     {
+    //       slug: {
+    //         equals: slug,
+    //       },
+    //     },
+    //     ...(draft ? [] : [{ _status: { equals: 'published' } }]),
+    //   ],
+    // },
     populate: {
       variants: {
         title: true,
@@ -108,11 +108,11 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   return generateMeta({
     doc: product,
     fallbackImage: gallery[0].image,
-    robots: { index: product._status === 'published' },
+    // robots: { index: product._status === 'published' },
   })
 }
 
-export default async function ProductPage({ params }: Args) {
+export default async function RentalProductPage({ params }: Args) {
   const { slug } = await params
   const raw = await queryProductBySlug({ slug })
 
@@ -149,7 +149,7 @@ export default async function ProductPage({ params }: Args) {
             </div>
 
             <div className="basis-full lg:basis-1/2">
-              <ProductDescription product={product} />
+              <RentableProductDescription product={product} />
             </div>
           </div>
         </div>
@@ -176,7 +176,7 @@ function RelatedProducts({ products }: { products: PopulatedProduct[] }) {
             className="w-full flex-none min-[475px]:w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5"
             key={product.id}
           >
-            <ProductGridItem product={product} path="products" />
+            <ProductGridItem product={product} path="wypozyczalnia" />
           </li>
         ))}
       </ul>
