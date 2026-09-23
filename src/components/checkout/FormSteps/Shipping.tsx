@@ -14,9 +14,14 @@ import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { usePayments } from '@payloadcms/plugin-ecommerce/client/react'
 import { ChevronLeft } from 'lucide-react'
+import dynamic from 'next/dynamic'
 import { useCallback } from 'react'
 import { useCheckoutData } from '../CheckoutDataProvider'
 import { FORM_STEP, useFormStep } from '../FormStepProvider'
+
+const InPostGeowidget = dynamic(() => import('../../CategoryTabs/InPostGeowidgetInner'), {
+  ssr: false,
+})
 
 export const Shipping = () => {
   const {
@@ -95,6 +100,10 @@ export const Shipping = () => {
   return (
     <div className="space-y-6">
       <h2 className="font-medium text-2xl">Sposób dostawy</h2>
+      <InPostGeowidget
+        onPointSelect={(point) => console.log(point.name)}
+        token={process.env.INPOST_GEOWIDGET_TOKEN!}
+      />
       <RadioGroup
         defaultValue={shippingMethod?.slug}
         onValueChange={(value) => handleDeliveryOptionChange(value)}
