@@ -1,4 +1,5 @@
 'use client'
+
 import { useProduct } from '@/providers/ProductProvider'
 import { PopulatedProduct } from '@/utilities/normalizeProduct'
 import { useMemo } from 'react'

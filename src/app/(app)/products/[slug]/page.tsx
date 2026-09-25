@@ -176,7 +176,7 @@ function RelatedProducts({ products }: { products: PopulatedProduct[] }) {
             className="w-full flex-none min-[475px]:w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5"
             key={product.id}
           >
-            <ProductGridItem product={product} />
+            <ProductGridItem product={product} path="products" />
           </li>
         ))}
       </ul>

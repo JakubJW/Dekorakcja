@@ -81,6 +81,7 @@ export interface Config {
     occasions: Occasion;
     'organization-addresses': OrganizationAddress;
     'shipping-methods': ShippingMethod;
+    'rent-carts': RentCart;
     forms: Form;
     'form-submissions': FormSubmission;
     addresses: Address;
@@ -100,6 +101,7 @@ export interface Config {
     users: {
       orders: 'orders';
       cart: 'carts';
+      rental_cart: 'rent-carts';
       addresses: 'addresses';
       organization_addresses: 'organization-addresses';
     };
@@ -120,6 +122,7 @@ export interface Config {
     occasions: OccasionsSelect<false> | OccasionsSelect<true>;
     'organization-addresses': OrganizationAddressesSelect<false> | OrganizationAddressesSelect<true>;
     'shipping-methods': ShippingMethodsSelect<false> | ShippingMethodsSelect<true>;
+    'rent-carts': RentCartsSelect<false> | RentCartsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     addresses: AddressesSelect<false> | AddressesSelect<true>;
@@ -206,6 +209,11 @@ export interface User {
   };
   cart?: {
     docs?: (number | Cart)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  rental_cart?: {
+    docs?: (number | RentCart)[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
@@ -1066,6 +1074,72 @@ export interface Cart {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rent-carts".
+ */
+export interface RentCart {
+  id: number;
+  customer?: (number | null) | User;
+  items?:
+    | {
+        rentable?: (number | null) | Rentable;
+        id?: string | null;
+      }[]
+    | null;
+  secret?: string | null;
+  submittedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rentables".
+ */
+export interface Rentable {
+  id: number;
+  title: string;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  gallery?:
+    | {
+        image: number | Media;
+        variantOption?: (number | null) | VariantOption;
+        id?: string | null;
+      }[]
+    | null;
+  layout?: (CallToActionBlock | ContentBlock | MediaBlock)[] | null;
+  relatedProducts?: (number | Product)[] | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
+  categories?: (number | Category)[] | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "addresses".
  */
 export interface Address {
@@ -1145,57 +1219,8 @@ export interface OrganizationAddress {
  */
 export interface Inquiry {
   id: number;
-  product: number | Rentable;
-  user: number | User;
-  status?: ('pending' | 'active' | 'completed' | 'cancelled') | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "rentables".
- */
-export interface Rentable {
-  id: number;
-  title: string;
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  gallery?:
-    | {
-        image: number | Media;
-        variantOption?: (number | null) | VariantOption;
-        id?: string | null;
-      }[]
-    | null;
-  layout?: (CallToActionBlock | ContentBlock | MediaBlock)[] | null;
-  relatedProducts?: (number | Product)[] | null;
-  meta?: {
-    title?: string | null;
-    /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
-     */
-    image?: (number | null) | Media;
-    description?: string | null;
-  };
-  categories?: (number | Category)[] | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
+  'rent-cart': number | RentCart;
+  user?: (number | null) | User;
   updatedAt: string;
   createdAt: string;
 }
@@ -1296,6 +1321,10 @@ export interface PayloadLockedDocument {
         value: number | ShippingMethod;
       } | null)
     | ({
+        relationTo: 'rent-carts';
+        value: number | RentCart;
+      } | null)
+    | ({
         relationTo: 'forms';
         value: number | Form;
       } | null)
@@ -1386,6 +1415,7 @@ export interface UsersSelect<T extends boolean = true> {
   roles?: T;
   orders?: T;
   cart?: T;
+  rental_cart?: T;
   addresses?: T;
   organization_addresses?: T;
   updatedAt?: T;
@@ -1669,9 +1699,8 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "inquiries_select".
  */
 export interface InquiriesSelect<T extends boolean = true> {
-  product?: T;
+  'rent-cart'?: T;
   user?: T;
-  status?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1749,6 +1778,23 @@ export interface ShippingMethodsSelect<T extends boolean = true> {
   sortOrder?: T;
   generateSlug?: T;
   slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rent-carts_select".
+ */
+export interface RentCartsSelect<T extends boolean = true> {
+  customer?: T;
+  items?:
+    | T
+    | {
+        rentable?: T;
+        id?: T;
+      };
+  secret?: T;
+  submittedAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }

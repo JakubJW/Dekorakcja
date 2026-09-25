@@ -20,7 +20,7 @@ export function ProductDescription({ product }: { product: PopulatedProduct }) {
       {product.description ? (
         <RichText className="" data={product.description} enableGutter={false} />
       ) : null}
-      {product.variants.length && (
+      {product.variants.length > 0 && (
         <Suspense fallback={null}>
           <VariantSelector product={product} />
         </Suspense>

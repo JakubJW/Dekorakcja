@@ -3,6 +3,7 @@ import { SonnerProvider } from '@/providers/Sonner'
 import { EcommerceProvider } from '@payloadcms/plugin-ecommerce/client/react'
 import { stripeAdapterClient } from '@payloadcms/plugin-ecommerce/payments/stripe'
 import React from 'react'
+import { RentalCartProvider } from './RentalCartProvider'
 
 export const Providers: React.FC<{
   children: React.ReactNode
@@ -45,7 +46,9 @@ export const Providers: React.FC<{
       ]}
     >
       <SonnerProvider />
-      <AuthProvider>{children}</AuthProvider>
+      <AuthProvider>
+        <RentalCartProvider>{children}</RentalCartProvider>
+      </AuthProvider>
     </EcommerceProvider>
   )
 }

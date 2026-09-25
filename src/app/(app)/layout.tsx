@@ -49,9 +49,7 @@ const playfairDisplay = Playfair_Display({
   display: 'swap',
 })
 
-export default async function RootLayout({ children }: { children: ReactNode }) {
-  console.log(process.env.NODE_ENV)
-
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       className={[playfairDisplay.variable, montserrat.variable].filter(Boolean).join(' ')}

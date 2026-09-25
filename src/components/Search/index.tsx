@@ -9,9 +9,10 @@ import { Input } from '../ui/input'
 
 type Props = {
   className?: string
+  path: string
 }
 
-export const Search: React.FC<Props> = ({ className }) => {
+export const Search: React.FC<Props> = ({ path, className }) => {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -28,7 +29,7 @@ export const Search: React.FC<Props> = ({ className }) => {
       newParams.delete('q')
     }
 
-    router.push(createUrl('/sklep', newParams))
+    router.push(createUrl(path, newParams))
   }
 
   return (

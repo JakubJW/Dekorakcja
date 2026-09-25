@@ -1,102 +1,55 @@
 import { Grid } from '@/components/Grid'
-import { ProductGridItem } from '@/components/ProductGridItem'
-import { populateGallery } from '@/utilities/normalizeProduct'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
+import { Categories } from '@/components/layout/search/Categories'
+import { FilterList } from '@/components/layout/search/filter/FilterList'
+import { Search } from '@/components/Search'
+import { RentablesList } from '@/features/rent/components/rentables-list'
+import { sorting } from '@/lib/constants'
+import { SearchParams } from '@/shared/types'
+import { Suspense } from 'react'
 
 export const metadata = {
-  description: 'Search for products in the store.',
-  title: 'Shop',
+  description: 'Search for rentables in the store.',
+  title: 'Wypozyczalnia',
 }
 
-type SearchParams = { [key: string]: string | string[] | undefined }
-
-type Props = {
-  searchParams: Promise<SearchParams>
-}
-
-export default async function ShopPage({ searchParams }: Props) {
-  const { q: searchValue, sort, category } = await searchParams
-  const payload = await getPayload({ config: configPromise })
-
-  const raw = await payload.find({
-    collection: 'products',
-    draft: false,
-    overrideAccess: false,
-    select: {
-      title: true,
-      slug: true,
-      gallery: true,
-      priceInPLN: true,
-    },
-    ...(sort ? { sort } : { sort: 'title' }),
-    ...(searchValue || category
-      ? {
-          where: {
-            and: [
-              {
-                _status: {
-                  equals: 'published',
-                },
-              },
-              ...(searchValue
-                ? [
-                    {
-                      or: [
-                        {
-                          title: {
-                            like: searchValue,
-                          },
-                        },
-                        {
-                          description: {
-                            like: searchValue,
-                          },
-                        },
-                      ],
-                    },
-                  ]
-                : []),
-              ...(category
-                ? [
-                    {
-                      categories: {
-                        contains: category,
-                      },
-                    },
-                  ]
-                : []),
-            ],
-          },
-        }
-      : {}),
-  })
-
-  const resultsText = raw.docs.length > 1 ? 'results' : 'result'
-  const products = raw.docs.map((item) => ({ ...item, gallery: populateGallery(item.gallery) }))
-
+export default function RentablesPage({ searchParams }: SearchParams) {
   return (
-    <div>
-      {searchValue ? (
-        <p className="mb-4">
-          {products.length === 0
-            ? 'There are no products that match '
-            : `Showing ${products.length} ${resultsText} for `}
-          <span className="font-bold">&quot;{searchValue}&quot;</span>
-        </p>
-      ) : null}
+    <section className="py-16">
+      <div className="container flex flex-col gap-4 md:gap-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between">
+          <hgroup className="mb-4">
+            <h1 className="text-4xl font-medium mb-2">Wypożyczalnia</h1>
+            <p className="text-sm">Wypożycz sobie cos fajnego na sluba</p>
+          </hgroup>
+          <Suspense fallback={<div>wyszukiwarka</div>}>
+            <Search path="/wypozyczalnia" />
+          </Suspense>
+        </div>
 
-      {!searchValue && products?.length === 0 && (
-        <p className="mb-4">No products found. Please try different filters.</p>
-      )}
-
-      {products?.length > 0 ? (
-        <Grid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product) => {
-            return <ProductGridItem key={product.id} product={product} />
-          })}
-        </Grid>
-      ) : null}
-    </div>
+        <div className="flex flex-col md:flex-row items-start justify-between gap-16 md:gap-4">
+          <div className="w-full flex-none flex flex-col gap-4 md:gap-8 basis-1/5">
+            <Suspense fallback={<div>filtry</div>}>
+              <FilterList list={sorting} />
+            </Suspense>
+            <Suspense fallback={<div>kategorie</div>}>
+              <Categories />
+            </Suspense>
+          </div>
+          <Suspense
+            fallback={
+              <Grid className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 min-h-screen w-full">
+                {Array(12)
+                  .fill(0)
+                  .map((_, index) => {
+                    return <div className="animate-pulse bg-neutral-100 rounded-2xl" key={index} />
+                  })}
+              </Grid>
+            }
+          >
+            <RentablesList searchParams={searchParams} />
+          </Suspense>
+        </div>
+      </div>
+    </section>
   )
 }

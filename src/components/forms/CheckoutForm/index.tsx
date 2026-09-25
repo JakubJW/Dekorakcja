@@ -3,7 +3,7 @@ import { FORM_STEP, useFormStep } from '@/components/checkout/FormStepProvider'
 import { Message } from '@/components/Message'
 import { Button } from '@/components/ui/button'
 import { DomainAddress } from '@/features/addresses/domain/types'
-import { useCart, usePayments } from '@payloadcms/plugin-ecommerce/client/react'
+import { useEcommerce, usePayments } from '@payloadcms/plugin-ecommerce/client/react'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { useRouter } from 'next/navigation'
 import React, { FormEvent, useCallback } from 'react'
@@ -27,8 +27,8 @@ export const CheckoutForm: React.FC<Props> = ({
   const [error, setError] = React.useState<null | string>(null)
   const [isLoading, setIsLoading] = React.useState(false)
   const router = useRouter()
-  const { clearCart } = useCart()
   const { confirmOrder } = usePayments()
+  const { clearSession } = useEcommerce()
 
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
@@ -92,7 +92,7 @@ export const CheckoutForm: React.FC<Props> = ({
               const redirectUrl = `/zamowienia/${confirmResult.orderID}${queryString ? `?${queryString}` : ''}`
 
               // Clear the cart after successful payment
-              clearCart()
+              clearSession()
 
               // Redirect to order confirmation page
               router.push(redirectUrl)
@@ -127,7 +127,7 @@ export const CheckoutForm: React.FC<Props> = ({
       billingAddress?.postalCode,
       billingAddress?.country,
       confirmOrder,
-      clearCart,
+      clearSession,
       router,
     ],
   )

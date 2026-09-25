@@ -4,7 +4,6 @@ import { DefaultDocumentIDType } from 'payload'
 export const NumberedListsBlock: React.FC<
   NumberedListsBlockProps & { id: DefaultDocumentIDType }
 > = ({ lists }) => {
-  console.log(lists)
   if (!lists?.length) return null
 
   return (

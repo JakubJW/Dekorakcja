@@ -3,12 +3,11 @@
 import { Toaster } from 'sonner'
 
 export const SonnerProvider = ({ children }: { children?: React.ReactNode }) => {
-
   return (
     <>
       {children}
 
-      <Toaster richColors position="bottom-left" />
+      <Toaster richColors position="top-left" />
     </>
   )
 }

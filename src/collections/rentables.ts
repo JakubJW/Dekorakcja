@@ -1,3 +1,4 @@
+import { adminOnly } from '@/access/adminOnly'
 import { CallToAction } from '@/blocks/CallToAction/config'
 import { Content } from '@/blocks/Content/config'
 import { MediaBlock } from '@/blocks/MediaBlock/config'
@@ -23,6 +24,12 @@ export const Rentables: CollectionConfig = {
   labels: {
     singular: 'Produkt',
     plural: 'Produkty',
+  },
+  access: {
+    create: adminOnly,
+    delete: adminOnly,
+    read: () => true,
+    update: adminOnly,
   },
   admin: {
     group: 'Wypożyczalnia',
