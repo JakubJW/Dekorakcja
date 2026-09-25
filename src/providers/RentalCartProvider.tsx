@@ -9,7 +9,7 @@ type RentalCartContextValue = {
   isLoading: boolean
   addItem: (productID: number, quantity?: number) => Promise<void>
   removeItem: (itemID: string) => Promise<void>
-  submitInquiry: (data: InquiryFormData) => Promise<RentCart>
+  submitInquiry: (data: any) => Promise<RentCart>
   resetRentalCart: () => void
 }
 
@@ -109,7 +109,7 @@ export const RentalCartProvider = ({ children }: { children: React.ReactNode }) 
   )
 
   const submitInquiry = useCallback(
-    async (formData: InquiryFormData) => {
+    async (formData: any) => {
       if (!rentalCart) throw new Error('Brak koszyka do wysłania')
       const res = await fetch('/next/rental-cart/submit', {
         method: 'POST',
