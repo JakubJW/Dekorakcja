@@ -39,5 +39,7 @@ export const RentCarts: CollectionConfig = {
         },
       ],
     },
+    { name: 'secret', type: 'text' },
+    { name: 'submittedAt', type: 'date' },
   ],
 }

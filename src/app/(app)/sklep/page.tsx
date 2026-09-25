@@ -1,74 +1,17 @@
 import { Grid } from '@/components/Grid'
 import { ProductGridItem } from '@/components/ProductGridItem'
-import { populateGallery } from '@/utilities/normalizeProduct'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
+import { getProductsList } from '@/features/shop/queries'
+import { SearchParams } from '@/shared/types'
 
 export const metadata = {
   description: 'Search for products in the store.',
-  title: 'Shop',
+  title: 'Sklep | Dekorakcja',
 }
 
-type SearchParams = { [key: string]: string | string[] | undefined }
-
-type Props = {
-  searchParams: Promise<SearchParams>
-}
-
-export default async function ShopPage({ searchParams }: Props) {
+export default async function ShopPage({ searchParams }: SearchParams) {
   const { q: searchValue, sort, okazja } = await searchParams
-  const payload = await getPayload({ config: configPromise })
+  const products = await getProductsList({ searchValue, sort, occasion: okazja })
 
-  const raw = await payload.find({
-    collection: 'products',
-    draft: false,
-    overrideAccess: false,
-    select: {
-      title: true,
-      slug: true,
-      gallery: true,
-      occasions: true,
-      priceInPLN: true,
-    },
-    ...(sort ? { sort } : { sort: 'title' }),
-    ...(searchValue || okazja
-      ? {
-          where: {
-            and: [
-              {
-                _status: {
-                  equals: 'published',
-                },
-              },
-              ...(searchValue
-                ? [
-                    {
-                      or: [
-                        {
-                          title: {
-                            like: searchValue,
-                          },
-                        },
-                      ],
-                    },
-                  ]
-                : []),
-              ...(okazja
-                ? [
-                    {
-                      occasions: {
-                        contains: okazja,
-                      },
-                    },
-                  ]
-                : []),
-            ],
-          },
-        }
-      : {}),
-  })
-
-  const products = raw.docs.map((doc) => ({ ...doc, gallery: populateGallery(doc.gallery) }))
   const resultsText = products.length > 1 ? 'results' : 'result'
 
   return (

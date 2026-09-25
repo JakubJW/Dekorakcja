@@ -1,29 +1,29 @@
-'use client'
-
-import type { CartItem } from '@/components/Cart'
 import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
 import clsx from 'clsx'
 import { XIcon } from 'lucide-react'
 import React from 'react'
 
-export function DeleteItemButton({ item }: { item: CartItem }) {
+export function DeleteItemButton({
+  removeItemHandler,
+}: {
+  removeItemHandler: () => Promise<void>
+}) {
   const { isLoading, removeItem } = useCart()
-  const itemId = item.id
 
   return (
     <form>
       <button
         aria-label="Remove cart item"
         className={clsx(
-          'ease hover:cursor-pointer flex h-[17px] w-[17px] items-center justify-center rounded-full bg-neutral-500 transition-all duration-200',
+          'ease hover:cursor-pointer flex size-4 items-center justify-center rounded-full bg-neutral-500 transition-all duration-200',
           {
-            'cursor-not-allowed px-0': !itemId || isLoading,
+            'cursor-not-allowed px-0': isLoading,
           },
         )}
-        disabled={!itemId || isLoading}
-        onClick={(e: React.FormEvent<HTMLButtonElement>) => {
+        disabled={isLoading}
+        onClick={async (e: React.FormEvent<HTMLButtonElement>) => {
           e.preventDefault()
-          if (itemId) removeItem(itemId)
+          await removeItemHandler()
         }}
         type="button"
       >

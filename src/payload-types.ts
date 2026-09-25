@@ -101,6 +101,7 @@ export interface Config {
     users: {
       orders: 'orders';
       cart: 'carts';
+      rental_cart: 'rent-carts';
       addresses: 'addresses';
       organization_addresses: 'organization-addresses';
     };
@@ -208,6 +209,11 @@ export interface User {
   };
   cart?: {
     docs?: (number | Cart)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  rental_cart?: {
+    docs?: (number | RentCart)[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
@@ -1068,6 +1074,72 @@ export interface Cart {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rent-carts".
+ */
+export interface RentCart {
+  id: number;
+  customer?: (number | null) | User;
+  items?:
+    | {
+        rentable?: (number | null) | Rentable;
+        id?: string | null;
+      }[]
+    | null;
+  secret?: string | null;
+  submittedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rentables".
+ */
+export interface Rentable {
+  id: number;
+  title: string;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  gallery?:
+    | {
+        image: number | Media;
+        variantOption?: (number | null) | VariantOption;
+        id?: string | null;
+      }[]
+    | null;
+  layout?: (CallToActionBlock | ContentBlock | MediaBlock)[] | null;
+  relatedProducts?: (number | Product)[] | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
+  categories?: (number | Category)[] | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "addresses".
  */
 export interface Address {
@@ -1149,70 +1221,6 @@ export interface Inquiry {
   id: number;
   'rent-cart': number | RentCart;
   user?: (number | null) | User;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "rent-carts".
- */
-export interface RentCart {
-  id: number;
-  customer?: (number | null) | User;
-  items?:
-    | {
-        rentable?: (number | null) | Rentable;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "rentables".
- */
-export interface Rentable {
-  id: number;
-  title: string;
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  gallery?:
-    | {
-        image: number | Media;
-        variantOption?: (number | null) | VariantOption;
-        id?: string | null;
-      }[]
-    | null;
-  layout?: (CallToActionBlock | ContentBlock | MediaBlock)[] | null;
-  relatedProducts?: (number | Product)[] | null;
-  meta?: {
-    title?: string | null;
-    /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
-     */
-    image?: (number | null) | Media;
-    description?: string | null;
-  };
-  categories?: (number | Category)[] | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -1407,6 +1415,7 @@ export interface UsersSelect<T extends boolean = true> {
   roles?: T;
   orders?: T;
   cart?: T;
+  rental_cart?: T;
   addresses?: T;
   organization_addresses?: T;
   updatedAt?: T;
@@ -1784,6 +1793,8 @@ export interface RentCartsSelect<T extends boolean = true> {
         rentable?: T;
         id?: T;
       };
+  secret?: T;
+  submittedAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }

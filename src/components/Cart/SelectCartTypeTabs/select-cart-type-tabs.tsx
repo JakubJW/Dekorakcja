@@ -1,21 +1,29 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { RentalCartTab } from './rental-cart-tab'
 import { ShopCartTab } from './shop-cart-tab'
 
-export const SelectCartTypeTabs = () => {
+type Props = {
+  rentalCartQuantity: number
+  cartQuantity: number
+}
+
+export const SelectCartTypeTabs = ({ rentalCartQuantity, cartQuantity }: Props) => {
   return (
     <Tabs defaultValue="shop">
       <TabsList className="w-full">
         <TabsTrigger value="shop" className="flex-1">
-          Sklep
+          Sklep {cartQuantity > 0 && <>({cartQuantity})</>}
         </TabsTrigger>
         <TabsTrigger value="rent" className="flex-1">
-          Wypoyzczalnia
+          Wypożyczalnia {rentalCartQuantity > 0 && <>({rentalCartQuantity})</>}
         </TabsTrigger>
       </TabsList>
       <TabsContent value="shop">
         <ShopCartTab />
       </TabsContent>
-      <TabsContent value="rent"></TabsContent>
+      <TabsContent value="rent">
+        <RentalCartTab />
+      </TabsContent>
     </Tabs>
   )
 }

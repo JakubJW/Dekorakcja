@@ -33,7 +33,7 @@ export function RentableProductDescription({ product }: { product: PopulatedProd
         <Suspense fallback={null}>
           <Button
             onClick={() => {
-              addItem()
+              addItem(product.id)
               toast('Dodano do zapytania')
             }}
           >

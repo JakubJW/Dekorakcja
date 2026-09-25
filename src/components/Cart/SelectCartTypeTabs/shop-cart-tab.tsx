@@ -10,7 +10,7 @@ import { DeleteItemButton } from '../DeleteItemButton'
 import { EditItemQuantityButton } from '../EditItemQuantityButton'
 
 export const ShopCartTab = () => {
-  const { cart } = useCart()
+  const { cart, removeItem } = useCart()
 
   return (
     <>
@@ -27,7 +27,11 @@ export const ShopCartTab = () => {
                   <li className="flex w-full flex-col" key={i}>
                     <div className="relative flex w-full flex-row justify-between py-4">
                       <div className="absolute z-40 -mt-2 ml-[55px]">
-                        <DeleteItemButton item={item} />
+                        <DeleteItemButton
+                          removeItemHandler={async () => {
+                            if (item.id) await removeItem(item.id)
+                          }}
+                        />
                       </div>
                       <Link
                         className="z-30 flex flex-row space-x-4"

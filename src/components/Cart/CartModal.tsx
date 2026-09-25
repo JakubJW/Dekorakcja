@@ -10,7 +10,7 @@ import { SelectCartTypeTabs } from './SelectCartTypeTabs/select-cart-type-tabs'
 
 export function CartModal() {
   const { cart } = useCart()
-  const { items } = useRentalCart()
+  const { rentalCart } = useRentalCart()
   const [isOpen, setIsOpen] = useState(false)
 
   const pathname = usePathname()
@@ -19,10 +19,16 @@ export function CartModal() {
     setIsOpen(false)
   }, [pathname])
 
+  const cartQuantity = useMemo(
+    () => cart?.items?.reduce((sum, item) => sum + (item.quantity || 0), 0) ?? 0,
+    [cart],
+  )
+  const rentalQuantity = useMemo(() => rentalCart?.items?.length ?? 0, [rentalCart])
+
   const totalQuantity = useMemo(() => {
-    if (!cart || !cart.items || !cart.items.length) return undefined
-    return cart.items.reduce((quantity, item) => (item.quantity || 0) + quantity + items, 0)
-  }, [cart, items])
+    const total = cartQuantity + rentalQuantity
+    return total > 0 ? total : undefined
+  }, [cartQuantity, rentalCart])
 
   return (
     <Sheet onOpenChange={setIsOpen} open={isOpen}>
@@ -35,7 +41,7 @@ export function CartModal() {
           <SheetTitle className="font-sans">Koszyk</SheetTitle>
         </SheetHeader>
 
-        <SelectCartTypeTabs />
+        <SelectCartTypeTabs cartQuantity={cartQuantity} rentalCartQuantity={rentalQuantity} />
       </SheetContent>
     </Sheet>
   )

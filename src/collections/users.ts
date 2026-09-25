@@ -80,6 +80,19 @@ export const Users: CollectionConfig = {
       },
     },
     {
+      name: 'rental_cart',
+      type: 'join',
+      collection: 'rent-carts',
+      on: 'customer',
+      admin: {
+        allowCreate: false,
+        defaultColumns: ['id', 'createdAt', 'items'],
+      },
+      where: {
+        submittedAt: { exists: false },
+      },
+    },
+    {
       name: 'addresses',
       type: 'join',
       collection: 'addresses',
