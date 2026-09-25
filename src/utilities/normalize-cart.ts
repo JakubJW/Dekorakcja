@@ -1,4 +1,4 @@
-import { Cart, Product, Variant } from '@/payload-types'
+import { Cart, Media, Product, Variant } from '@/payload-types'
 import { populateGallery } from './normalizeProduct'
 const isPopulated = <T>(value: T | number | null | undefined): value is T =>
   typeof value === 'object' && value !== null
@@ -8,12 +8,9 @@ type PopulatedCartItem = {
   slug?: string
   title: string
   isVariant: boolean
-  variantOptions: { label: string }[]
-  image: {
-    url: string
-    alt?: string
-  }
-  price: number
+  variantOptions: Array<string | undefined> | undefined
+  image?: Media
+  price?: number | null
   quantity: number
 }
 
@@ -77,6 +74,13 @@ export const normalizeCartItems = (items: Cart['items']): PopulatedCartItem[] =>
     isVariant: Boolean(item.variant),
     price: populatePrice(item),
     quantity: item.quantity,
-    variantOptions: typeof item.variant === 'object' ? item.variant?.options : undefined,
+    variantOptions:
+      typeof item.variant === 'object'
+        ? typeof item.variant?.options === 'object'
+          ? item.variant.options.map((option) =>
+              typeof option === 'object' ? option.label : undefined,
+            )
+          : undefined
+        : undefined,
   }))
 }
