@@ -100,10 +100,6 @@ export const Shipping = () => {
   return (
     <div className="space-y-6">
       <h2 className="font-medium text-2xl">Sposób dostawy</h2>
-      <InPostGeowidget
-        onPointSelect={(point) => console.log(point.name)}
-        token={process.env.NEXT_PUBLIC_INPOST_GEOWIDGET_TOKEN!}
-      />
       <RadioGroup
         defaultValue={shippingMethod?.slug}
         onValueChange={(value) => handleDeliveryOptionChange(value)}
@@ -122,25 +118,36 @@ export const Shipping = () => {
           </FieldLabel>
         ))}
       </RadioGroup>
-      <Label htmlFor="billingAddressSameAsShipping">
-        <Checkbox
-          id="billingAddressSameAsShipping"
-          onCheckedChange={(val: boolean) => handleBillingAddressSameAsShipping(val)}
-          checked={billingAddressSameAsShipping}
+      {shippingMethod?.slug === 'paczkomat-inpost' && (
+        <InPostGeowidget
+          onPointSelect={(point) => console.log(point.name)}
+          token={process.env.NEXT_PUBLIC_INPOST_GEOWIDGET_TOKEN!}
         />
-        Adres dostawy taki sam, jak adres rozliczeniowy
-      </Label>
-      <h2 className="font-medium text-2xl">Adres dostawy</h2>
-      {shippingAddress ? (
-        <UpdateAddressForm initialData={shippingAddress} />
-      ) : (
-        <CreateAddressForm />
+      )}
+      {shippingMethod?.type === 'courier' && (
+        <>
+          <Label htmlFor="billingAddressSameAsShipping">
+            <Checkbox
+              id="billingAddressSameAsShipping"
+              onCheckedChange={(val: boolean) => handleBillingAddressSameAsShipping(val)}
+              checked={billingAddressSameAsShipping}
+            />
+            Adres dostawy taki sam, jak adres rozliczeniowy
+          </Label>
+          <h2 className="font-medium text-2xl">Adres dostawy</h2>
+          {shippingAddress ? (
+            <UpdateAddressForm initialData={shippingAddress} />
+          ) : (
+            <CreateAddressForm />
+          )}
+        </>
       )}
       <div className="flex justify-between">
         <Button variant="link" size="clear" onClick={() => setCurrentStep(FORM_STEP.PERSONAL_DATA)}>
           <ChevronLeft /> Poprzedni krok
         </Button>
         <Button
+          disabled={!shippingMethod}
           className="self-start"
           onClick={async (e) => {
             e.preventDefault()

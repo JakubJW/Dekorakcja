@@ -63,7 +63,7 @@ export const RentalCartTab = () => {
 
             <div className="py-4 text-sm text-neutral-500">
               <Button asChild>
-                <Link className="w-full" href="/checkout">
+                <Link className="w-full" href="/zapytanie">
                   Złóz zapytanie
                 </Link>
               </Button>
