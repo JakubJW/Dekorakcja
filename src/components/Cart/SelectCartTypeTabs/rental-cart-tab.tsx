@@ -14,63 +14,54 @@ export const RentalCartTab = () => {
     await removeItem(id)
   }
 
+  if (!rentalCart || !rentalCart.items) return <CartEmpty />
+
   return (
-    <>
-      {!rentalCart || !rentalCart.items ? (
-        <CartEmpty />
-      ) : (
-        <div className="grow flex">
-          <div className="flex flex-col justify-between w-full">
-            <ul className="grow overflow-auto py-4">
-              {normalizeRentalCartItems(rentalCart.items).map((item, i) => {
-                if (!item || !item.slug) return <React.Fragment key={i} />
+    <div className="flex flex-col h-full justify-between w-full">
+      <ul className="grow overflow-auto py-4">
+        {normalizeRentalCartItems(rentalCart.items).map((item, i) => {
+          if (!item || !item.slug) return <React.Fragment key={i} />
 
-                return (
-                  <li className="flex w-full flex-col" key={i}>
-                    <div className="relative flex w-full flex-row justify-between py-4">
-                      <div className="absolute z-40 -mt-2 ml-[55px]">
-                        <DeleteItemButton
-                          removeItemHandler={async () => {
-                            if (item.id) await removeItem(item.id)
-                          }}
-                        />
-                      </div>
-                      <Link
-                        className="z-30 flex flex-row space-x-4"
-                        href={`/produkty/${item.slug}`}
-                      >
-                        <div className="relative h-16 w-16 cursor-pointer overflow-hidden rounded-md border border-neutral-300 bg-neutral-300">
-                          {item.image?.url && (
-                            <Image
-                              alt={item.image?.alt || item.title}
-                              className="h-full w-full object-cover"
-                              height={94}
-                              src={item.image?.url}
-                              width={94}
-                            />
-                          )}
-                        </div>
+          return (
+            <li className="flex w-full flex-col" key={i}>
+              <div className="relative flex w-full flex-row justify-between py-4">
+                <div className="absolute z-40 -mt-2 ml-[55px]">
+                  <DeleteItemButton
+                    removeItemHandler={async () => {
+                      if (item.id) await removeItem(item.id)
+                    }}
+                  />
+                </div>
+                <Link className="z-30 flex flex-row space-x-4" href={`/produkty/${item.slug}`}>
+                  <div className="relative h-16 w-16 cursor-pointer overflow-hidden rounded-md border border-neutral-300 bg-neutral-300">
+                    {item.image?.url && (
+                      <Image
+                        alt={item.image?.alt || item.title}
+                        className="h-full w-full object-cover"
+                        height={94}
+                        src={item.image?.url}
+                        width={94}
+                      />
+                    )}
+                  </div>
 
-                        <div className="flex flex-1 flex-col text-base">
-                          <span className="leading-tight">{item.title}</span>
-                        </div>
-                      </Link>
-                    </div>
-                  </li>
-                )
-              })}
-            </ul>
-
-            <div className="py-4 text-sm text-neutral-500">
-              <Button asChild>
-                <Link className="w-full" href="/zapytanie">
-                  Złóz zapytanie
+                  <div className="flex flex-1 flex-col text-base">
+                    <span className="leading-tight">{item.title}</span>
+                  </div>
                 </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+              </div>
+            </li>
+          )
+        })}
+      </ul>
+
+      <div className="py-4 text-sm text-neutral-500">
+        <Button asChild>
+          <Link className="w-full" href="/zapytanie">
+            Złóż zapytanie
+          </Link>
+        </Button>
+      </div>
+    </div>
   )
 }

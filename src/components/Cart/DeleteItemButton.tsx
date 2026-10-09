@@ -8,16 +8,16 @@ export function DeleteItemButton({
 }: {
   removeItemHandler: () => Promise<void>
 }) {
-  const { isLoading, removeItem } = useCart()
+  const { isLoading } = useCart()
 
   return (
     <form>
       <button
-        aria-label="Remove cart item"
+        aria-label="Usuń z koszyka"
         className={clsx(
-          'ease hover:cursor-pointer flex size-4 items-center justify-center rounded-full bg-neutral-500 transition-all duration-200',
+          'ease hover:cursor-pointer flex p-1 items-center justify-center rounded-full border border-primary bg-[#F7F3EE]',
           {
-            'cursor-not-allowed px-0': isLoading,
+            'cursor-not-allowed': isLoading,
           },
         )}
         disabled={isLoading}
@@ -27,7 +27,7 @@ export function DeleteItemButton({
         }}
         type="button"
       >
-        <XIcon className="hover:text-accent-3 mx-px h-4 w-4 text-white" />
+        <XIcon className="hover:text-accent-3 size-3 text-primary" />
       </button>
     </form>
   )

@@ -5,8 +5,10 @@ import { useRentalCart } from '@/providers/RentalCartProvider'
 import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import { OpenCartButton } from './OpenCart'
-import { SelectCartTypeTabs } from './SelectCartTypeTabs/select-cart-type-tabs'
+import { RentalCartTab } from './SelectCartTypeTabs/rental-cart-tab'
+import { ShopCartTab } from './SelectCartTypeTabs/shop-cart-tab'
 
 export function CartModal() {
   const { cart } = useCart()
@@ -36,12 +38,27 @@ export function CartModal() {
         <OpenCartButton quantity={totalQuantity} />
       </SheetTrigger>
 
-      <SheetContent className="flex flex-col px-4">
+      <SheetContent className="px-4">
         <SheetHeader className="px-0">
-          <SheetTitle className="font-sans">Koszyk</SheetTitle>
+          <SheetTitle className="font-sans text-[#665D53]">Koszyk</SheetTitle>
         </SheetHeader>
 
-        <SelectCartTypeTabs cartQuantity={cartQuantity} rentalCartQuantity={rentalQuantity} />
+        <Tabs defaultValue="shop" className="flex flex-col grow">
+          <TabsList className="w-full">
+            <TabsTrigger value="shop" className="flex-1">
+              Sklep {cartQuantity > 0 && <>&#40;{cartQuantity}&#41;</>}
+            </TabsTrigger>
+            <TabsTrigger value="rent" className="flex-1">
+              Wypożyczalnia {rentalQuantity > 0 && <>&#40;{rentalQuantity}&#41;</>}
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent className="grow" value="shop">
+            <ShopCartTab />
+          </TabsContent>
+          <TabsContent className="grow" value="rent">
+            <RentalCartTab />
+          </TabsContent>
+        </Tabs>
       </SheetContent>
     </Sheet>
   )
