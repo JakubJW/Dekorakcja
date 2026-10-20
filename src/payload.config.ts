@@ -27,6 +27,7 @@ import { ShippingMethods } from './collections/shipping-methods'
 import { Users } from './collections/users'
 import { Footer } from './globals/Footer'
 import { Header } from './globals/Header'
+import { InsertSettings } from './globals/InsertSettings'
 import { plugins } from './plugins'
 
 const filename = fileURLToPath(import.meta.url)
@@ -105,7 +106,7 @@ export default buildConfig({
   }),
   //email: nodemailerAdapter(),
   endpoints: [],
-  globals: [Header, Footer],
+  globals: [Header, Footer, InsertSettings],
   plugins,
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

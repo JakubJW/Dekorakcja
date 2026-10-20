@@ -145,10 +145,12 @@ export interface Config {
   globals: {
     header: Header;
     footer: Footer;
+    'insert-settings': InsertSetting;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    'insert-settings': InsertSettingsSelect<false> | InsertSettingsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -2284,6 +2286,19 @@ export interface Footer {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "insert-settings".
+ */
+export interface InsertSetting {
+  id: number;
+  accessToken?: string | null;
+  refreshToken?: string | null;
+  expiresAt?: string | null;
+  isConnected?: boolean | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -2362,6 +2377,19 @@ export interface FooterSelect<T extends boolean = true> {
               id?: T;
             };
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "insert-settings_select".
+ */
+export interface InsertSettingsSelect<T extends boolean = true> {
+  accessToken?: T;
+  refreshToken?: T;
+  expiresAt?: T;
+  isConnected?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
