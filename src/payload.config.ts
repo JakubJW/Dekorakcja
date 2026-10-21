@@ -14,11 +14,11 @@ import { pl } from '@payloadcms/translations/languages/pl'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
+import { BillingAddresses } from './collections/billing-addresses'
 import { Categories } from './collections/categories'
 import { Inquiries } from './collections/inquiries'
 import { Media } from './collections/media'
 import { Occasions } from './collections/occasions'
-import { OrganizationAddresses } from './collections/organization-addresses'
 import { Pages } from './collections/pages'
 import { RentCarts } from './collections/rent-carts'
 // import { RentCartsItems } from './collections/rent-carts-items'
@@ -58,7 +58,7 @@ export default buildConfig({
     Inquiries,
     Rentables,
     Occasions,
-    OrganizationAddresses,
+    BillingAddresses,
     ShippingMethods,
     RentCarts,
     // RentCartsItems,

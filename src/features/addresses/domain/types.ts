@@ -1,24 +1,22 @@
-export type DomainAddress = {
-  id?: number
-  customer?: number
-  firstName: string
-  lastName: string
+export type BaseBillingAddress = {
   addressLine1: string
   addressLine2?: string
   city: string
+  postalCode: string
   country: string
   phone: string
-  postalCode: string
 }
 
-export type DomainOrganizationAddress = {
-  id?: number
-  customer?: number
+export type OrganizationBillingAddress = BaseBillingAddress & {
+  type: 'organization'
   nip: string
-  organization: string
-  addressLine1: string
-  addressLine2?: string
-  city: string
-  country: string
-  postalCode: string
+  companyName: string
 }
+
+export type PersonalBillingAddress = BaseBillingAddress & {
+  type: 'person'
+  firstName: string
+  lastName: string
+}
+
+export type BillingAddress = OrganizationBillingAddress | PersonalBillingAddress

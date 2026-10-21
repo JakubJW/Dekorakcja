@@ -3,49 +3,16 @@
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/providers/Auth'
-import { useCallback } from 'react'
 import { useCheckoutData } from '../CheckoutDataProvider'
 import { FORM_STEP, useFormStep } from '../FormStepProvider'
 import { BillingAddress } from '../PersonalData/BillingAddress'
 import { EmailField } from '../PersonalData/EmailField'
 import { LoginPrompt } from '../PersonalData/LoginPrompt'
-import { OrganizationSection } from '../PersonalData/organization/OrganizationSection'
 
 export const PersonalDataFormStep = () => {
   const { user } = useAuth()
-  const {
-    paymentData,
-    personalData: {
-      buyAsOrganization,
-      setBillingAddress,
-      setOrganizationAddress,
-      companyFormRef,
-      billingFormRef,
-    },
-  } = useCheckoutData()
+  const { paymentData } = useCheckoutData()
   const { setCurrentStep } = useFormStep()
-
-  const handleNextStep = useCallback(async () => {
-    const [billingData, organizationData] = await Promise.all([
-      billingFormRef.current?.submit(),
-      buyAsOrganization ? companyFormRef.current?.submit() : Promise.resolve(undefined),
-    ])
-
-    if (!billingData || (buyAsOrganization && !organizationData)) {
-      return
-    }
-
-    setBillingAddress(billingData)
-    setOrganizationAddress(organizationData)
-    setCurrentStep(FORM_STEP.SHIPPING)
-  }, [
-    buyAsOrganization,
-    setBillingAddress,
-    setOrganizationAddress,
-    setCurrentStep,
-    billingFormRef,
-    companyFormRef,
-  ])
 
   if (user === undefined) {
     return (
@@ -60,13 +27,12 @@ export const PersonalDataFormStep = () => {
       {!user && <LoginPrompt />}
       {!user && <EmailField />}
       <BillingAddress />
-      <OrganizationSection />
       {!paymentData && (
         <Button
           className="self-end"
           onClick={async (e) => {
             e.preventDefault()
-            await handleNextStep()
+            setCurrentStep(FORM_STEP.SHIPPING)
           }}
         >
           Przejdź do dostawy

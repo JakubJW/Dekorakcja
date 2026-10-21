@@ -6,19 +6,40 @@ const ERROR_MESSAGES = {
 
 export const nonEmptyString = z.string().trim().min(1, { message: ERROR_MESSAGES.required })
 
-export const createAddressFormSchema = z.object({
-  firstName: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
-  lastName: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
+const baseAddressShape = {
   phone: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
   addressLine1: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
-  addressLine2: z.string({ message: ERROR_MESSAGES.required }).optional(),
+  addressLine2: z.string().optional(),
   city: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
   country: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
   postalCode: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
   submitAddress: z.boolean().optional(),
+}
+
+const personSchema = z.object({
+  ...baseAddressShape,
+  type: z.literal('person'),
+  firstName: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
+  lastName: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
+  companyName: z.string().optional(),
+  nip: z.string().optional(),
 })
 
-export const updateAddressFormSchema = createAddressFormSchema.extend({})
+const organizationSchema = z.object({
+  ...baseAddressShape,
+  type: z.literal('organization'),
+  companyName: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
+  nip: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+})
+
+export const createAddressFormSchema = z.discriminatedUnion('type', [
+  personSchema,
+  organizationSchema,
+])
+
+export const updateAddressFormSchema = createAddressFormSchema
 
 export type TCreateAddressFormSchema = z.infer<typeof createAddressFormSchema>
 export type TUpdateAddressFormSchema = z.infer<typeof updateAddressFormSchema>

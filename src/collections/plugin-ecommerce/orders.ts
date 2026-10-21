@@ -2,6 +2,16 @@ import { adminOnlyFieldAccess } from '@/access/adminOnlyFieldAccess'
 import { EcommercePluginConfig } from '@payloadcms/plugin-ecommerce/types'
 import crypto from 'crypto'
 
+const extractByName = (fields: any[], names: string[]): any[] =>
+  fields.flatMap((field) => {
+    if ('name' in field && names.includes(field.name)) return [field]
+    if (Array.isArray(field.fields)) return extractByName(field.fields, names)
+    if (Array.isArray(field.tabs)) {
+      return field.tabs.flatMap((tab: any) => extractByName(tab.fields ?? [], names))
+    }
+    return []
+  })
+
 export const orders: EcommercePluginConfig['orders'] = {
   ordersCollectionOverride: ({ defaultCollection }) => ({
     ...defaultCollection,
@@ -49,11 +59,92 @@ export const orders: EcommercePluginConfig['orders'] = {
           },
         ],
       },
-      ...defaultCollection.fields.filter(
-        (field) =>
-          ('name' in field && field.name === 'amount') ||
-          ('name' in field && field.name === 'currency'),
-      ),
+      {
+        name: 'billingAddress',
+        type: 'group',
+        required: true,
+        fields: [
+          {
+            name: 'type',
+            type: 'select',
+            label: 'Typ nabywcy',
+            defaultValue: 'person',
+            options: [
+              {
+                label: 'Osoba prywatna',
+                value: 'person',
+              },
+              {
+                label: 'Firma',
+                value: 'organization',
+              },
+            ],
+          },
+          {
+            name: 'firstName',
+            type: 'text',
+            label: 'Imię',
+            admin: {
+              condition: (_, siblingData) => siblingData.type === 'person',
+            },
+          },
+          {
+            name: 'lastName',
+            type: 'text',
+            label: 'Nazwisko',
+            admin: {
+              condition: (_, siblingData) => siblingData.type === 'person',
+            },
+          },
+          {
+            name: 'nip',
+            type: 'text',
+            label: 'NIP',
+            admin: {
+              condition: (_, siblingData) => siblingData.type === 'organization',
+            },
+          },
+          {
+            name: 'companyName',
+            type: 'text',
+            label: 'Nazwa firmy',
+            admin: {
+              condition: (_, siblingData) => siblingData.type === 'organization',
+            },
+          },
+          {
+            name: 'addressLine1',
+            type: 'text',
+            required: true,
+            label: 'Ulica i numer domu',
+          },
+          {
+            name: 'addressLine2',
+            type: 'text',
+            label: 'Mieszkanie',
+          },
+          {
+            name: 'city',
+            type: 'text',
+            required: true,
+            label: 'Miejscowość',
+          },
+          {
+            name: 'postalCode',
+            type: 'text',
+            required: true,
+            label: 'Kod pocztowy',
+          },
+          {
+            name: 'country',
+            type: 'text',
+            required: true,
+            defaultValue: 'PL',
+            label: 'Kraj',
+          },
+        ],
+      },
+      ...extractByName(defaultCollection.fields, ['amount', 'currency', 'items']),
       {
         name: 'customer',
         type: 'relationship',

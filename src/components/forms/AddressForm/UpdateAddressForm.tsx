@@ -1,48 +1,35 @@
 import { useCheckoutData } from '@/components/checkout/CheckoutDataProvider'
-import { DomainAddress } from '@/features/addresses/domain/types'
+import { BillingAddress } from '@/features/addresses/domain/types'
 import { User } from '@/payload-types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAddresses } from '@payloadcms/plugin-ecommerce/client/react'
-import { useImperativeHandle } from 'react'
 import { useForm } from 'react-hook-form'
 import { AddressForm } from '.'
-import { updateAddressFormSchema } from './addressFormSchema'
+import { TUpdateAddressFormSchema, updateAddressFormSchema } from './addressFormSchema'
 
 type Props = {
   user?: User | null
   existingAddressId?: number
-  initialData: DomainAddress
+  initialData: BillingAddress
 }
 
 export const UpdateAddressForm = ({ user, existingAddressId, initialData }: Props) => {
   const { updateAddress } = useAddresses()
   const {
-    personalData: { billingFormRef },
+    personalData: { setBillingAddress },
   } = useCheckoutData()
   const form = useForm({
     resolver: zodResolver(updateAddressFormSchema),
-    values: initialData,
+    values: { ...initialData, type: 'person' },
   })
 
-  useImperativeHandle(
-    billingFormRef,
-    () => ({
-      submit: () =>
-        new Promise((resolve) => {
-          form.handleSubmit(
-            (data) => {
-              if (data.submitAddress && existingAddressId) {
-                updateAddress(existingAddressId, data)
-              }
+  const handleSubmit = (values: TUpdateAddressFormSchema) => {
+    if (values.submitAddress && existingAddressId) {
+      updateAddress(existingAddressId, values)
+    }
 
-              resolve(data)
-            },
-            () => resolve(undefined),
-          )()
-        }),
-    }),
-    [],
-  )
+    setBillingAddress(values)
+  }
 
-  return <AddressForm form={form} allowAddressSave={Boolean(user)} />
+  return <AddressForm form={form} onSubmit={handleSubmit} allowAddressSave={Boolean(user)} />
 }

@@ -254,6 +254,27 @@ export interface User {
  */
 export interface Order {
   id: number;
+  shippingAddress: {
+    firstName: string;
+    lastName: string;
+    addressLine1: string;
+    addressLine2?: string | null;
+    city: string;
+    postalCode: string;
+    phone: string;
+  };
+  billingAddress: {
+    type?: ('person' | 'organization') | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    nip?: string | null;
+    companyName?: string | null;
+    addressLine1: string;
+    addressLine2?: string | null;
+    city: string;
+    postalCode: string;
+    country: string;
+  };
   items?:
     | {
         product?: (number | null) | Product;
@@ -262,25 +283,12 @@ export interface Order {
         id?: string | null;
       }[]
     | null;
-  shippingAddress?: {
-    title?: string | null;
-    firstName?: string | null;
-    lastName?: string | null;
-    company?: string | null;
-    addressLine1?: string | null;
-    addressLine2?: string | null;
-    city?: string | null;
-    state?: string | null;
-    postalCode?: string | null;
-    country?: string | null;
-    phone?: string | null;
-  };
+  amount?: number | null;
+  currency?: 'PLN' | null;
   customer?: (number | null) | User;
   customerEmail?: string | null;
   transactions?: (number | Transaction)[] | null;
   status?: OrderStatus;
-  amount?: number | null;
-  currency?: 'PLN' | null;
   accessToken?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -2079,6 +2087,31 @@ export interface CartsSelect<T extends boolean = true> {
  * via the `definition` "orders_select".
  */
 export interface OrdersSelect<T extends boolean = true> {
+  shippingAddress?:
+    | T
+    | {
+        firstName?: T;
+        lastName?: T;
+        addressLine1?: T;
+        addressLine2?: T;
+        city?: T;
+        postalCode?: T;
+        phone?: T;
+      };
+  billingAddress?:
+    | T
+    | {
+        type?: T;
+        firstName?: T;
+        lastName?: T;
+        nip?: T;
+        companyName?: T;
+        addressLine1?: T;
+        addressLine2?: T;
+        city?: T;
+        postalCode?: T;
+        country?: T;
+      };
   items?:
     | T
     | {
@@ -2087,27 +2120,12 @@ export interface OrdersSelect<T extends boolean = true> {
         quantity?: T;
         id?: T;
       };
-  shippingAddress?:
-    | T
-    | {
-        title?: T;
-        firstName?: T;
-        lastName?: T;
-        company?: T;
-        addressLine1?: T;
-        addressLine2?: T;
-        city?: T;
-        state?: T;
-        postalCode?: T;
-        country?: T;
-        phone?: T;
-      };
+  amount?: T;
+  currency?: T;
   customer?: T;
   customerEmail?: T;
   transactions?: T;
   status?: T;
-  amount?: T;
-  currency?: T;
   accessToken?: T;
   updatedAt?: T;
   createdAt?: T;

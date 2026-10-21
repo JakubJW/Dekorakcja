@@ -2,8 +2,6 @@ import { Address, OrganizationAddress } from '@/payload-types'
 import { DomainAddress, DomainOrganizationAddress } from './domain/types'
 
 export const mapAddressToDomain = (data: Address): DomainAddress => {
-  console.log(data)
-
   return {
     id: data.id,
     firstName: data.firstName,
