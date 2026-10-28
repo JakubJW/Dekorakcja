@@ -1,31 +1,14 @@
 'use client'
 
-import { DomainAddress, DomainOrganizationAddress } from '@/features/addresses/domain/types'
+import { DomainAddress, DomainBillingAddress } from '@/features/addresses/domain/types'
 import type { ShippingMethod } from '@/payload-types'
-import { createContext, RefObject, useContext, useEffect, useRef, useState } from 'react'
-import { FormHandle } from '../forms/AddressForm'
-import {
-  TCreateAddressFormSchema,
-  TUpdateAddressFormSchema,
-} from '../forms/AddressForm/addressFormSchema'
-import {
-  TCreateOrganizationAddressFormSchema,
-  TUpdateOrganizationAddressFormSchema,
-} from './PersonalData/organization/organizationAddressFormSchema'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 type PersonalDataStep = {
   email?: string
   setEmail: (value: string) => void
-  buyAsOrganization: boolean
-  setBuyAsOrganization: (value: boolean) => void
-  organizationAddress?: DomainOrganizationAddress
-  setOrganizationAddress: (value: DomainOrganizationAddress | undefined) => void
-  billingAddress?: DomainAddress
-  setBillingAddress: (value: DomainAddress | undefined) => void
-  billingFormRef: RefObject<FormHandle<TCreateAddressFormSchema | TUpdateAddressFormSchema> | null>
-  companyFormRef: RefObject<FormHandle<
-    TCreateOrganizationAddressFormSchema | TUpdateOrganizationAddressFormSchema
-  > | null>
+  billingAddress?: DomainBillingAddress
+  setBillingAddress: (value: DomainBillingAddress | undefined) => void
 }
 
 type ShippingDataStep = {
@@ -52,43 +35,30 @@ const Context = createContext({} as CheckoutDataContext)
 export const PaymentDataProvider = ({
   children,
   addresses,
-  organizationAddresses,
   shippingMethods,
+  billingAddresses,
 }: {
   children: React.ReactNode
   addresses: DomainAddress[]
-  organizationAddresses: DomainOrganizationAddress[]
+  billingAddresses: DomainBillingAddress[]
   shippingMethods: ShippingMethod[]
 }) => {
   const [email, setEmail] = useState<string | undefined>(undefined)
-  const [organizationAddress, setOrganizationAddress] = useState<
-    DomainOrganizationAddress | undefined
-  >(undefined)
   const [paymentData, setPaymentData] = useState<null | Record<string, unknown>>(null)
+
   const [shippingAddress, setShippingAddress] = useState<DomainAddress | undefined>()
   const [shippingMethod, setShippingMethod] = useState<ShippingMethod | undefined>()
-  const [billingAddress, setBillingAddress] = useState<DomainAddress | undefined>()
+
+  const [billingAddress, setBillingAddress] = useState<DomainBillingAddress | undefined>()
   const [billingAddressSameAsShipping, setBillingAddressSameAsShipping] = useState(false)
   const [isProcessingPayment, setProcessingPayment] = useState(false)
-  const [buyAsOrganization, setBuyAsOrganization] = useState(false)
-  const billingFormRef =
-    useRef<FormHandle<TCreateAddressFormSchema | TUpdateAddressFormSchema>>(null)
-  const companyFormRef =
-    useRef<FormHandle<TCreateOrganizationAddressFormSchema | TUpdateOrganizationAddressFormSchema>>(
-      null,
-    )
 
   useEffect(() => {
     if (!billingAddress && addresses.length) {
-      setBillingAddress(addresses[0])
+      setShippingAddress(addresses[0])
+      setBillingAddress(billingAddresses[0])
     }
   }, [addresses])
-
-  useEffect(() => {
-    if (!organizationAddress && organizationAddresses.length) {
-      setOrganizationAddress(organizationAddresses[0])
-    }
-  }, [organizationAddresses])
 
   useEffect(() => {
     return () => {
@@ -104,14 +74,8 @@ export const PaymentDataProvider = ({
         personalData: {
           email,
           setEmail,
-          organizationAddress,
-          setOrganizationAddress,
-          buyAsOrganization,
-          setBuyAsOrganization,
           billingAddress,
           setBillingAddress,
-          billingFormRef,
-          companyFormRef,
         },
         shippingData: {
           shippingMethods,

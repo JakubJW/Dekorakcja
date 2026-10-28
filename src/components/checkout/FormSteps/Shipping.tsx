@@ -1,5 +1,3 @@
-import { CreateAddressForm } from '@/components/forms/AddressForm/CreateAddressForm'
-import { UpdateAddressForm } from '@/components/forms/AddressForm/UpdateAddressForm'
 import { Price } from '@/components/Price'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -39,12 +37,6 @@ export const Shipping = () => {
   } = useCheckoutData()
   const { initiatePayment } = usePayments()
   const { setCurrentStep } = useFormStep()
-
-  const handleBillingAddressSameAsShipping = (value: boolean) => {
-    setBillingAddressSameAsShipping(value)
-    if (!value) return
-    setShippingAddress(billingAddress)
-  }
 
   const initiatePaymentIntent = useCallback(
     async (paymentID: string) => {
@@ -129,17 +121,17 @@ export const Shipping = () => {
           <Label htmlFor="billingAddressSameAsShipping">
             <Checkbox
               id="billingAddressSameAsShipping"
-              onCheckedChange={(val: boolean) => handleBillingAddressSameAsShipping(val)}
+              onCheckedChange={(val: boolean) => console.log('nic')}
               checked={billingAddressSameAsShipping}
             />
             Adres dostawy taki sam, jak adres rozliczeniowy
           </Label>
           <h2 className="font-medium text-2xl">Adres dostawy</h2>
-          {shippingAddress ? (
+          {/* {shippingAddress ? (
             <UpdateAddressForm initialData={shippingAddress} />
           ) : (
             <CreateAddressForm />
-          )}
+          )} */}
         </>
       )}
       <div className="flex justify-between">

@@ -11,8 +11,6 @@ export const BillingAddress: React.FC = () => {
     personalData: { billingAddress },
   } = useCheckoutData()
 
-  console.log(billingAddress)
-
   return (
     <div className="space-y-6">
       <h2 className="font-medium text-2xl">Adres rozliczeniowy</h2>

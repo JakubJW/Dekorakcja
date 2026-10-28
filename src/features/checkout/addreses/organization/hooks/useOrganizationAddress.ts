@@ -1,17 +1,14 @@
-import { OrganizationAddress } from '@/payload-types'
+import { BillingAddress } from '@/payload-types'
 
-export const useOrganizationAddresses = () => {
-  const create = async (data: Omit<OrganizationAddress, 'id' | 'createdAt' | 'updatedAt'>) => {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/organization-addresses`,
-      {
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        method: 'POST',
+export const useBillingAddress = () => {
+  const create = async (data: Omit<BillingAddress, 'id' | 'createdAt' | 'updatedAt'>) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/billing-address`, {
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
       },
-    )
+      method: 'POST',
+    })
 
     if (!response.ok) {
       const message = response.statusText || 'There was an error creating the account.'
@@ -22,7 +19,7 @@ export const useOrganizationAddresses = () => {
 
   const getMany = async (customerId: number) => {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/organization-addresses?where[customer
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/billing-addresses?where[customer
       ][equals]=${customerId}&depth=0`,
       {
         headers: {

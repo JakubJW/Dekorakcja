@@ -103,9 +103,9 @@ export const Users: CollectionConfig = {
       },
     },
     {
-      name: 'organization_addresses',
+      name: 'billing_addresses',
       type: 'join',
-      collection: 'organization-addresses',
+      collection: 'billing-addresses',
       on: 'customer',
       admin: {
         allowCreate: false,

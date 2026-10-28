@@ -3,19 +3,18 @@ import { adminOrPublishedStatus } from '@/access/adminOrPublishedStatus'
 import { customerOnlyFieldAccess } from '@/access/customerOnlyFieldAccess'
 import { isAdmin } from '@/access/isAdmin'
 import { isDocumentOwner } from '@/access/isDocumentOwner'
-import { ProductsCollection } from '@/collections/products'
+import { ecommerceCollections } from '@/collections/plugin-ecommerce'
 import { Page, Product } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
 import { ecommercePlugin } from '@payloadcms/plugin-ecommerce'
-import { defaultCountries } from '@payloadcms/plugin-ecommerce/client/react'
 import { stripeAdapter } from '@payloadcms/plugin-ecommerce/payments/stripe'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import { s3Storage } from '@payloadcms/storage-s3'
-import crypto from 'crypto'
-import { Field, NumberField, Plugin } from 'payload'
+import { Plugin } from 'payload'
+import { confirmOrder } from './confirm-order'
 import { initiatePayment } from './initiatePayment'
 
 const generateTitle: GenerateTitle<Product | Page> = ({ doc }) => {
@@ -119,109 +118,7 @@ export const plugins: Plugin[] = [
       isAdmin,
       isDocumentOwner,
     },
-    addresses: {
-      addressesCollectionOverride: ({ defaultCollection }) => ({
-        ...defaultCollection,
-        fields: [
-          {
-            name: 'customer',
-            type: 'relationship',
-            relationTo: 'users',
-            required: true,
-          },
-          {
-            name: 'firstName',
-            type: 'text',
-            required: true,
-          },
-          {
-            name: 'lastName',
-            type: 'text',
-            required: true,
-          },
-          {
-            name: 'addressLine1',
-            type: 'text',
-            required: true,
-          },
-          {
-            name: 'addressLine2',
-            type: 'text',
-          },
-          {
-            name: 'city',
-            type: 'text',
-            required: true,
-          },
-          {
-            name: 'postalCode',
-            type: 'text',
-            required: true,
-          },
-          {
-            name: 'country',
-            type: 'select',
-            options: defaultCountries,
-            required: true,
-          },
-          {
-            name: 'phone',
-            type: 'text',
-            required: true,
-          },
-        ],
-      }),
-    },
-    customers: {
-      slug: 'users',
-    },
-    carts: {
-      cartsCollectionOverride: ({ defaultCollection }) => ({
-        ...defaultCollection,
-        admin: {
-          group: 'Sklep',
-        },
-      }),
-    },
-    transactions: {
-      transactionsCollectionOverride: ({ defaultCollection }) => ({
-        ...defaultCollection,
-        admin: {
-          group: 'Sklep',
-        },
-      }),
-    },
-    orders: {
-      ordersCollectionOverride: ({ defaultCollection }) => ({
-        ...defaultCollection,
-        admin: {
-          group: 'Sklep',
-        },
-        fields: [
-          ...defaultCollection.fields,
-          {
-            name: 'accessToken',
-            type: 'text',
-            unique: true,
-            index: true,
-            admin: {
-              position: 'sidebar',
-              readOnly: true,
-            },
-            hooks: {
-              beforeValidate: [
-                ({ value, operation }) => {
-                  if (operation === 'create' || !value) {
-                    return crypto.randomUUID()
-                  }
-                  return value
-                },
-              ],
-            },
-          },
-        ],
-      }),
-    },
+    ...ecommerceCollections,
     payments: {
       paymentMethods: [
         {
@@ -231,52 +128,9 @@ export const plugins: Plugin[] = [
             webhookSecret: process.env.STRIPE_WEBHOOKS_SIGNING_SECRET!,
           }),
           initiatePayment: initiatePayment({ secretKey: process.env.STRIPE_SECRET_KEY! }),
+          confirmOrder: confirmOrder({ secretKey: process.env.STRIPE_SECRET_KEY! }),
         },
       ],
-    },
-    products: {
-      productsCollectionOverride: ProductsCollection,
-      variants: {
-        variantTypesCollectionOverride: ({ defaultCollection }) => ({
-          ...defaultCollection,
-          fields: [...defaultCollection.fields],
-        }),
-        variantOptionsCollectionOverride: ({ defaultCollection }) => ({
-          ...defaultCollection,
-          fields: [...defaultCollection.fields],
-        }),
-        variantsCollectionOverride: ({ defaultCollection }) => ({
-          ...defaultCollection,
-          fields: [
-            ...defaultCollection.fields.flatMap((field): Field[] => {
-              if ('name' in field && field.name === 'inventory') {
-                const inventoryField = field as NumberField
-                return [
-                  {
-                    name: 'useInventory',
-                    label: 'Włącz magazyn',
-                    type: 'checkbox',
-                  },
-                  {
-                    ...inventoryField,
-                    admin: {
-                      ...inventoryField.admin,
-                      condition: (_data: unknown, siblingData: { useInventory?: boolean }) =>
-                        siblingData.useInventory === true,
-                    },
-                  },
-                ]
-              }
-              return [field]
-            }),
-            {
-              name: 'customField',
-              label: 'Custom Field',
-              type: 'text',
-            },
-          ],
-        }),
-      },
     },
   }),
   (config) => {

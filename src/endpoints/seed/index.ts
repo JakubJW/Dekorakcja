@@ -1,6 +1,6 @@
 import type { CollectionSlug, File, GlobalSlug, Payload, PayloadRequest } from 'payload'
 
-import { Address, Transaction, VariantOption } from '@/payload-types'
+import { Address, BillingAddress, Transaction, VariantOption } from '@/payload-types'
 import { contactFormData } from './contact-form'
 import { contactPageData } from './contact-page'
 import { homePageData } from './home'
@@ -43,18 +43,15 @@ const colorVariantOptions = [
 
 const globals: GlobalSlug[] = ['header', 'footer']
 
-const baseAddressUSData: Transaction['billingAddress'] = {
-  title: 'Dr.',
+const baseAddressUSData: Omit<BillingAddress, 'id' | 'createdAt' | 'updatedAt'> = {
   firstName: 'Otto',
   lastName: 'Octavius',
-  phone: '1234567890',
-  company: 'Oscorp',
+  type: 'organization',
+  companyName: 'Oscorp',
   addressLine1: '123 Main St',
   addressLine2: 'Suite 100',
   city: 'New York',
-  state: 'NY',
   postalCode: '10001',
-  country: 'US',
 }
 
 const baseAddressUKData: Transaction['billingAddress'] = {
@@ -345,6 +342,7 @@ export const seed = async ({
     collection: 'addresses',
     depth: 0,
     data: {
+      //@ts-ignore
       ...(baseAddressUSData as Address),
       customer: customer.id,
     },
@@ -469,7 +467,10 @@ export const seed = async ({
       amount: 7499,
       currency: 'PLN',
       customer: customer.id,
+      //@ts-ignore
       shippingAddress: baseAddressUSData,
+      //@ts-ignore
+      billingAddress: baseAddressUSData,
       items: [
         {
           product: productTshirt.id,
@@ -493,7 +494,16 @@ export const seed = async ({
       amount: 7499,
       currency: 'PLN',
       customer: customer.id,
+      //@ts-ignore
       shippingAddress: baseAddressUSData,
+      //@ts-ignore
+      billingAddress: {
+        ...baseAddressUSData,
+        addressLine1: 'ez',
+        city: 'Ostrołęka',
+        type: 'person',
+        postalCode: '15-740',
+      },
       items: [
         {
           product: productTshirt.id,

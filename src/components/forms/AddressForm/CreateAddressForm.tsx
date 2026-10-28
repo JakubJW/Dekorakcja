@@ -1,11 +1,15 @@
+import { BillingAddressType } from '@/collections/billing-addresses'
 import { useCheckoutData } from '@/components/checkout/CheckoutDataProvider'
+import { FORM_STEP, useFormStep } from '@/components/checkout/FormStepProvider'
 import { User } from '@/payload-types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAddresses } from '@payloadcms/plugin-ecommerce/client/react'
-import { useImperativeHandle } from 'react'
 import { useForm } from 'react-hook-form'
 import { AddressForm } from '.'
-import { createAddressFormSchema } from './addressFormSchema'
+import {
+  createBillingAddressFormSchema,
+  TCreateBillingAddressFormSchema,
+} from './billingAddressFormSchema'
 
 type Props = {
   user?: User | null
@@ -13,32 +17,25 @@ type Props = {
 
 export const CreateAddressForm = ({ user }: Props) => {
   const { createAddress } = useAddresses()
+  const { setCurrentStep } = useFormStep()
   const {
-    personalData: { billingFormRef },
+    personalData: { setBillingAddress },
   } = useCheckoutData()
   const form = useForm({
-    resolver: zodResolver(createAddressFormSchema),
+    resolver: zodResolver(createBillingAddressFormSchema),
+    defaultValues: {
+      type: BillingAddressType.PERSONAL,
+    },
   })
 
-  useImperativeHandle(
-    billingFormRef,
-    () => ({
-      submit: () =>
-        new Promise((resolve) => {
-          form.handleSubmit(
-            (data) => {
-              if (data.submitAddress) {
-                createAddress(data)
-              }
+  const handleSubmit = (values: TCreateBillingAddressFormSchema) => {
+    if (values.submitAddress) {
+      createAddress(values)
+    }
 
-              resolve(data)
-            },
-            () => resolve(undefined),
-          )()
-        }),
-    }),
-    [],
-  )
+    setBillingAddress(values)
+    setCurrentStep(FORM_STEP.SHIPPING)
+  }
 
-  return <AddressForm form={form} allowAddressSave={Boolean(user)} />
+  return <AddressForm form={form} onSubmit={handleSubmit} allowAddressSave={Boolean(user)} />
 }

@@ -1,63 +1,121 @@
+import { BillingAddressType } from '@/collections/billing-addresses'
+import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { defaultCountries as supportedCountries } from '@payloadcms/plugin-ecommerce/client/react'
+import { Info } from 'lucide-react'
+import React from 'react'
 import { Controller, UseFormReturn } from 'react-hook-form'
 import { FormError } from '../FormError'
 import { FormItem } from '../FormItem'
-import { TCreateAddressFormSchema, TUpdateAddressFormSchema } from './addressFormSchema'
+import {
+  TCreateBillingAddressFormSchema,
+  TUpdateBillingAddressFormSchema,
+} from './billingAddressFormSchema'
 
 type Props = {
   allowAddressSave?: boolean
-  form: UseFormReturn<TCreateAddressFormSchema | TUpdateAddressFormSchema>
+  form: UseFormReturn<TCreateBillingAddressFormSchema | TUpdateBillingAddressFormSchema>
+  onSubmit: (values: TCreateBillingAddressFormSchema) => void
 }
 
 export type FormHandle<T> = {
   submit: () => Promise<T | undefined>
 }
 
-export const AddressForm: React.FC<Props> = ({ form, allowAddressSave }) => {
-  const country = form.watch('country')
+export const AddressForm: React.FC<Props> = ({ form, allowAddressSave, onSubmit }) => {
+  const type = form.watch('type')
 
   return (
-    <form>
+    <form onSubmit={form.handleSubmit(onSubmit)}>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-4">
-        <FormItem>
-          <Label htmlFor="firstName">Imię*</Label>
-          <Input
-            id="firstName"
-            autoComplete="given-name"
-            {...form.register('firstName', { required: 'Imię jest wymagane.' })}
-          />
-          {form.formState.errors.firstName && (
-            <FormError message={form.formState.errors.firstName.message} />
+        <Controller
+          name="type"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className="col-span-2">
+              <Label htmlFor="type">
+                <Checkbox
+                  id="type"
+                  checked={field.value === BillingAddressType.ORGANIZATION}
+                  onCheckedChange={(checked) =>
+                    checked
+                      ? field.onChange(BillingAddressType.ORGANIZATION)
+                      : field.onChange(BillingAddressType.PERSONAL)
+                  }
+                />
+                Kupuję jako firma
+              </Label>
+            </FormItem>
           )}
-        </FormItem>
-        <FormItem>
-          <Label htmlFor="lastName">Nazwisko*</Label>
-          <Input
-            autoComplete="family-name"
-            id="lastName"
-            {...form.register('lastName', { required: 'Nazwisko jest wymagane.' })}
-          />
-          {form.formState.errors.lastName && (
-            <FormError message={form.formState.errors.lastName.message} />
-          )}
-        </FormItem>
-        <FormItem>
+        />
+        {type === BillingAddressType.ORGANIZATION && (
+          <div className="flex items-center gap-2 rounded-md p-2 mb-4 bg-emerald-100 text-emerald-500 col-span-full">
+            <Info className="size-4" />
+            <p className="text-sm">
+              nie jesteśmy czynnym płatnikiem vatu i fv jest netto równa sie brutto
+            </p>
+          </div>
+        )}
+        {type === BillingAddressType.ORGANIZATION && (
+          <React.Fragment>
+            <FormItem>
+              <Label htmlFor="NIP">NIP*</Label>
+              <Input
+                id="NIP"
+                autoComplete="given-name"
+                {...form.register('nip', { required: 'NIP jest wymagany.' })}
+              />
+              {form.formState.errors.nip && (
+                <FormError message={form.formState.errors.nip.message} />
+              )}
+            </FormItem>
+            <FormItem>
+              <Label htmlFor="organization">Nazwa firmy*</Label>
+              <Input
+                autoComplete="company"
+                id="organization"
+                {...form.register('companyName', { required: 'Last name is required.' })}
+              />
+              {form.formState.errors.companyName && (
+                <FormError message={form.formState.errors.companyName.message} />
+              )}
+            </FormItem>
+          </React.Fragment>
+        )}
+        {type === BillingAddressType.PERSONAL && (
+          <React.Fragment>
+            <FormItem>
+              <Label htmlFor="firstName">Imię*</Label>
+              <Input
+                id="firstName"
+                autoComplete="given-name"
+                {...form.register('firstName', { required: 'Imię jest wymagane.' })}
+              />
+              {form.formState.errors.firstName && (
+                <FormError message={form.formState.errors.firstName.message} />
+              )}
+            </FormItem>
+            <FormItem>
+              <Label htmlFor="lastName">Nazwisko*</Label>
+              <Input
+                autoComplete="family-name"
+                id="lastName"
+                {...form.register('lastName', { required: 'Nazwisko jest wymagane.' })}
+              />
+              {form.formState.errors.lastName && (
+                <FormError message={form.formState.errors.lastName.message} />
+              )}
+            </FormItem>
+          </React.Fragment>
+        )}
+        {/* <FormItem>
           <Label htmlFor="phone">Nr telefonu</Label>
           <Input type="tel" id="phone" autoComplete="mobile tel" {...form.register('phone')} />
           {form.formState.errors.phone && (
             <FormError message={form.formState.errors.phone.message} />
           )}
-        </FormItem>
+        </FormItem> */}
         <FormItem>
           <Label htmlFor="addressLine1">Ulica*</Label>
           <Input
@@ -99,46 +157,6 @@ export const AddressForm: React.FC<Props> = ({ form, allowAddressSave }) => {
             <FormError message={form.formState.errors.postalCode.message} />
           )}
         </FormItem>
-        <FormItem>
-          <Label htmlFor="country">Kraj*</Label>
-          <Controller
-            name="country"
-            control={form.control}
-            rules={{ required: 'Kraj jest wymagany.' }}
-            render={({ field }) => (
-              <Select
-                onValueChange={field.onChange}
-                value={field.value}
-                required
-                defaultValue={country ?? 'PL'}
-              >
-                <SelectTrigger id="country" className="w-full">
-                  <SelectValue placeholder="Wybierz kraj" />
-                </SelectTrigger>
-                <SelectContent>
-                  {supportedCountries.map((country) => {
-                    const value = typeof country === 'string' ? country : country.value
-                    const label =
-                      typeof country === 'string'
-                        ? country
-                        : typeof country.label === 'string'
-                          ? country.label
-                          : value
-                    return (
-                      <SelectItem key={value} value={value}>
-                        {label}
-                      </SelectItem>
-                    )
-                  })}
-                </SelectContent>
-              </Select>
-            )}
-          />
-
-          {form.formState.errors.country && (
-            <FormError message={form.formState.errors.country.message} />
-          )}
-        </FormItem>
         {allowAddressSave && (
           <Controller
             name="submitAddress"
@@ -157,6 +175,9 @@ export const AddressForm: React.FC<Props> = ({ form, allowAddressSave }) => {
             )}
           />
         )}
+        <Button className="self-end" type="submit">
+          Przejdź do dostawy
+        </Button>
       </div>
     </form>
   )

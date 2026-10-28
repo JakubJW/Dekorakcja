@@ -93,6 +93,7 @@ export const initiatePayment =
           cartID: cart.id,
           cartItemsSnapshot: JSON.stringify(flattenedCart),
           shippingAddress: JSON.stringify(shippingAddressFromData),
+          billingAddress: JSON.stringify(billingAddressFromData),
         },
       })
       // Create a transaction for the payment intent in the database

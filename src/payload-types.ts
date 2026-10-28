@@ -72,16 +72,17 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    users: User;
-    pages: Page;
+    'billing-addresses': BillingAddress;
     categories: Category;
-    media: Media;
     inquiries: Inquiry;
-    rentables: Rentable;
+    media: Media;
     occasions: Occasion;
-    'organization-addresses': OrganizationAddress;
-    'shipping-methods': ShippingMethod;
+    pages: Page;
     'rent-carts': RentCart;
+    rentables: Rentable;
+    'shipping-methods': ShippingMethod;
+    invoices: Invoice;
+    users: User;
     forms: Form;
     'form-submissions': FormSubmission;
     addresses: Address;
@@ -103,7 +104,7 @@ export interface Config {
       cart: 'carts';
       rental_cart: 'rent-carts';
       addresses: 'addresses';
-      organization_addresses: 'organization-addresses';
+      billing_addresses: 'billing-addresses';
     };
     variantTypes: {
       options: 'variantOptions';
@@ -113,16 +114,17 @@ export interface Config {
     };
   };
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
-    pages: PagesSelect<false> | PagesSelect<true>;
+    'billing-addresses': BillingAddressesSelect<false> | BillingAddressesSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
     inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
-    rentables: RentablesSelect<false> | RentablesSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
     occasions: OccasionsSelect<false> | OccasionsSelect<true>;
-    'organization-addresses': OrganizationAddressesSelect<false> | OrganizationAddressesSelect<true>;
-    'shipping-methods': ShippingMethodsSelect<false> | ShippingMethodsSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
     'rent-carts': RentCartsSelect<false> | RentCartsSelect<true>;
+    rentables: RentablesSelect<false> | RentablesSelect<true>;
+    'shipping-methods': ShippingMethodsSelect<false> | ShippingMethodsSelect<true>;
+    invoices: InvoicesSelect<false> | InvoicesSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     addresses: AddressesSelect<false> | AddressesSelect<true>;
@@ -143,10 +145,12 @@ export interface Config {
   };
   fallbackLocale: null;
   globals: {
+    'insert-settings': InsertSetting;
     header: Header;
     footer: Footer;
   };
   globalsSelect: {
+    'insert-settings': InsertSettingsSelect<false> | InsertSettingsSelect<true>;
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
   };
@@ -196,6 +200,25 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "billing-addresses".
+ */
+export interface BillingAddress {
+  id: number;
+  type: 'person' | 'organization';
+  customer?: (number | null) | User;
+  firstName?: string | null;
+  lastName?: string | null;
+  nip?: string | null;
+  companyName?: string | null;
+  addressLine1: string;
+  addressLine2?: string | null;
+  city: string;
+  postalCode: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -222,8 +245,8 @@ export interface User {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
-  organization_addresses?: {
-    docs?: (number | OrganizationAddress)[];
+  billing_addresses?: {
+    docs?: (number | BillingAddress)[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
@@ -252,6 +275,27 @@ export interface User {
  */
 export interface Order {
   id: number;
+  shippingAddress: {
+    firstName: string;
+    lastName: string;
+    addressLine1: string;
+    addressLine2?: string | null;
+    city: string;
+    postalCode: string;
+    phone: string;
+  };
+  billingAddress: {
+    type?: ('person' | 'organization') | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    nip?: string | null;
+    companyName?: string | null;
+    addressLine1: string;
+    addressLine2?: string | null;
+    city: string;
+    postalCode: string;
+    country: string;
+  };
   items?:
     | {
         product?: (number | null) | Product;
@@ -260,25 +304,12 @@ export interface Order {
         id?: string | null;
       }[]
     | null;
-  shippingAddress?: {
-    title?: string | null;
-    firstName?: string | null;
-    lastName?: string | null;
-    company?: string | null;
-    addressLine1?: string | null;
-    addressLine2?: string | null;
-    city?: string | null;
-    state?: string | null;
-    postalCode?: string | null;
-    country?: string | null;
-    phone?: string | null;
-  };
+  amount?: number | null;
+  currency?: 'PLN' | null;
   customer?: (number | null) | User;
   customerEmail?: string | null;
   transactions?: (number | Transaction)[] | null;
   status?: OrderStatus;
-  amount?: number | null;
-  currency?: 'PLN' | null;
   accessToken?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -1198,23 +1229,6 @@ export interface Address {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "organization-addresses".
- */
-export interface OrganizationAddress {
-  id: number;
-  customer: number | User;
-  nip: string;
-  organization: string;
-  addressLine1: string;
-  addressLine2?: string | null;
-  city: string;
-  postalCode: string;
-  country: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "inquiries".
  */
 export interface Inquiry {
@@ -1240,6 +1254,41 @@ export interface ShippingMethod {
    */
   generateSlug?: boolean | null;
   slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "invoices".
+ */
+export interface Invoice {
+  id: number;
+  order: number | Order;
+  status: 'pending' | 'processing' | 'success' | 'failed';
+  invoiceNumber?: string | null;
+  subiektId?: string | null;
+  issuedAt?: string | null;
+  pdfUrl?: string | null;
+  retryCount?: number | null;
+  lastAttemptAt?: string | null;
+  lastError?: string | null;
+  attemptsLog?:
+    | {
+        timestamp: string;
+        status: string;
+        message?: string | null;
+        responsePayload?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1285,44 +1334,48 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'users';
-        value: number | User;
-      } | null)
-    | ({
-        relationTo: 'pages';
-        value: number | Page;
+        relationTo: 'billing-addresses';
+        value: number | BillingAddress;
       } | null)
     | ({
         relationTo: 'categories';
         value: number | Category;
       } | null)
     | ({
-        relationTo: 'media';
-        value: number | Media;
-      } | null)
-    | ({
         relationTo: 'inquiries';
         value: number | Inquiry;
       } | null)
     | ({
-        relationTo: 'rentables';
-        value: number | Rentable;
+        relationTo: 'media';
+        value: number | Media;
       } | null)
     | ({
         relationTo: 'occasions';
         value: number | Occasion;
       } | null)
     | ({
-        relationTo: 'organization-addresses';
-        value: number | OrganizationAddress;
+        relationTo: 'pages';
+        value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'rent-carts';
+        value: number | RentCart;
+      } | null)
+    | ({
+        relationTo: 'rentables';
+        value: number | Rentable;
       } | null)
     | ({
         relationTo: 'shipping-methods';
         value: number | ShippingMethod;
       } | null)
     | ({
-        relationTo: 'rent-carts';
-        value: number | RentCart;
+        relationTo: 'invoices';
+        value: number | Invoice;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
       } | null)
     | ({
         relationTo: 'forms';
@@ -1408,32 +1461,72 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
+ * via the `definition` "billing-addresses_select".
  */
-export interface UsersSelect<T extends boolean = true> {
-  name?: T;
-  roles?: T;
-  orders?: T;
-  cart?: T;
-  rental_cart?: T;
-  addresses?: T;
-  organization_addresses?: T;
+export interface BillingAddressesSelect<T extends boolean = true> {
+  type?: T;
+  customer?: T;
+  firstName?: T;
+  lastName?: T;
+  nip?: T;
+  companyName?: T;
+  addressLine1?: T;
+  addressLine2?: T;
+  city?: T;
+  postalCode?: T;
   updatedAt?: T;
   createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
-    | T
-    | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inquiries_select".
+ */
+export interface InquiriesSelect<T extends boolean = true> {
+  'rent-cart'?: T;
+  user?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_select".
+ */
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  caption?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "occasions_select".
+ */
+export interface OccasionsSelect<T extends boolean = true> {
+  name?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1666,41 +1759,18 @@ export interface NumberedListsBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories_select".
+ * via the `definition` "rent-carts_select".
  */
-export interface CategoriesSelect<T extends boolean = true> {
-  title?: T;
-  generateSlug?: T;
-  slug?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media_select".
- */
-export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
-  caption?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "inquiries_select".
- */
-export interface InquiriesSelect<T extends boolean = true> {
-  'rent-cart'?: T;
-  user?: T;
+export interface RentCartsSelect<T extends boolean = true> {
+  customer?: T;
+  items?:
+    | T
+    | {
+        rentable?: T;
+        id?: T;
+      };
+  secret?: T;
+  submittedAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1741,33 +1811,6 @@ export interface RentablesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "occasions_select".
- */
-export interface OccasionsSelect<T extends boolean = true> {
-  name?: T;
-  generateSlug?: T;
-  slug?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "organization-addresses_select".
- */
-export interface OrganizationAddressesSelect<T extends boolean = true> {
-  customer?: T;
-  nip?: T;
-  organization?: T;
-  addressLine1?: T;
-  addressLine2?: T;
-  city?: T;
-  postalCode?: T;
-  country?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "shipping-methods_select".
  */
 export interface ShippingMethodsSelect<T extends boolean = true> {
@@ -1783,20 +1826,58 @@ export interface ShippingMethodsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "rent-carts_select".
+ * via the `definition` "invoices_select".
  */
-export interface RentCartsSelect<T extends boolean = true> {
-  customer?: T;
-  items?:
+export interface InvoicesSelect<T extends boolean = true> {
+  order?: T;
+  status?: T;
+  invoiceNumber?: T;
+  subiektId?: T;
+  issuedAt?: T;
+  pdfUrl?: T;
+  retryCount?: T;
+  lastAttemptAt?: T;
+  lastError?: T;
+  attemptsLog?:
     | T
     | {
-        rentable?: T;
+        timestamp?: T;
+        status?: T;
+        message?: T;
+        responsePayload?: T;
         id?: T;
       };
-  secret?: T;
-  submittedAt?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  roles?: T;
+  orders?: T;
+  cart?: T;
+  rental_cart?: T;
+  addresses?: T;
+  billing_addresses?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2077,6 +2158,31 @@ export interface CartsSelect<T extends boolean = true> {
  * via the `definition` "orders_select".
  */
 export interface OrdersSelect<T extends boolean = true> {
+  shippingAddress?:
+    | T
+    | {
+        firstName?: T;
+        lastName?: T;
+        addressLine1?: T;
+        addressLine2?: T;
+        city?: T;
+        postalCode?: T;
+        phone?: T;
+      };
+  billingAddress?:
+    | T
+    | {
+        type?: T;
+        firstName?: T;
+        lastName?: T;
+        nip?: T;
+        companyName?: T;
+        addressLine1?: T;
+        addressLine2?: T;
+        city?: T;
+        postalCode?: T;
+        country?: T;
+      };
   items?:
     | T
     | {
@@ -2085,28 +2191,14 @@ export interface OrdersSelect<T extends boolean = true> {
         quantity?: T;
         id?: T;
       };
-  shippingAddress?:
-    | T
-    | {
-        title?: T;
-        firstName?: T;
-        lastName?: T;
-        company?: T;
-        addressLine1?: T;
-        addressLine2?: T;
-        city?: T;
-        state?: T;
-        postalCode?: T;
-        country?: T;
-        phone?: T;
-      };
+  amount?: T;
+  currency?: T;
   customer?: T;
   customerEmail?: T;
   transactions?: T;
   status?: T;
-  amount?: T;
-  currency?: T;
   accessToken?: T;
+  invoiceStatus?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2197,6 +2289,19 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "insert-settings".
+ */
+export interface InsertSetting {
+  id: number;
+  accessToken?: string | null;
+  refreshToken?: string | null;
+  expiresAt?: string | null;
+  isConnected?: boolean | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header".
  */
 export interface Header {
@@ -2281,6 +2386,19 @@ export interface Footer {
   };
   updatedAt?: string | null;
   createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "insert-settings_select".
+ */
+export interface InsertSettingsSelect<T extends boolean = true> {
+  accessToken?: T;
+  refreshToken?: T;
+  expiresAt?: T;
+  isConnected?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

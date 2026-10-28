@@ -1,48 +1,38 @@
 import { useCheckoutData } from '@/components/checkout/CheckoutDataProvider'
-import { DomainAddress } from '@/features/addresses/domain/types'
+import { DomainBillingAddress } from '@/features/addresses/domain/types'
 import { User } from '@/payload-types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAddresses } from '@payloadcms/plugin-ecommerce/client/react'
-import { useImperativeHandle } from 'react'
 import { useForm } from 'react-hook-form'
 import { AddressForm } from '.'
-import { updateAddressFormSchema } from './addressFormSchema'
+import {
+  TUpdateBillingAddressFormSchema,
+  updateBillingAddressFormSchema,
+} from './billingAddressFormSchema'
 
 type Props = {
   user?: User | null
   existingAddressId?: number
-  initialData: DomainAddress
+  initialData: DomainBillingAddress
 }
 
 export const UpdateAddressForm = ({ user, existingAddressId, initialData }: Props) => {
   const { updateAddress } = useAddresses()
   const {
-    personalData: { billingFormRef },
+    personalData: { setBillingAddress },
   } = useCheckoutData()
   const form = useForm({
-    resolver: zodResolver(updateAddressFormSchema),
+    resolver: zodResolver(updateBillingAddressFormSchema),
     values: initialData,
   })
 
-  useImperativeHandle(
-    billingFormRef,
-    () => ({
-      submit: () =>
-        new Promise((resolve) => {
-          form.handleSubmit(
-            (data) => {
-              if (data.submitAddress && existingAddressId) {
-                updateAddress(existingAddressId, data)
-              }
+  const handleSubmit = (values: TUpdateBillingAddressFormSchema) => {
+    if (values.submitAddress && existingAddressId) {
+      updateAddress(existingAddressId, values)
+    }
 
-              resolve(data)
-            },
-            () => resolve(undefined),
-          )()
-        }),
-    }),
-    [],
-  )
+    setBillingAddress(values)
+  }
 
-  return <AddressForm form={form} allowAddressSave={Boolean(user)} />
+  return <AddressForm form={form} onSubmit={handleSubmit} allowAddressSave={Boolean(user)} />
 }
