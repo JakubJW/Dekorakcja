@@ -35,10 +35,10 @@ export class InvoiceService {
     const insertPayload = {
       issueDate: new Date().toISOString().split('T')[0],
       contractor: {
-        name: order.customerName,
-        taxId: order.customerNip,
+        name: order.billingAddress.firstName,
+        taxId: order.billingAddress?.nip,
       },
-      positions: order.items.map((item: any) => ({
+      positions: order.items?.map((item: any) => ({
         name: item.productName,
         quantity: item.qty,
         priceNetto: item.price,
@@ -51,12 +51,12 @@ export class InvoiceService {
 
     // 4. Zapisujesz dane faktury powrotnie w Payloadzie
     await this.payload.update({
-      collection: 'orders',
+      collection: 'invoices',
       id: orderId,
       data: {
         invoiceNumber: invoiceResponse.number,
-        invoiceId: invoiceResponse.id,
-        invoiceStatus: 'issued',
+        subiektId: invoiceResponse.id,
+        status: 'success',
       },
     })
 

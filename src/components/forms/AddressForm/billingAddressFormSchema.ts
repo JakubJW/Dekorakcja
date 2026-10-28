@@ -1,3 +1,4 @@
+import { BillingAddressType } from '@/collections/billing-addresses'
 import z from 'zod'
 
 const ERROR_MESSAGES = {
@@ -7,18 +8,19 @@ const ERROR_MESSAGES = {
 export const nonEmptyString = z.string().trim().min(1, { message: ERROR_MESSAGES.required })
 
 const baseAddressShape = {
-  phone: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
+  id: z.number().optional(),
+  // phone: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
   addressLine1: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
   addressLine2: z.string().optional(),
   city: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
-  country: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
+  // country: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
   postalCode: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
   submitAddress: z.boolean().optional(),
 }
 
 const personSchema = z.object({
   ...baseAddressShape,
-  type: z.literal('person'),
+  type: z.literal(BillingAddressType.PERSONAL),
   firstName: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
   lastName: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
   companyName: z.string().optional(),
@@ -27,19 +29,19 @@ const personSchema = z.object({
 
 const organizationSchema = z.object({
   ...baseAddressShape,
-  type: z.literal('organization'),
+  type: z.literal(BillingAddressType.ORGANIZATION),
   companyName: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
   nip: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
 })
 
-export const createAddressFormSchema = z.discriminatedUnion('type', [
+export const createBillingAddressFormSchema = z.discriminatedUnion('type', [
   personSchema,
   organizationSchema,
 ])
 
-export const updateAddressFormSchema = createAddressFormSchema
+export const updateBillingAddressFormSchema = createBillingAddressFormSchema
 
-export type TCreateAddressFormSchema = z.infer<typeof createAddressFormSchema>
-export type TUpdateAddressFormSchema = z.infer<typeof updateAddressFormSchema>
+export type TCreateBillingAddressFormSchema = z.infer<typeof createBillingAddressFormSchema>
+export type TUpdateBillingAddressFormSchema = z.infer<typeof updateBillingAddressFormSchema>

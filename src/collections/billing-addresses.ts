@@ -1,5 +1,10 @@
 import { CollectionConfig } from 'payload'
 
+export enum BillingAddressType {
+  PERSONAL = 'person',
+  ORGANIZATION = 'organization',
+}
+
 export const BillingAddresses: CollectionConfig = {
   slug: 'billing-addresses',
   labels: {
@@ -18,9 +23,9 @@ export const BillingAddresses: CollectionConfig = {
       options: [
         {
           label: 'Osoba prywatna',
-          value: 'person',
+          value: BillingAddressType.PERSONAL,
         },
-        { label: 'Firma', value: 'organization' },
+        { label: 'Firma', value: BillingAddressType.ORGANIZATION },
       ],
     },
     {
@@ -33,7 +38,7 @@ export const BillingAddresses: CollectionConfig = {
       type: 'text',
       label: 'Imię',
       admin: {
-        condition: (_, siblingData) => siblingData.type === 'person',
+        condition: (_, siblingData) => siblingData.type === BillingAddressType.PERSONAL,
       },
     },
     {
@@ -41,7 +46,7 @@ export const BillingAddresses: CollectionConfig = {
       type: 'text',
       label: 'Nazwisko',
       admin: {
-        condition: (_, siblingData) => siblingData.type === 'person',
+        condition: (_, siblingData) => siblingData.type === BillingAddressType.PERSONAL,
       },
     },
     {
@@ -49,7 +54,7 @@ export const BillingAddresses: CollectionConfig = {
       type: 'text',
       label: 'NIP',
       admin: {
-        condition: (_, siblingData) => siblingData.type === 'organization',
+        condition: (_, siblingData) => siblingData.type === BillingAddressType.ORGANIZATION,
       },
     },
     {
@@ -57,7 +62,7 @@ export const BillingAddresses: CollectionConfig = {
       type: 'text',
       label: 'Nazwa firmy',
       admin: {
-        condition: (_, siblingData) => siblingData.type === 'organization',
+        condition: (_, siblingData) => siblingData.type === BillingAddressType.ORGANIZATION,
       },
     },
     {

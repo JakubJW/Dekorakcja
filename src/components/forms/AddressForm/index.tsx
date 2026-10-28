@@ -1,3 +1,5 @@
+import { BillingAddressType } from '@/collections/billing-addresses'
+import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -6,23 +8,26 @@ import React from 'react'
 import { Controller, UseFormReturn } from 'react-hook-form'
 import { FormError } from '../FormError'
 import { FormItem } from '../FormItem'
-import { TCreateAddressFormSchema, TUpdateAddressFormSchema } from './addressFormSchema'
+import {
+  TCreateBillingAddressFormSchema,
+  TUpdateBillingAddressFormSchema,
+} from './billingAddressFormSchema'
 
 type Props = {
   allowAddressSave?: boolean
-  form: UseFormReturn<TCreateAddressFormSchema | TUpdateAddressFormSchema>
-  onSubmit: (values: TCreateAddressFormSchema) => void
+  form: UseFormReturn<TCreateBillingAddressFormSchema | TUpdateBillingAddressFormSchema>
+  onSubmit: (values: TCreateBillingAddressFormSchema) => void
 }
 
 export type FormHandle<T> = {
   submit: () => Promise<T | undefined>
 }
 
-export const AddressForm: React.FC<Props> = ({ form, allowAddressSave }) => {
+export const AddressForm: React.FC<Props> = ({ form, allowAddressSave, onSubmit }) => {
   const type = form.watch('type')
 
   return (
-    <form>
+    <form onSubmit={form.handleSubmit(onSubmit)}>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-4">
         <Controller
           name="type"
@@ -32,9 +37,11 @@ export const AddressForm: React.FC<Props> = ({ form, allowAddressSave }) => {
               <Label htmlFor="type">
                 <Checkbox
                   id="type"
-                  checked={field.value === 'organization'}
+                  checked={field.value === BillingAddressType.ORGANIZATION}
                   onCheckedChange={(checked) =>
-                    checked ? field.onChange('organization') : field.onChange('person')
+                    checked
+                      ? field.onChange(BillingAddressType.ORGANIZATION)
+                      : field.onChange(BillingAddressType.PERSONAL)
                   }
                 />
                 Kupuję jako firma
@@ -42,7 +49,7 @@ export const AddressForm: React.FC<Props> = ({ form, allowAddressSave }) => {
             </FormItem>
           )}
         />
-        {type === 'organization' && (
+        {type === BillingAddressType.ORGANIZATION && (
           <div className="flex items-center gap-2 rounded-md p-2 mb-4 bg-emerald-100 text-emerald-500 col-span-full">
             <Info className="size-4" />
             <p className="text-sm">
@@ -50,32 +57,7 @@ export const AddressForm: React.FC<Props> = ({ form, allowAddressSave }) => {
             </p>
           </div>
         )}
-        {type === 'person' ? (
-          <React.Fragment>
-            <FormItem>
-              <Label htmlFor="firstName">Imię*</Label>
-              <Input
-                id="firstName"
-                autoComplete="given-name"
-                {...form.register('firstName', { required: 'Imię jest wymagane.' })}
-              />
-              {form.formState.errors.firstName && (
-                <FormError message={form.formState.errors.firstName.message} />
-              )}
-            </FormItem>
-            <FormItem>
-              <Label htmlFor="lastName">Nazwisko*</Label>
-              <Input
-                autoComplete="family-name"
-                id="lastName"
-                {...form.register('lastName', { required: 'Nazwisko jest wymagane.' })}
-              />
-              {form.formState.errors.lastName && (
-                <FormError message={form.formState.errors.lastName.message} />
-              )}
-            </FormItem>
-          </React.Fragment>
-        ) : (
+        {type === BillingAddressType.ORGANIZATION && (
           <React.Fragment>
             <FormItem>
               <Label htmlFor="NIP">NIP*</Label>
@@ -101,13 +83,39 @@ export const AddressForm: React.FC<Props> = ({ form, allowAddressSave }) => {
             </FormItem>
           </React.Fragment>
         )}
-        <FormItem>
+        {type === BillingAddressType.PERSONAL && (
+          <React.Fragment>
+            <FormItem>
+              <Label htmlFor="firstName">Imię*</Label>
+              <Input
+                id="firstName"
+                autoComplete="given-name"
+                {...form.register('firstName', { required: 'Imię jest wymagane.' })}
+              />
+              {form.formState.errors.firstName && (
+                <FormError message={form.formState.errors.firstName.message} />
+              )}
+            </FormItem>
+            <FormItem>
+              <Label htmlFor="lastName">Nazwisko*</Label>
+              <Input
+                autoComplete="family-name"
+                id="lastName"
+                {...form.register('lastName', { required: 'Nazwisko jest wymagane.' })}
+              />
+              {form.formState.errors.lastName && (
+                <FormError message={form.formState.errors.lastName.message} />
+              )}
+            </FormItem>
+          </React.Fragment>
+        )}
+        {/* <FormItem>
           <Label htmlFor="phone">Nr telefonu</Label>
           <Input type="tel" id="phone" autoComplete="mobile tel" {...form.register('phone')} />
           {form.formState.errors.phone && (
             <FormError message={form.formState.errors.phone.message} />
           )}
-        </FormItem>
+        </FormItem> */}
         <FormItem>
           <Label htmlFor="addressLine1">Ulica*</Label>
           <Input
@@ -167,6 +175,9 @@ export const AddressForm: React.FC<Props> = ({ form, allowAddressSave }) => {
             )}
           />
         )}
+        <Button className="self-end" type="submit">
+          Przejdź do dostawy
+        </Button>
       </div>
     </form>
   )

@@ -1,6 +1,7 @@
 import { adminOnlyFieldAccess } from '@/access/adminOnlyFieldAccess'
 import { EcommercePluginConfig } from '@payloadcms/plugin-ecommerce/types'
 import crypto from 'crypto'
+import { BillingAddressType } from '../billing-addresses'
 
 const extractByName = (fields: any[], names: string[]): any[] =>
   fields.flatMap((field) => {
@@ -21,39 +22,47 @@ export const orders: EcommercePluginConfig['orders'] = {
     fields: [
       {
         name: 'shippingAddress',
+        label: 'Adres dostawy',
         type: 'group',
         fields: [
           {
             name: 'firstName',
+            label: 'Imię',
             type: 'text',
             required: true,
           },
           {
             name: 'lastName',
+            label: 'Nazwisko',
             type: 'text',
             required: true,
           },
           {
             name: 'addressLine1',
+            label: 'Ulica i numer domu',
             type: 'text',
             required: true,
           },
           {
             name: 'addressLine2',
+            label: 'Mieszkanie',
             type: 'text',
           },
           {
             name: 'city',
+            label: 'Miejscowość',
             type: 'text',
             required: true,
           },
           {
             name: 'postalCode',
+            label: 'Kod pocztowy',
             type: 'text',
             required: true,
           },
           {
             name: 'phone',
+            label: 'Telefon',
             type: 'text',
             required: true,
           },
@@ -61,6 +70,7 @@ export const orders: EcommercePluginConfig['orders'] = {
       },
       {
         name: 'billingAddress',
+        label: 'Adres rozliczeniowy',
         type: 'group',
         required: true,
         fields: [
@@ -85,7 +95,7 @@ export const orders: EcommercePluginConfig['orders'] = {
             type: 'text',
             label: 'Imię',
             admin: {
-              condition: (_, siblingData) => siblingData.type === 'person',
+              condition: (_, siblingData) => siblingData.type === BillingAddressType.PERSONAL,
             },
           },
           {
@@ -93,7 +103,7 @@ export const orders: EcommercePluginConfig['orders'] = {
             type: 'text',
             label: 'Nazwisko',
             admin: {
-              condition: (_, siblingData) => siblingData.type === 'person',
+              condition: (_, siblingData) => siblingData.type === BillingAddressType.PERSONAL,
             },
           },
           {
@@ -101,7 +111,7 @@ export const orders: EcommercePluginConfig['orders'] = {
             type: 'text',
             label: 'NIP',
             admin: {
-              condition: (_, siblingData) => siblingData.type === 'organization',
+              condition: (_, siblingData) => siblingData.type === BillingAddressType.ORGANIZATION,
             },
           },
           {
@@ -109,7 +119,7 @@ export const orders: EcommercePluginConfig['orders'] = {
             type: 'text',
             label: 'Nazwa firmy',
             admin: {
-              condition: (_, siblingData) => siblingData.type === 'organization',
+              condition: (_, siblingData) => siblingData.type === BillingAddressType.ORGANIZATION,
             },
           },
           {
@@ -144,13 +154,41 @@ export const orders: EcommercePluginConfig['orders'] = {
           },
         ],
       },
-      ...extractByName(defaultCollection.fields, ['amount', 'currency', 'items']),
+      ...extractByName(defaultCollection.fields, ['amount', 'currency', 'items']).map((field) =>
+        'name' in field && field.name === 'amount'
+          ? { ...field, admin: { ...field.admin, position: 'sidebar', readOnly: true } }
+          : 'name' in field && field.name === 'currency'
+            ? { ...field, admin: { ...field.admin, hidden: true } }
+            : field,
+      ),
       {
-        name: 'customer',
-        type: 'relationship',
-        relationTo: 'users',
+        name: 'invoiceStatusUi',
+        type: 'ui',
+        admin: {
+          position: 'sidebar',
+          condition: (_, siblingData) => siblingData.billingAddress.type === 'organization',
+          components: {
+            Field: '@/components/admin/order-invoice-status#InvoiceStatusUi',
+          },
+        },
       },
       {
+        name: 'customer',
+        label: 'Klient',
+        type: 'relationship',
+        relationTo: 'users',
+        admin: {
+          position: 'sidebar',
+          condition: (_, siblingData) => siblingData.customer !== null,
+          readOnly: true,
+        },
+      },
+      {
+        label: 'Email klienta',
+        admin: {
+          position: 'sidebar',
+          condition: (_, siblingData) => siblingData.customer === null,
+        },
         name: 'customerEmail',
         type: 'text',
       },
@@ -201,7 +239,7 @@ export const orders: EcommercePluginConfig['orders'] = {
         unique: true,
         index: true,
         admin: {
-          position: 'sidebar',
+          hidden: true,
           readOnly: true,
         },
         hooks: {
@@ -213,6 +251,16 @@ export const orders: EcommercePluginConfig['orders'] = {
               return value
             },
           ],
+        },
+      },
+      {
+        name: 'invoiceStatus',
+        label: 'Faktura',
+        type: 'boolean',
+        admin: {
+          position: 'sidebar',
+          condition: (_, siblingData) =>
+            siblingData.billingAddress.type === BillingAddressType.ORGANIZATION,
         },
       },
     ],

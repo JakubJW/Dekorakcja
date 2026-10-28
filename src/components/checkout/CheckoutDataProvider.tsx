@@ -1,14 +1,14 @@
 'use client'
 
-import { DomainAddress, DomainOrganizationAddress } from '@/features/addresses/domain/types'
+import { DomainAddress, DomainBillingAddress } from '@/features/addresses/domain/types'
 import type { ShippingMethod } from '@/payload-types'
 import { createContext, useContext, useEffect, useState } from 'react'
 
 type PersonalDataStep = {
   email?: string
   setEmail: (value: string) => void
-  billingAddress?: DomainAddress
-  setBillingAddress: (value: DomainAddress | undefined) => void
+  billingAddress?: DomainBillingAddress
+  setBillingAddress: (value: DomainBillingAddress | undefined) => void
 }
 
 type ShippingDataStep = {
@@ -36,23 +36,27 @@ export const PaymentDataProvider = ({
   children,
   addresses,
   shippingMethods,
+  billingAddresses,
 }: {
   children: React.ReactNode
   addresses: DomainAddress[]
-  organizationAddresses: DomainOrganizationAddress[]
+  billingAddresses: DomainBillingAddress[]
   shippingMethods: ShippingMethod[]
 }) => {
   const [email, setEmail] = useState<string | undefined>(undefined)
   const [paymentData, setPaymentData] = useState<null | Record<string, unknown>>(null)
+
   const [shippingAddress, setShippingAddress] = useState<DomainAddress | undefined>()
   const [shippingMethod, setShippingMethod] = useState<ShippingMethod | undefined>()
-  const [billingAddress, setBillingAddress] = useState<DomainAddress | undefined>()
+
+  const [billingAddress, setBillingAddress] = useState<DomainBillingAddress | undefined>()
   const [billingAddressSameAsShipping, setBillingAddressSameAsShipping] = useState(false)
   const [isProcessingPayment, setProcessingPayment] = useState(false)
 
   useEffect(() => {
     if (!billingAddress && addresses.length) {
-      setBillingAddress(addresses[0])
+      setShippingAddress(addresses[0])
+      setBillingAddress(billingAddresses[0])
     }
   }, [addresses])
 

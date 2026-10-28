@@ -20,6 +20,6 @@ export class Subiekt123Client {
   }
 
   async getCustomers() {
-    return this.http.request('/contractors')
+    return this.http.request('/clients?pageNumber=0&pageSize=10', { method: 'GET' })
   }
 }

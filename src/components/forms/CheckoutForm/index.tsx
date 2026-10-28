@@ -2,7 +2,7 @@ import { useCheckoutData } from '@/components/checkout/CheckoutDataProvider'
 import { FORM_STEP, useFormStep } from '@/components/checkout/FormStepProvider'
 import { Message } from '@/components/Message'
 import { Button } from '@/components/ui/button'
-import { DomainAddress } from '@/features/addresses/domain/types'
+import { DomainAddress, DomainBillingAddress } from '@/features/addresses/domain/types'
 import { useEcommerce, usePayments } from '@payloadcms/plugin-ecommerce/client/react'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { useRouter } from 'next/navigation'
@@ -10,7 +10,7 @@ import React, { FormEvent, useCallback } from 'react'
 
 type Props = {
   customerEmail?: string
-  billingAddress?: DomainAddress
+  billingAddress?: DomainBillingAddress
   shippingAddress?: DomainAddress
   setProcessingPayment: (value: boolean) => void
 }
@@ -18,6 +18,7 @@ type Props = {
 export const CheckoutForm: React.FC<Props> = ({
   customerEmail,
   billingAddress,
+  shippingAddress,
   setProcessingPayment,
 }) => {
   const stripe = useStripe()
@@ -47,13 +48,13 @@ export const CheckoutForm: React.FC<Props> = ({
             payment_method_data: {
               billing_details: {
                 email: customerEmail,
-                phone: billingAddress?.phone,
+                phone: shippingAddress?.phone,
                 address: {
                   line1: billingAddress?.addressLine1,
                   line2: billingAddress?.addressLine2,
                   city: billingAddress?.city,
                   postal_code: billingAddress?.postalCode,
-                  country: billingAddress?.country,
+                  country: 'PL',
                 },
               },
             },
@@ -120,12 +121,12 @@ export const CheckoutForm: React.FC<Props> = ({
       stripe,
       elements,
       customerEmail,
-      billingAddress?.phone,
+      shippingAddress?.phone,
       billingAddress?.addressLine1,
       billingAddress?.addressLine2,
       billingAddress?.city,
       billingAddress?.postalCode,
-      billingAddress?.country,
+      'PL',
       confirmOrder,
       clearSession,
       router,

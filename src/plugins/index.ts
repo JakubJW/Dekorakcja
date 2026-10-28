@@ -14,6 +14,7 @@ import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { Plugin } from 'payload'
+import { confirmOrder } from './confirm-order'
 import { initiatePayment } from './initiatePayment'
 
 const generateTitle: GenerateTitle<Product | Page> = ({ doc }) => {
@@ -127,6 +128,7 @@ export const plugins: Plugin[] = [
             webhookSecret: process.env.STRIPE_WEBHOOKS_SIGNING_SECRET!,
           }),
           initiatePayment: initiatePayment({ secretKey: process.env.STRIPE_SECRET_KEY! }),
+          confirmOrder: confirmOrder({ secretKey: process.env.STRIPE_SECRET_KEY! }),
         },
       ],
     },

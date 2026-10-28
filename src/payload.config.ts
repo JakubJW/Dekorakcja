@@ -14,20 +14,10 @@ import { pl } from '@payloadcms/translations/languages/pl'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
-import { BillingAddresses } from './collections/billing-addresses'
-import { Categories } from './collections/categories'
-import { Inquiries } from './collections/inquiries'
-import { Media } from './collections/media'
-import { Occasions } from './collections/occasions'
-import { Pages } from './collections/pages'
-import { RentCarts } from './collections/rent-carts'
-// import { RentCartsItems } from './collections/rent-carts-items'
-import { Rentables } from './collections/rentables'
-import { ShippingMethods } from './collections/shipping-methods'
+import { collections } from './collections'
 import { Users } from './collections/users'
-import { Footer } from './globals/Footer'
-import { Header } from './globals/Header'
-import { InsertSettings } from './globals/InsertSettings'
+import { generateInvoiceEndpoint } from './endpoints/insert/issue-invoice'
+import { globals } from './globals'
 import { plugins } from './plugins'
 
 const filename = fileURLToPath(import.meta.url)
@@ -50,19 +40,7 @@ export default buildConfig({
     },
     user: Users.slug,
   },
-  collections: [
-    Users,
-    Pages,
-    Categories,
-    Media,
-    Inquiries,
-    Rentables,
-    Occasions,
-    BillingAddresses,
-    ShippingMethods,
-    RentCarts,
-    // RentCartsItems,
-  ],
+  collections,
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
@@ -105,8 +83,8 @@ export default buildConfig({
     },
   }),
   //email: nodemailerAdapter(),
-  endpoints: [],
-  globals: [Header, Footer, InsertSettings],
+  endpoints: [generateInvoiceEndpoint],
+  globals,
   plugins,
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

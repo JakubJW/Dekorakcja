@@ -1,18 +1,20 @@
 import { InsertTokenManager } from './insert-token-manager'
 
 export class InsertHttpClient {
-  private baseUrl = 'https://api.insert.com.pl/subiekt123'
+  private baseUrl = 'https://api.subiekt123.pl/1.1'
 
   constructor(private tokenManager: InsertTokenManager) {}
 
   async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const accessToken = await this.tokenManager.getValidAccessToken()
 
-    const headers: HeadersInit = {
+    const headers: Record<string, string> = {
+      'x-api-version': '1.1',
       'Content-Type': 'application/json',
+      Accept: 'application/json',
       Authorization: `Bearer ${accessToken}`,
       'Ocp-Apim-Subscription-Key': process.env.INSERT_SUBSCRIPTION_KEY || '',
-      ...options.headers,
+      ...(options.headers as Record<string, string> | undefined),
     }
 
     let response = await fetch(`${this.baseUrl}${endpoint}`, {
@@ -20,7 +22,6 @@ export class InsertHttpClient {
       headers,
     })
 
-    // Jeśli token wygasł w trakcie (401), spróbuj odświeżyć i ponowić zapytanie jeden raz
     if (response.status === 401) {
       const newAccessToken = await this.tokenManager.refreshTokens()
       headers['Authorization'] = `Bearer ${newAccessToken}`

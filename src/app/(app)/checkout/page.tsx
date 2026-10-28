@@ -1,7 +1,7 @@
 import { PaymentDataProvider } from '@/components/checkout/CheckoutDataProvider'
 import { CheckoutPage } from '@/components/checkout/CheckoutPage'
 import { FormStepProvider } from '@/components/checkout/FormStepProvider'
-import { mapAddressToDomain, mapOrganizationAddressToDomain } from '@/features/addresses/mapper'
+import { mapAddressToDomain, mapBillingAddressToDomain } from '@/features/addresses/mapper'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import configPromise from '@payload-config'
 import type { Metadata } from 'next'
@@ -14,10 +14,10 @@ export default async function Checkout() {
   const payload = await getPayload({ config: configPromise })
   const { user } = await payload.auth({ headers })
 
-  const organizationAddresses = user
+  const billingAddresses = user
     ? await payload
         .find({
-          collection: 'organization-addresses',
+          collection: 'billing-addresses',
           depth: 0,
           where: {
             customer: {
@@ -25,7 +25,7 @@ export default async function Checkout() {
             },
           },
         })
-        .then((res) => res.docs.map(mapOrganizationAddressToDomain))
+        .then((res) => res.docs.map(mapBillingAddressToDomain))
     : []
 
   const shippingMethods = await payload
@@ -80,7 +80,7 @@ export default async function Checkout() {
 
       <PaymentDataProvider
         addresses={addresses}
-        organizationAddresses={organizationAddresses}
+        billingAddresses={billingAddresses}
         shippingMethods={shippingMethods}
       >
         <FormStepProvider>
