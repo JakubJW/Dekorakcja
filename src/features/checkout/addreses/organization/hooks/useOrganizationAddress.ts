@@ -1,8 +1,9 @@
+import { env } from '@/env'
 import { BillingAddress } from '@/payload-types'
 
 export const useBillingAddress = () => {
   const create = async (data: Omit<BillingAddress, 'id' | 'createdAt' | 'updatedAt'>) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/billing-address`, {
+    const response = await fetch(`${env.NEXT_PUBLIC_SERVER_URL}/api/billing-address`, {
       body: JSON.stringify(data),
       headers: {
         'Content-Type': 'application/json',
@@ -19,7 +20,7 @@ export const useBillingAddress = () => {
 
   const getMany = async (customerId: number) => {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/billing-addresses?where[customer
+      `${env.NEXT_PUBLIC_SERVER_URL}/api/billing-addresses?where[customer
       ][equals]=${customerId}&depth=0`,
       {
         headers: {

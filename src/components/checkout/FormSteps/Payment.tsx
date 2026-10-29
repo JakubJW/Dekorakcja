@@ -1,12 +1,12 @@
 import { CheckoutForm } from '@/components/forms/CheckoutForm'
 import { cssVariables } from '@/cssVariables'
+import { env } from '@/env'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import { useCheckoutData } from '../CheckoutDataProvider'
 import { useFormStep } from '../FormStepProvider'
 
-const apiKey = `${process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}`
-const stripe = loadStripe(apiKey)
+const stripe = loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 
 export const Payment = () => {
   const { setCurrentStep } = useFormStep()

@@ -4,6 +4,7 @@ import { customerOnlyFieldAccess } from '@/access/customerOnlyFieldAccess'
 import { isAdmin } from '@/access/isAdmin'
 import { isDocumentOwner } from '@/access/isDocumentOwner'
 import { ecommerceCollections } from '@/collections/plugin-ecommerce'
+import { env } from '@/env'
 import { Page, Product } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
 import { ecommercePlugin } from '@payloadcms/plugin-ecommerce'
@@ -33,24 +34,24 @@ export const plugins: Plugin[] = [
     generateURL,
   }),
   s3Storage({
-    enabled: Boolean(process.env.R2_BUCKET),
+    enabled: Boolean(env.R2_BUCKET),
     collections: {
       media: {
         disablePayloadAccessControl: true,
         generateFileURL: ({ filename, prefix }) => {
           const key = prefix ? `${prefix}/${filename}` : filename
-          return `${process.env.R2_PUBLIC_URL}/${key}`
+          return `${env.R2_PUBLIC_URL}/${key}`
         },
       },
     },
-    bucket: process.env.R2_BUCKET!,
+    bucket: env.R2_BUCKET,
     config: {
       credentials: {
-        accessKeyId: process.env.R2_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+        accessKeyId: env.R2_ACCESS_KEY_ID,
+        secretAccessKey: env.R2_SECRET_ACCESS_KEY,
       },
       region: 'auto',
-      endpoint: process.env.R2_ENDPOINT,
+      endpoint: env.R2_ENDPOINT,
       forcePathStyle: true,
     },
   }),
@@ -123,12 +124,11 @@ export const plugins: Plugin[] = [
       paymentMethods: [
         {
           ...stripeAdapter({
-            secretKey: process.env.STRIPE_SECRET_KEY!,
-            publishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
-            webhookSecret: process.env.STRIPE_WEBHOOKS_SIGNING_SECRET!,
+            secretKey: env.STRIPE_SECRET_KEY,
+            publishableKey: env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
           }),
-          initiatePayment: initiatePayment({ secretKey: process.env.STRIPE_SECRET_KEY! }),
-          confirmOrder: confirmOrder({ secretKey: process.env.STRIPE_SECRET_KEY! }),
+          initiatePayment: initiatePayment({ secretKey: env.STRIPE_SECRET_KEY }),
+          confirmOrder: confirmOrder({ secretKey: env.STRIPE_SECRET_KEY }),
         },
       ],
     },

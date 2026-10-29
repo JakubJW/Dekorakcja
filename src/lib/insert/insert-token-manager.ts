@@ -1,3 +1,5 @@
+import { env } from '@/env'
+
 export interface TokenStorage {
   getAccessToken(): Promise<string | null>
   getRefreshToken(): Promise<string | null>
@@ -33,8 +35,8 @@ export class InsertTokenManager {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
         grant_type: 'refresh_token',
-        client_id: process.env.INSERT_CLIENT_ID!,
-        client_secret: process.env.INSERT_CLIENT_SECRET!,
+        client_id: env.INSERT_CLIENT_ID,
+        client_secret: env.INSERT_CLIENT_SECRET,
         refresh_token: refreshToken,
       }),
     })

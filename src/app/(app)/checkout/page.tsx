@@ -1,6 +1,7 @@
 import { PaymentDataProvider } from '@/components/checkout/CheckoutDataProvider'
 import { CheckoutPage } from '@/components/checkout/CheckoutPage'
 import { FormStepProvider } from '@/components/checkout/FormStepProvider'
+import { env } from '@/env'
 import { mapAddressToDomain, mapBillingAddressToDomain } from '@/features/addresses/mapper'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import configPromise from '@payload-config'
@@ -52,7 +53,7 @@ export default async function Checkout() {
 
   return (
     <div className="container min-h-[90vh] flex">
-      {!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY && (
+      {!env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY && (
         <div>
           <Fragment>
             {'To enable checkout, you must '}

@@ -1,12 +1,12 @@
 'use client'
 
-import type { PayloadAdminBarProps } from '@payloadcms/admin-bar'
-
-import { cn } from '@/utilities/cn'
-import { useSelectedLayoutSegments } from 'next/navigation'
-import { PayloadAdminBar } from '@payloadcms/admin-bar'
-import React, { useState } from 'react'
+import { env } from '@/env'
 import { User } from '@/payload-types'
+import { cn } from '@/utilities/cn'
+import type { PayloadAdminBarProps } from '@payloadcms/admin-bar'
+import { PayloadAdminBar } from '@payloadcms/admin-bar'
+import { useSelectedLayoutSegments } from 'next/navigation'
+import React, { useState } from 'react'
 
 const collectionLabels = {
   pages: {
@@ -57,7 +57,7 @@ export const AdminBar: React.FC<{
             logo: 'text-white',
             user: 'text-white',
           }}
-          cmsURL={process.env.NEXT_PUBLIC_SERVER_URL}
+          cmsURL={env.NEXT_PUBLIC_SERVER_URL}
           collectionLabels={{
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore - todo fix, not sure why this is erroring

@@ -17,6 +17,7 @@ import { fileURLToPath } from 'url'
 import { collections } from './collections'
 import { Users } from './collections/users'
 import { generateInvoiceEndpoint } from './endpoints/insert/issue-invoice'
+import { env } from './env'
 import { globals } from './globals'
 import { plugins } from './plugins'
 
@@ -43,7 +44,7 @@ export default buildConfig({
   collections,
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URL || '',
+      connectionString: env.DATABASE_URL,
     },
     push: false,
   }),
@@ -86,7 +87,7 @@ export default buildConfig({
   endpoints: [generateInvoiceEndpoint],
   globals,
   plugins,
-  secret: process.env.PAYLOAD_SECRET || '',
+  secret: env.PAYLOAD_SECRET,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
