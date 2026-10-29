@@ -3,11 +3,12 @@ import type { Footer } from '@/payload-types'
 import { FooterContactColumn } from '@/components/Footer/contact-column'
 import { FooterNavColumn } from '@/components/Footer/nav-column'
 import { LogoIcon } from '@/components/icons/logo'
+import { env } from '@/env'
 import { getCachedGlobal } from '@/utilities/getGlobals'
 import Link from 'next/link'
 import { Suspense } from 'react'
 
-const { COMPANY_NAME, SITE_NAME } = process.env
+const { COMPANY_NAME, SITE_NAME } = env
 
 function FooterColumnSkeleton() {
   const skeleton = 'w-full h-6 animate-pulse rounded bg-neutral-200 dark:bg-neutral-700'

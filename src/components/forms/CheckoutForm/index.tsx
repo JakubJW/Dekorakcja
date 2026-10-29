@@ -2,6 +2,7 @@ import { useCheckoutData } from '@/components/checkout/CheckoutDataProvider'
 import { FORM_STEP, useFormStep } from '@/components/checkout/FormStepProvider'
 import { Message } from '@/components/Message'
 import { Button } from '@/components/ui/button'
+import { env } from '@/env'
 import { DomainAddress, DomainBillingAddress } from '@/features/addresses/domain/types'
 import { useEcommerce, usePayments } from '@payloadcms/plugin-ecommerce/client/react'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
@@ -40,7 +41,7 @@ export const CheckoutForm: React.FC<Props> = ({
       if (!stripe || !elements) return
 
       try {
-        const returnUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/checkout/confirm-order${customerEmail ? `?email=${customerEmail}` : ''}`
+        const returnUrl = `${env.NEXT_PUBLIC_SERVER_URL}/checkout/confirm-order${customerEmail ? `?email=${customerEmail}` : ''}`
 
         const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
           confirmParams: {

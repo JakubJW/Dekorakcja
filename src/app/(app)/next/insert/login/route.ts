@@ -1,3 +1,4 @@
+import { env } from '@/env'
 import crypto from 'crypto'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
@@ -11,16 +12,6 @@ function generateCodeChallenge(verifier: string) {
 }
 
 export async function GET() {
-  const clientId = process.env.INSERT_CLIENT_ID
-  const redirectUri = process.env.INSERT_REDIRECT_URI || ''
-
-  if (!clientId || !redirectUri) {
-    return new NextResponse(
-      'Brak zmiennych środowiskowych INSERT_CLIENT_ID lub INSERT_REDIRECT_URI',
-      { status: 500 },
-    )
-  }
-
   const codeVerifier = generateCodeVerifier()
   const codeChallenge = generateCodeChallenge(codeVerifier)
   const state = crypto.randomBytes(16).toString('hex')
@@ -28,7 +19,7 @@ export async function GET() {
 
   jar.set('code_verifier', codeVerifier, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
     maxAge: 60 * 10,
@@ -36,15 +27,15 @@ export async function GET() {
 
   jar.set('oauth_state', state, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
     maxAge: 60 * 10,
   })
 
   const searchParams = new URLSearchParams({
-    client_id: clientId,
-    redirect_uri: redirectUri,
+    client_id: env.INSERT_CLIENT_ID,
+    redirect_uri: env.INSERT_REDIRECT_URI,
     response_type: 'code',
     scope: 'openid profile email subiekt123 offline_access',
     state: state,

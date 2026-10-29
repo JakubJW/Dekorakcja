@@ -1,3 +1,4 @@
+import { env } from '@/env'
 import { withPayload } from '@payloadcms/next/withPayload'
 import type { NextConfig } from 'next'
 import path from 'path'
@@ -7,9 +8,9 @@ import { redirects } from './redirects'
 const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
-const NEXT_PUBLIC_SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+const NEXT_PUBLIC_SERVER_URL = env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
 
-const imageRemotePatterns = [NEXT_PUBLIC_SERVER_URL, process.env.R2_PUBLIC_URL]
+const imageRemotePatterns = [NEXT_PUBLIC_SERVER_URL, env.R2_PUBLIC_URL]
   .filter(Boolean)
   .map((item) => {
     const url = new URL(item!)

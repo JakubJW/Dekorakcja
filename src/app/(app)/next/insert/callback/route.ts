@@ -1,3 +1,4 @@
+import { env } from '@/env'
 import { PayloadTokenStorage } from '@/lib/insert/payload-token-storage'
 import config from '@payload-config'
 import { cookies } from 'next/headers'
@@ -27,10 +28,10 @@ export async function GET(request: Request) {
       },
       body: new URLSearchParams({
         grant_type: 'authorization_code',
-        client_id: process.env.INSERT_CLIENT_ID || '',
-        client_secret: process.env.INSERT_CLIENT_SECRET || '',
+        client_id: env.INSERT_CLIENT_ID,
+        client_secret: env.INSERT_CLIENT_SECRET,
         code: code,
-        redirect_uri: process.env.INSERT_REDIRECT_URI || '',
+        redirect_uri: env.INSERT_REDIRECT_URI,
         code_verifier: CODE_VERIFIER.value,
       }),
     })

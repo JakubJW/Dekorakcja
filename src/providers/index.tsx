@@ -1,3 +1,4 @@
+import { env } from '@/env'
 import { AuthProvider } from '@/providers/Auth'
 import { SonnerProvider } from '@/providers/Sonner'
 import { EcommerceProvider } from '@payloadcms/plugin-ecommerce/client/react'
@@ -41,7 +42,7 @@ export const Providers: React.FC<{
       }}
       paymentMethods={[
         stripeAdapterClient({
-          publishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',
+          publishableKey: env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
         }),
       ]}
     >

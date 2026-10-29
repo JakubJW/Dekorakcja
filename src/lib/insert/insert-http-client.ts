@@ -1,3 +1,5 @@
+import { env } from '@/env'
+
 import { InsertTokenManager } from './insert-token-manager'
 
 export class InsertHttpClient {
@@ -13,7 +15,7 @@ export class InsertHttpClient {
       'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization: `Bearer ${accessToken}`,
-      'Ocp-Apim-Subscription-Key': process.env.INSERT_SUBSCRIPTION_KEY || '',
+      'Ocp-Apim-Subscription-Key': env.INSERT_SUBSCRIPTION_KEY || '',
       ...(options.headers as Record<string, string> | undefined),
     }
 

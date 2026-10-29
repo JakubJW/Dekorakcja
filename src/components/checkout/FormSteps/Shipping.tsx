@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/field'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { env } from '@/env'
 import { usePayments } from '@payloadcms/plugin-ecommerce/client/react'
 import { ChevronLeft } from 'lucide-react'
 import dynamic from 'next/dynamic'
@@ -113,7 +114,7 @@ export const Shipping = () => {
       {shippingMethod?.slug === 'paczkomat-inpost' && (
         <InPostGeowidget
           onPointSelect={(point) => console.log(point.name)}
-          token={process.env.NEXT_PUBLIC_INPOST_GEOWIDGET_TOKEN!}
+          token={env.NEXT_PUBLIC_INPOST_GEOWIDGET_TOKEN}
         />
       )}
       {shippingMethod?.type === 'courier' && (
