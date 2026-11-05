@@ -11,7 +11,7 @@ const stripe = loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 export const Payment = () => {
   const { setCurrentStep } = useFormStep()
   const {
-    personalData: { email, billingAddress },
+    personalData: { billingAddress },
     paymentData,
     setProcessingPayment,
     setPaymentData,
@@ -50,7 +50,7 @@ export const Payment = () => {
       >
         <div className="flex flex-col gap-8">
           <CheckoutForm
-            customerEmail={email}
+            customerEmail={billingAddress?.email}
             billingAddress={billingAddress}
             setProcessingPayment={setProcessingPayment}
           />

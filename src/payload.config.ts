@@ -16,6 +16,7 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import { collections } from './collections'
 import { Users } from './collections/users'
+import { deleteAddressEndpoint } from './endpoints/addresses/delete'
 import { generateInvoiceEndpoint } from './endpoints/insert/issue-invoice'
 import { env } from './env'
 import { globals } from './globals'
@@ -84,7 +85,7 @@ export default buildConfig({
     },
   }),
   //email: nodemailerAdapter(),
-  endpoints: [generateInvoiceEndpoint],
+  endpoints: [generateInvoiceEndpoint, deleteAddressEndpoint],
   globals,
   plugins,
   secret: env.PAYLOAD_SECRET,

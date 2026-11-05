@@ -19,7 +19,6 @@ export const initiatePayment =
   async ({ data, req, transactionsSlug }) => {
     const payload = req.payload
     const { apiVersion, appInfo, secretKey } = props || {}
-    const customerEmail = data.customerEmail
     const currency = data.currency
     const cart = data.cart
     const amount = cart.subtotal
@@ -33,9 +32,6 @@ export const initiatePayment =
     }
     if (!cart || !cart.items || cart.items.length === 0) {
       throw new Error('Cart is empty or not provided.')
-    }
-    if (!customerEmail || typeof customerEmail !== 'string') {
-      throw new Error('A valid customer email is required to make a purchase.')
     }
     if (!amount || typeof amount !== 'number' || amount <= 0) {
       throw new Error('A valid amount is required to initiate a payment.')
@@ -53,12 +49,12 @@ export const initiatePayment =
     try {
       let customer = (
         await stripe.customers.list({
-          email: customerEmail,
+          email: billingAddressFromData.email,
         })
       ).data[0]
       if (!customer?.id) {
         customer = await stripe.customers.create({
-          email: customerEmail,
+          email: billingAddressFromData.email,
         })
       }
       const flattenedCart = cart.items.map((item) => {
@@ -105,7 +101,7 @@ export const initiatePayment =
                 customer: req.user.id,
               }
             : {
-                customerEmail,
+                customerEmail: billingAddressFromData.email,
               }),
           amount: paymentIntent.amount,
           billingAddress: billingAddressFromData,

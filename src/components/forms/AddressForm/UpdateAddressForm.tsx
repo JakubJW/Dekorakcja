@@ -1,19 +1,14 @@
 import { useCheckoutData } from '@/components/checkout/CheckoutDataProvider'
-import { DomainBillingAddress } from '@/features/addresses/domain/types'
+import { DomainAddress } from '@/features/addresses/domain/types'
 import { User } from '@/payload-types'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { useAddresses } from '@payloadcms/plugin-ecommerce/client/react'
-import { useForm } from 'react-hook-form'
 import { AddressForm } from '.'
-import {
-  TUpdateBillingAddressFormSchema,
-  updateBillingAddressFormSchema,
-} from './billingAddressFormSchema'
+import { TUpdateAddressFormSchema } from './billingAddressFormSchema'
 
 type Props = {
   user?: User | null
   existingAddressId?: number
-  initialData: DomainBillingAddress
+  initialData?: DomainAddress
 }
 
 export const UpdateAddressForm = ({ user, existingAddressId, initialData }: Props) => {
@@ -21,18 +16,10 @@ export const UpdateAddressForm = ({ user, existingAddressId, initialData }: Prop
   const {
     personalData: { setBillingAddress },
   } = useCheckoutData()
-  const form = useForm({
-    resolver: zodResolver(updateBillingAddressFormSchema),
-    values: initialData,
-  })
 
-  const handleSubmit = (values: TUpdateBillingAddressFormSchema) => {
-    if (values.submitAddress && existingAddressId) {
-      updateAddress(existingAddressId, values)
-    }
-
+  const handleSubmit = (values: TUpdateAddressFormSchema) => {
     setBillingAddress(values)
   }
 
-  return <AddressForm form={form} onSubmit={handleSubmit} allowAddressSave={Boolean(user)} />
+  return <AddressForm onSubmit={handleSubmit} mode="update" initialData={initialData} />
 }

@@ -1,6 +1,5 @@
 import { Price } from '@/components/Price'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   Field,
   FieldContent,
@@ -8,7 +7,6 @@ import {
   FieldLabel,
   FieldTitle,
 } from '@/components/ui/field'
-import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { env } from '@/env'
 import { usePayments } from '@payloadcms/plugin-ecommerce/client/react'
@@ -24,17 +22,9 @@ const InPostGeowidget = dynamic(() => import('../../CategoryTabs/InPostGeowidget
 
 export const Shipping = () => {
   const {
-    shippingData: {
-      shippingMethods,
-      shippingMethod,
-      setShippingMethod,
-      shippingAddress,
-      billingAddressSameAsShipping,
-      setBillingAddressSameAsShipping,
-      setShippingAddress,
-    },
+    shippingData: { shippingMethods, shippingMethod, setShippingMethod },
     setPaymentData,
-    personalData: { email, billingAddress },
+    personalData: { billingAddress, shippingAddress },
   } = useCheckoutData()
   const { initiatePayment } = usePayments()
   const { setCurrentStep } = useFormStep()
@@ -44,7 +34,6 @@ export const Shipping = () => {
       try {
         const paymentData = (await initiatePayment(paymentID, {
           additionalData: {
-            ...(email ? { customerEmail: email } : {}),
             billingAddress,
             shippingAddress,
             currency: 'PLN',
@@ -79,15 +68,6 @@ export const Shipping = () => {
 
     if (!selectedMethod) return
     setShippingMethod(selectedMethod)
-    //tutaj prawdopodobnie wolasz funkcje z providera, ktora ustawi w kontekscie checkoutu wybrana metode dostawy
-    //nastepnie z providera zostanie pobrana ta wartosc i powinna sie zaktualizowac cena
-    //potem metoda dostawy powinna zostac wpierdolona do ordera w bazie danych i w matadanych payment intenta w stripe
-    //nie wiem tylko w jakiej formie to przechowac - czy tak samo jak adresy czyli zdenormalizowane wartosci w kolumnach
-    //czy jako jsonb czy jako chuj wie co, foreign key (raczej lipa bo metody dostawy moga sie zmieniac a to powinien byc snapshot ku pamieci)
-
-    //juz widze ze jest lipa, bo w tabeli zamowien jest kolumna subtotal, ktora bierze sie pewnie z koszyka, a my wkoszyku nie mamy
-    //zapisanej opcji delivery
-    //ale w sumie jak masz historie zamowien, to kwota zamowienia jest z wysylka, czy to suma czesciowa i dostawa jest liczona osobno?
   }
 
   return (
@@ -113,27 +93,9 @@ export const Shipping = () => {
       </RadioGroup>
       {shippingMethod?.slug === 'paczkomat-inpost' && (
         <InPostGeowidget
-          onPointSelect={(point) => console.log(point.name)}
+          onPointSelect={(point) => console.log(point)}
           token={env.NEXT_PUBLIC_INPOST_GEOWIDGET_TOKEN}
         />
-      )}
-      {shippingMethod?.type === 'courier' && (
-        <>
-          <Label htmlFor="billingAddressSameAsShipping">
-            <Checkbox
-              id="billingAddressSameAsShipping"
-              onCheckedChange={(val: boolean) => console.log('nic')}
-              checked={billingAddressSameAsShipping}
-            />
-            Adres dostawy taki sam, jak adres rozliczeniowy
-          </Label>
-          <h2 className="font-medium text-2xl">Adres dostawy</h2>
-          {/* {shippingAddress ? (
-            <UpdateAddressForm initialData={shippingAddress} />
-          ) : (
-            <CreateAddressForm />
-          )} */}
-        </>
       )}
       <div className="flex justify-between">
         <Button variant="link" size="clear" onClick={() => setCurrentStep(FORM_STEP.PERSONAL_DATA)}>

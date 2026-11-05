@@ -2,7 +2,7 @@ import { PaymentDataProvider } from '@/components/checkout/CheckoutDataProvider'
 import { CheckoutPage } from '@/components/checkout/CheckoutPage'
 import { FormStepProvider } from '@/components/checkout/FormStepProvider'
 import { env } from '@/env'
-import { mapAddressToDomain, mapBillingAddressToDomain } from '@/features/addresses/mapper'
+import { mapAddressToDomain } from '@/features/addresses/mapper'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import configPromise from '@payload-config'
 import type { Metadata } from 'next'
@@ -14,20 +14,6 @@ export default async function Checkout() {
   const headers = await getHeaders()
   const payload = await getPayload({ config: configPromise })
   const { user } = await payload.auth({ headers })
-
-  const billingAddresses = user
-    ? await payload
-        .find({
-          collection: 'billing-addresses',
-          depth: 0,
-          where: {
-            customer: {
-              equals: user ? user.id : null,
-            },
-          },
-        })
-        .then((res) => res.docs.map(mapBillingAddressToDomain))
-    : []
 
   const shippingMethods = await payload
     .find({
@@ -48,7 +34,7 @@ export default async function Checkout() {
             },
           },
         })
-        .then((res) => res.docs.map(mapAddressToDomain))
+        .then((res) => res.docs.map((doc) => mapAddressToDomain(doc, user.email)))
     : []
 
   return (
@@ -79,11 +65,7 @@ export default async function Checkout() {
 
       <h1 className="sr-only">Checkout</h1>
 
-      <PaymentDataProvider
-        addresses={addresses}
-        billingAddresses={billingAddresses}
-        shippingMethods={shippingMethods}
-      >
+      <PaymentDataProvider addresses={addresses} shippingMethods={shippingMethods}>
         <FormStepProvider>
           <CheckoutPage />
         </FormStepProvider>

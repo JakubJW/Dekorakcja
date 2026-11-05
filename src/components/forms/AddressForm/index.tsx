@@ -1,73 +1,148 @@
-import { BillingAddressType } from '@/collections/billing-addresses'
+import { BillingAddressType } from '@/collections/plugin-ecommerce/orders'
+import { supportedCountries } from '@/collections/plugin-ecommerce/supported-countries'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Info } from 'lucide-react'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { DomainAddress } from '@/features/addresses/domain/types'
+import { cn } from '@/utilities/cn'
+import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
-import { Controller, UseFormReturn } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { FormError } from '../FormError'
 import { FormItem } from '../FormItem'
 import {
-  TCreateBillingAddressFormSchema,
-  TUpdateBillingAddressFormSchema,
+  createAddressFormSchema,
+  TCreateAddressFormSchema,
+  TUpdateAddressFormSchema,
 } from './billingAddressFormSchema'
 
 type Props = {
-  allowAddressSave?: boolean
-  form: UseFormReturn<TCreateBillingAddressFormSchema | TUpdateBillingAddressFormSchema>
-  onSubmit: (values: TCreateBillingAddressFormSchema) => void
+  onSubmit: (values: TCreateAddressFormSchema | TUpdateAddressFormSchema) => void
+  onCancel?: () => void
+  initialData?: Partial<DomainAddress & { email?: string }>
+  mode: 'create' | 'update'
+  inputsContainerClassName?: string
+  formClassName?: string
 }
 
-export type FormHandle<T> = {
-  submit: () => Promise<T | undefined>
+function toFormValues(initial: Partial<DomainAddress> | undefined): TCreateAddressFormSchema {
+  const base = {
+    email: initial?.email ?? '',
+    addressLine1: initial?.addressLine1 ?? '',
+    addressLine2: initial?.addressLine2,
+    city: initial?.city ?? '',
+    postalCode: initial?.postalCode ?? '',
+    phone: initial?.phone ?? '',
+    country: 'PL' as const,
+  }
+
+  if (initial?.kind === BillingAddressType.ORGANIZATION) {
+    return {
+      ...base,
+      kind: BillingAddressType.ORGANIZATION,
+      companyName: initial.companyName ?? '',
+      taxId: initial.taxId ?? '',
+      firstName: initial.firstName,
+      lastName: initial.lastName,
+    }
+  }
+
+  if (initial?.kind === BillingAddressType.PERSONAL) {
+    return {
+      ...base,
+      kind: BillingAddressType.PERSONAL,
+      firstName: initial.firstName ?? '',
+      lastName: initial.lastName ?? '',
+      companyName: initial.companyName,
+      taxId: initial.taxId,
+    }
+  }
+
+  return {
+    ...base,
+    kind: BillingAddressType.PERSONAL,
+    firstName: '',
+    lastName: '',
+    companyName: undefined,
+    taxId: undefined,
+  }
 }
 
-export const AddressForm: React.FC<Props> = ({ form, allowAddressSave, onSubmit }) => {
-  const type = form.watch('type')
+export const AddressForm: React.FC<Props> = ({
+  onSubmit,
+  onCancel,
+  mode,
+  initialData,
+  inputsContainerClassName,
+  formClassName,
+}) => {
+  const form = useForm({
+    resolver: zodResolver(createAddressFormSchema),
+    values: toFormValues(initialData),
+  })
+
+  const [kind] = form.watch(['kind'])
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-4">
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className={cn('flex flex-col grow', formClassName)}
+    >
+      {mode === 'create' && (
         <Controller
-          name="type"
+          name="kind"
           control={form.control}
           render={({ field }) => (
-            <FormItem className="col-span-2">
-              <Label htmlFor="type">
-                <Checkbox
-                  id="type"
-                  checked={field.value === BillingAddressType.ORGANIZATION}
-                  onCheckedChange={(checked) =>
-                    checked
-                      ? field.onChange(BillingAddressType.ORGANIZATION)
-                      : field.onChange(BillingAddressType.PERSONAL)
-                  }
-                />
-                Kupuję jako firma
-              </Label>
+            <FormItem className="mb-4">
+              <RadioGroup
+                className="flex gap-4"
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+              >
+                <div className="flex items-center gap-3">
+                  <RadioGroupItem id="person" value="person" className="cursor-pointer" />
+                  <Label htmlFor="person" className="cursor-pointer">
+                    Osoba prywatna
+                  </Label>
+                </div>
+                <div className="flex items-center gap-3">
+                  <RadioGroupItem
+                    id="organization"
+                    value="organization"
+                    className="cursor-pointer"
+                  />
+                  <Label htmlFor="organization" className="cursor-pointer">
+                    Firma
+                  </Label>
+                </div>
+              </RadioGroup>
+              {form.formState.errors.kind && (
+                <FormError message={form.formState.errors.kind.message} />
+              )}
             </FormItem>
           )}
         />
-        {type === BillingAddressType.ORGANIZATION && (
-          <div className="flex items-center gap-2 rounded-md p-2 mb-4 bg-emerald-100 text-emerald-500 col-span-full">
-            <Info className="size-4" />
-            <p className="text-sm">
-              nie jesteśmy czynnym płatnikiem vatu i fv jest netto równa sie brutto
-            </p>
-          </div>
-        )}
-        {type === BillingAddressType.ORGANIZATION && (
+      )}
+      <div className={cn('grid grid-cols-1 gap-4 h-min', inputsContainerClassName)}>
+        {kind === BillingAddressType.ORGANIZATION && (
           <React.Fragment>
             <FormItem>
-              <Label htmlFor="NIP">NIP*</Label>
+              <Label htmlFor="taxId">NIP*</Label>
               <Input
-                id="NIP"
+                id="taxId"
                 autoComplete="given-name"
-                {...form.register('nip', { required: 'NIP jest wymagany.' })}
+                {...form.register('taxId', { required: 'NIP jest wymagany.' })}
               />
-              {form.formState.errors.nip && (
-                <FormError message={form.formState.errors.nip.message} />
+              {form.formState.errors.taxId && (
+                <FormError message={form.formState.errors.taxId.message} />
               )}
             </FormItem>
             <FormItem>
@@ -83,7 +158,7 @@ export const AddressForm: React.FC<Props> = ({ form, allowAddressSave, onSubmit 
             </FormItem>
           </React.Fragment>
         )}
-        {type === BillingAddressType.PERSONAL && (
+        {kind === BillingAddressType.PERSONAL && (
           <React.Fragment>
             <FormItem>
               <Label htmlFor="firstName">Imię*</Label>
@@ -109,13 +184,25 @@ export const AddressForm: React.FC<Props> = ({ form, allowAddressSave, onSubmit 
             </FormItem>
           </React.Fragment>
         )}
-        {/* <FormItem>
+        <FormItem>
           <Label htmlFor="phone">Nr telefonu</Label>
           <Input type="tel" id="phone" autoComplete="mobile tel" {...form.register('phone')} />
           {form.formState.errors.phone && (
             <FormError message={form.formState.errors.phone.message} />
           )}
-        </FormItem> */}
+        </FormItem>
+        <FormItem>
+          <Label htmlFor="email">Adres e-mail*</Label>
+          <Input
+            id="email"
+            autoComplete="email"
+            disabled={form.getValues('email') !== ''}
+            {...form.register('email', { required: 'Adres e-mail jest wymagany.' })}
+          />
+          {form.formState.errors.email && (
+            <FormError message={form.formState.errors.email.message} />
+          )}
+        </FormItem>
         <FormItem>
           <Label htmlFor="addressLine1">Ulica*</Label>
           <Input
@@ -128,7 +215,7 @@ export const AddressForm: React.FC<Props> = ({ form, allowAddressSave, onSubmit 
           )}
         </FormItem>
         <FormItem>
-          <Label htmlFor="addressLine2">Nr domu/mieszkania</Label>
+          <Label htmlFor="addressLine2">Numer lokalu</Label>
           <Input
             id="addressLine2"
             autoComplete="address-line2"
@@ -157,27 +244,42 @@ export const AddressForm: React.FC<Props> = ({ form, allowAddressSave, onSubmit 
             <FormError message={form.formState.errors.postalCode.message} />
           )}
         </FormItem>
-        {allowAddressSave && (
+        <FormItem>
           <Controller
-            name="submitAddress"
+            name="country"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="md:col-span-1 lg:col-span-2">
-                <Label htmlFor="submitAddress">
-                  <Checkbox
-                    id="submitAddress"
-                    onCheckedChange={field.onChange}
-                    checked={field.value}
-                  />
-                  Zapisz adres na moim koncie
-                </Label>
+              <FormItem>
+                <Label htmlFor={field.name}>Kraj*</Label>
+                <Select defaultValue={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger className="w-full h-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {supportedCountries.map((country) => (
+                      <SelectItem id={country.value} key={country.value} value={country.value}>
+                        {country.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {form.formState.errors.country && (
+                  <FormError message={form.formState.errors.country.message} />
+                )}
               </FormItem>
             )}
           />
-        )}
-        <Button className="self-end" type="submit">
-          Przejdź do dostawy
+        </FormItem>
+      </div>
+      <div className="flex gap-4 mt-4">
+        <Button type="submit" className="flex-1">
+          Zatwierdź
         </Button>
+        {onCancel && (
+          <Button type="button" variant={'outline'} onClick={onCancel} className="flex-1">
+            Anuluj
+          </Button>
+        )}
       </div>
     </form>
   )

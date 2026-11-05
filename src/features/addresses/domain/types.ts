@@ -1,34 +1,31 @@
-import { BillingAddressType } from '@/collections/billing-addresses'
+import { BillingAddressType } from '@/collections/plugin-ecommerce/orders'
+import { CountryType } from '@payloadcms/plugin-ecommerce/types'
 
-export type DomainAddress = {
+export type BaseAddress = {
   id?: number
   addressLine1: string
   addressLine2?: string
   city: string
   postalCode: string
-  firstName: string
-  lastName: string
   phone: string
+  country: CountryType['value']
+  email: string
 }
 
-export type BaseBillingAddress = {
-  id?: number
-  addressLine1: string
-  addressLine2?: string
-  city: string
-  postalCode: string
-}
-
-export type OrganizationBillingAddress = BaseBillingAddress & {
-  type: BillingAddressType.ORGANIZATION
-  nip: string
+export type OrganizationAddress = BaseAddress & {
+  kind: BillingAddressType.ORGANIZATION
+  taxId: string
   companyName: string
+  firstName?: string
+  lastName?: string
 }
 
-export type PersonalBillingAddress = BaseBillingAddress & {
-  type: BillingAddressType.PERSONAL
+export type PersonalAddress = BaseAddress & {
+  kind: BillingAddressType.PERSONAL
   firstName: string
   lastName: string
+  companyName?: string
+  taxId?: string
 }
 
-export type DomainBillingAddress = OrganizationBillingAddress | PersonalBillingAddress
+export type DomainAddress = OrganizationAddress | PersonalAddress

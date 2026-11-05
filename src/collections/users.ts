@@ -102,15 +102,5 @@ export const Users: CollectionConfig = {
         defaultColumns: ['id'],
       },
     },
-    {
-      name: 'billing_addresses',
-      type: 'join',
-      collection: 'billing-addresses',
-      on: 'customer',
-      admin: {
-        allowCreate: false,
-        defaultColumns: ['id'],
-      },
-    },
   ],
 }
