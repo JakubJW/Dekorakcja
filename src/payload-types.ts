@@ -72,7 +72,6 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    'billing-addresses': BillingAddress;
     categories: Category;
     inquiries: Inquiry;
     media: Media;
@@ -104,7 +103,6 @@ export interface Config {
       cart: 'carts';
       rental_cart: 'rent-carts';
       addresses: 'addresses';
-      billing_addresses: 'billing-addresses';
     };
     variantTypes: {
       options: 'variantOptions';
@@ -114,7 +112,6 @@ export interface Config {
     };
   };
   collectionsSelect: {
-    'billing-addresses': BillingAddressesSelect<false> | BillingAddressesSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
@@ -200,20 +197,45 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "billing-addresses".
+ * via the `definition` "categories".
  */
-export interface BillingAddress {
+export interface Category {
   id: number;
-  type: 'person' | 'organization';
+  title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inquiries".
+ */
+export interface Inquiry {
+  id: number;
+  'rent-cart': number | RentCart;
+  user?: (number | null) | User;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rent-carts".
+ */
+export interface RentCart {
+  id: number;
   customer?: (number | null) | User;
-  firstName?: string | null;
-  lastName?: string | null;
-  nip?: string | null;
-  companyName?: string | null;
-  addressLine1: string;
-  addressLine2?: string | null;
-  city: string;
-  postalCode: string;
+  items?:
+    | {
+        rentable?: (number | null) | Rentable;
+        id?: string | null;
+      }[]
+    | null;
+  secret?: string | null;
+  submittedAt?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -245,11 +267,6 @@ export interface User {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
-  billing_addresses?: {
-    docs?: (number | BillingAddress)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -275,6 +292,7 @@ export interface User {
  */
 export interface Order {
   id: number;
+  shippingMethod: number | ShippingMethod;
   shippingAddress: {
     firstName: string;
     lastName: string;
@@ -283,6 +301,47 @@ export interface Order {
     city: string;
     postalCode: string;
     phone: string;
+    country:
+      | 'US'
+      | 'GB'
+      | 'CA'
+      | 'AU'
+      | 'AT'
+      | 'BE'
+      | 'BR'
+      | 'BG'
+      | 'CY'
+      | 'CZ'
+      | 'DK'
+      | 'EE'
+      | 'FI'
+      | 'FR'
+      | 'DE'
+      | 'GR'
+      | 'HK'
+      | 'HU'
+      | 'IN'
+      | 'IE'
+      | 'IT'
+      | 'JP'
+      | 'LV'
+      | 'LT'
+      | 'LU'
+      | 'MY'
+      | 'MT'
+      | 'MX'
+      | 'NL'
+      | 'NZ'
+      | 'NO'
+      | 'PL'
+      | 'PT'
+      | 'RO'
+      | 'SG'
+      | 'SK'
+      | 'SI'
+      | 'ES'
+      | 'SE'
+      | 'CH';
   };
   billingAddress: {
     type?: ('person' | 'organization') | null;
@@ -293,8 +352,49 @@ export interface Order {
     addressLine1: string;
     addressLine2?: string | null;
     city: string;
+    phone: string;
     postalCode: string;
-    country: string;
+    country:
+      | 'US'
+      | 'GB'
+      | 'CA'
+      | 'AU'
+      | 'AT'
+      | 'BE'
+      | 'BR'
+      | 'BG'
+      | 'CY'
+      | 'CZ'
+      | 'DK'
+      | 'EE'
+      | 'FI'
+      | 'FR'
+      | 'DE'
+      | 'GR'
+      | 'HK'
+      | 'HU'
+      | 'IN'
+      | 'IE'
+      | 'IT'
+      | 'JP'
+      | 'LV'
+      | 'LT'
+      | 'LU'
+      | 'MY'
+      | 'MT'
+      | 'MX'
+      | 'NL'
+      | 'NZ'
+      | 'NO'
+      | 'PL'
+      | 'PT'
+      | 'RO'
+      | 'SG'
+      | 'SK'
+      | 'SI'
+      | 'ES'
+      | 'SE'
+      | 'CH';
   };
   items?:
     | {
@@ -311,6 +411,25 @@ export interface Order {
   transactions?: (number | Transaction)[] | null;
   status?: OrderStatus;
   accessToken?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shipping-methods".
+ */
+export interface ShippingMethod {
+  id: number;
+  type: 'courier' | 'locker';
+  name: string;
+  price: number;
+  enabled?: boolean | null;
+  sortOrder?: number | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -649,21 +768,6 @@ export interface ArchiveBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'archive';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories".
- */
-export interface Category {
-  id: number;
-  title: string;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1105,79 +1209,16 @@ export interface Cart {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "rent-carts".
- */
-export interface RentCart {
-  id: number;
-  customer?: (number | null) | User;
-  items?:
-    | {
-        rentable?: (number | null) | Rentable;
-        id?: string | null;
-      }[]
-    | null;
-  secret?: string | null;
-  submittedAt?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "rentables".
- */
-export interface Rentable {
-  id: number;
-  title: string;
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  gallery?:
-    | {
-        image: number | Media;
-        variantOption?: (number | null) | VariantOption;
-        id?: string | null;
-      }[]
-    | null;
-  layout?: (CallToActionBlock | ContentBlock | MediaBlock)[] | null;
-  relatedProducts?: (number | Product)[] | null;
-  meta?: {
-    title?: string | null;
-    /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
-     */
-    image?: (number | null) | Media;
-    description?: string | null;
-  };
-  categories?: (number | Category)[] | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "addresses".
  */
 export interface Address {
   id: number;
   customer: number | User;
-  firstName: string;
-  lastName: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  taxId?: string | null;
+  companyName?: string | null;
+  email: string;
   addressLine1: string;
   addressLine2?: string | null;
   city: string;
@@ -1229,26 +1270,44 @@ export interface Address {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "inquiries".
+ * via the `definition` "rentables".
  */
-export interface Inquiry {
+export interface Rentable {
   id: number;
-  'rent-cart': number | RentCart;
-  user?: (number | null) | User;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "shipping-methods".
- */
-export interface ShippingMethod {
-  id: number;
-  type: 'courier' | 'locker';
-  name: string;
-  price: number;
-  enabled?: boolean | null;
-  sortOrder?: number | null;
+  title: string;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  gallery?:
+    | {
+        image: number | Media;
+        variantOption?: (number | null) | VariantOption;
+        id?: string | null;
+      }[]
+    | null;
+  layout?: (CallToActionBlock | ContentBlock | MediaBlock)[] | null;
+  relatedProducts?: (number | Product)[] | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
+  categories?: (number | Category)[] | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -1333,10 +1392,6 @@ export interface PayloadKv {
 export interface PayloadLockedDocument {
   id: number;
   document?:
-    | ({
-        relationTo: 'billing-addresses';
-        value: number | BillingAddress;
-      } | null)
     | ({
         relationTo: 'categories';
         value: number | Category;
@@ -1458,24 +1513,6 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "billing-addresses_select".
- */
-export interface BillingAddressesSelect<T extends boolean = true> {
-  type?: T;
-  customer?: T;
-  firstName?: T;
-  lastName?: T;
-  nip?: T;
-  companyName?: T;
-  addressLine1?: T;
-  addressLine2?: T;
-  city?: T;
-  postalCode?: T;
-  updatedAt?: T;
-  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1861,7 +1898,6 @@ export interface UsersSelect<T extends boolean = true> {
   cart?: T;
   rental_cart?: T;
   addresses?: T;
-  billing_addresses?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -2036,6 +2072,9 @@ export interface AddressesSelect<T extends boolean = true> {
   customer?: T;
   firstName?: T;
   lastName?: T;
+  taxId?: T;
+  companyName?: T;
+  email?: T;
   addressLine1?: T;
   addressLine2?: T;
   city?: T;
@@ -2158,6 +2197,7 @@ export interface CartsSelect<T extends boolean = true> {
  * via the `definition` "orders_select".
  */
 export interface OrdersSelect<T extends boolean = true> {
+  shippingMethod?: T;
   shippingAddress?:
     | T
     | {
@@ -2168,6 +2208,7 @@ export interface OrdersSelect<T extends boolean = true> {
         city?: T;
         postalCode?: T;
         phone?: T;
+        country?: T;
       };
   billingAddress?:
     | T
@@ -2180,6 +2221,7 @@ export interface OrdersSelect<T extends boolean = true> {
         addressLine1?: T;
         addressLine2?: T;
         city?: T;
+        phone?: T;
         postalCode?: T;
         country?: T;
       };

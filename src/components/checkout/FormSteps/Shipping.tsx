@@ -1,6 +1,6 @@
 import { Price } from '@/components/Price'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import {
   Field,
   FieldContent,
@@ -8,34 +8,30 @@ import {
   FieldLabel,
   FieldTitle,
 } from '@/components/ui/field'
-import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { env } from '@/env'
+import { InpostPointInterface } from '@/features/checkout/inpost-geowidget'
 import { usePayments } from '@payloadcms/plugin-ecommerce/client/react'
 import { ChevronLeft } from 'lucide-react'
 import dynamic from 'next/dynamic'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { useCheckoutData } from '../CheckoutDataProvider'
 import { FORM_STEP, useFormStep } from '../FormStepProvider'
 
-const InPostGeowidget = dynamic(() => import('../../CategoryTabs/InPostGeowidgetInner'), {
+const InPostGeowidget = dynamic(() => import('@/features/checkout/inpost-geowidget'), {
   ssr: false,
 })
 
 export const Shipping = () => {
   const {
-    shippingData: {
-      shippingMethods,
-      shippingMethod,
-      setShippingMethod,
-      shippingAddress,
-      billingAddressSameAsShipping,
-      setBillingAddressSameAsShipping,
-      setShippingAddress,
-    },
+    shippingData: { shippingMethods, shippingMethod, setShippingMethod },
     setPaymentData,
-    personalData: { email, billingAddress },
+    personalData: { billingAddress, shippingAddress },
   } = useCheckoutData()
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [selectedLocker, setSelectedLocker] = useState<
+    Pick<InpostPointInterface, 'location_description' | 'address' | 'name'> | undefined
+  >(undefined)
   const { initiatePayment } = usePayments()
   const { setCurrentStep } = useFormStep()
 
@@ -44,7 +40,6 @@ export const Shipping = () => {
       try {
         const paymentData = (await initiatePayment(paymentID, {
           additionalData: {
-            ...(email ? { customerEmail: email } : {}),
             billingAddress,
             shippingAddress,
             currency: 'PLN',
@@ -77,64 +72,71 @@ export const Shipping = () => {
   const handleDeliveryOptionChange = (value: string) => {
     const selectedMethod = shippingMethods.find((method) => method.slug === value)
 
-    if (!selectedMethod) return
-    setShippingMethod(selectedMethod)
-    //tutaj prawdopodobnie wolasz funkcje z providera, ktora ustawi w kontekscie checkoutu wybrana metode dostawy
-    //nastepnie z providera zostanie pobrana ta wartosc i powinna sie zaktualizowac cena
-    //potem metoda dostawy powinna zostac wpierdolona do ordera w bazie danych i w matadanych payment intenta w stripe
-    //nie wiem tylko w jakiej formie to przechowac - czy tak samo jak adresy czyli zdenormalizowane wartosci w kolumnach
-    //czy jako jsonb czy jako chuj wie co, foreign key (raczej lipa bo metody dostawy moga sie zmieniac a to powinien byc snapshot ku pamieci)
+    if (!selectedMethod) {
+      setShippingMethod(undefined)
+      return
+    }
 
-    //juz widze ze jest lipa, bo w tabeli zamowien jest kolumna subtotal, ktora bierze sie pewnie z koszyka, a my wkoszyku nie mamy
-    //zapisanej opcji delivery
-    //ale w sumie jak masz historie zamowien, to kwota zamowienia jest z wysylka, czy to suma czesciowa i dostawa jest liczona osobno?
+    setShippingMethod(selectedMethod)
+
+    if (selectedMethod.slug === 'paczkomat-inpost' && !dialogOpen) {
+      setDialogOpen(true)
+    }
+  }
+
+  const handleDialogOpenChange = (state: boolean) => {
+    setDialogOpen(state)
+
+    if (!state && shippingMethod?.slug === 'paczkomat-inpost' && !selectedLocker) {
+      setShippingMethod(undefined)
+    }
+  }
+
+  const handleShippingpointSelect = (point: InpostPointInterface) => {
+    setSelectedLocker((prev) => ({
+      ...prev,
+      name: point.name,
+      address: { line1: point.address.line1, line2: point.address.line2 },
+      location_description: point.location_description,
+    }))
+    setDialogOpen(false)
   }
 
   return (
     <div className="space-y-6">
       <h2 className="font-medium text-2xl">Sposób dostawy</h2>
       <RadioGroup
-        defaultValue={shippingMethod?.slug}
+        value={shippingMethod?.slug}
         onValueChange={(value) => handleDeliveryOptionChange(value)}
       >
         {shippingMethods.map((method) => (
           <FieldLabel htmlFor={method.slug} key={method.id}>
-            <Field orientation="horizontal" className="cursor-pointer">
-              <FieldContent className="flex-row justify-between">
-                <FieldTitle>{method.name}</FieldTitle>
-                <FieldDescription>
-                  <Price as="span" amount={method.price} />
-                </FieldDescription>
+            <Field className="cursor-pointer">
+              <FieldContent>
+                <div className="flex justify-between">
+                  <FieldTitle>{method.name}</FieldTitle>
+                  <FieldDescription>
+                    <Price as="span" amount={method.price} />
+                  </FieldDescription>
+                </div>
+                {method.slug === 'paczkomat-inpost' && selectedLocker && (
+                  <div>
+                    <div>
+                      <p className="text-xs">{selectedLocker?.name}</p>
+                      <p className="font-bold">
+                        {selectedLocker?.address.line1}, {selectedLocker.address.line2}
+                      </p>
+                      <p>{selectedLocker.location_description}</p>
+                    </div>
+                    <Button onClick={() => setDialogOpen(true)}>Zmień</Button>
+                  </div>
+                )}
               </FieldContent>
               <RadioGroupItem value={method.slug} id={method.slug} className="hidden" />
             </Field>
           </FieldLabel>
         ))}
       </RadioGroup>
-      {shippingMethod?.slug === 'paczkomat-inpost' && (
-        <InPostGeowidget
-          onPointSelect={(point) => console.log(point.name)}
-          token={env.NEXT_PUBLIC_INPOST_GEOWIDGET_TOKEN}
-        />
-      )}
-      {shippingMethod?.type === 'courier' && (
-        <>
-          <Label htmlFor="billingAddressSameAsShipping">
-            <Checkbox
-              id="billingAddressSameAsShipping"
-              onCheckedChange={(val: boolean) => console.log('nic')}
-              checked={billingAddressSameAsShipping}
-            />
-            Adres dostawy taki sam, jak adres rozliczeniowy
-          </Label>
-          <h2 className="font-medium text-2xl">Adres dostawy</h2>
-          {/* {shippingAddress ? (
-            <UpdateAddressForm initialData={shippingAddress} />
-          ) : (
-            <CreateAddressForm />
-          )} */}
-        </>
-      )}
       <div className="flex justify-between">
         <Button variant="link" size="clear" onClick={() => setCurrentStep(FORM_STEP.PERSONAL_DATA)}>
           <ChevronLeft /> Poprzedni krok
@@ -150,6 +152,16 @@ export const Shipping = () => {
           Przejdź do płatności
         </Button>
       </div>
+      <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogTitle>Znajdź Paczkomat</DialogTitle>
+          <DialogDescription></DialogDescription>
+          <InPostGeowidget
+            onPointSelect={(point) => handleShippingpointSelect(point)}
+            token={env.NEXT_PUBLIC_INPOST_GEOWIDGET_TOKEN}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -41,8 +41,8 @@ export const CheckoutPage: React.FC = () => {
   return (
     <div className="w-full flex flex-col mb-16">
       <Stepper />
-      <div className="border rounded-xl flex flex-col md:flex-row grow items-stretch justify-stretch">
-        <div className="basis-full lg:basis-2/3 p-8">
+      <div className="md:border rounded-xl flex flex-col md:flex-row grow items-stretch justify-stretch">
+        <div className="basis-full lg:basis-2/3 md:p-8">
           <Suspense fallback={<div>pizda</div>}>
             <CurrentStep />
           </Suspense>

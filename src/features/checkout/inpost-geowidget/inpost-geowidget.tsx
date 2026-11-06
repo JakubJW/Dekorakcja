@@ -1,21 +1,26 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { InpostPointInterface } from './types'
 
-interface InPostGeowidgetProps {
+export interface InPostGeowidgetProps {
   token: string
-  onPointSelect?: (point: any) => void
+  onPointSelect?: (point: InpostPointInterface) => void
   config?: string
   language?: string
 }
 
-export default function InPostGeowidgetInner({
+export default function InpostGeowidget({
   token,
   onPointSelect,
   config = 'parcelCollect',
   language = 'pl',
 }: InPostGeowidgetProps) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const onPointSelectRef = useRef(onPointSelect)
+  useEffect(() => {
+    onPointSelectRef.current = onPointSelect
+  }, [onPointSelect])
 
   useEffect(() => {
     const container = containerRef.current
@@ -29,9 +34,10 @@ export default function InPostGeowidgetInner({
 
     container.replaceChildren(widget)
 
-    const handlePointSelection = (event: any) => {
-      if (event.detail && onPointSelect) {
-        onPointSelect(event.detail)
+    const handlePointSelection = (event: Event) => {
+      const customEvent = event as CustomEvent<InpostPointInterface>
+      if (customEvent.detail) {
+        onPointSelectRef.current?.(customEvent.detail)
       }
     }
 
@@ -43,7 +49,7 @@ export default function InPostGeowidgetInner({
         container.innerHTML = ''
       }
     }
-  }, [token, language, config, onPointSelect])
+  }, [token, language, config])
 
-  return <div ref={containerRef} className="w-full h-[500px] min-h-[500px] relative" />
+  return <div ref={containerRef} className="w-full min-h-[80vh] relative" />
 }

@@ -25,7 +25,6 @@ export const confirmOrder =
   }) => {
     const payload = req.payload
     const { apiVersion, appInfo, secretKey } = props || {}
-    const customerEmail = data.customerEmail
     const paymentIntentID = data.paymentIntentID
     if (!secretKey) {
       throw new Error('Stripe secret key is required')
@@ -44,16 +43,6 @@ export const confirmOrder =
       },
     })
     try {
-      let customer = (
-        await stripe.customers.list({
-          email: customerEmail,
-        })
-      ).data[0]
-      if (!customer?.id) {
-        customer = await stripe.customers.create({
-          email: customerEmail,
-        })
-      }
       // Find our existing transaction by the payment intent ID
       const transactionsResults = await payload.find({
         collection: transactionsSlug as 'transactions',
@@ -72,6 +61,7 @@ export const confirmOrder =
       if (paymentIntent.status !== 'succeeded') {
         throw new Error(`Payment not completed.`)
       }
+
       const cartID = paymentIntent.metadata.cartID
       const cartItemsSnapshot = paymentIntent.metadata.cartItemsSnapshot
         ? JSON.parse(paymentIntent.metadata.cartItemsSnapshot)
@@ -82,12 +72,26 @@ export const confirmOrder =
       const billingAddress = paymentIntent.metadata.billingAddress
         ? JSON.parse(paymentIntent.metadata.billingAddress)
         : undefined
+
+      console.log(billingAddress)
+
       if (!cartID) {
         throw new Error('Cart ID not found in the PaymentIntent metadata')
       }
       if (!cartItemsSnapshot || !Array.isArray(cartItemsSnapshot)) {
         throw new Error('Cart items snapshot not found or invalid in the PaymentIntent metadata')
       }
+      let customer = (
+        await stripe.customers.list({
+          email: billingAddress.email,
+        })
+      ).data[0]
+      if (!customer?.id) {
+        customer = await stripe.customers.create({
+          email: billingAddress.email,
+        })
+      }
+
       const order = await payload.create({
         collection: ordersSlug as 'orders',
         draft: false,
@@ -99,11 +103,16 @@ export const confirmOrder =
                 customer: req.user.id,
               }
             : {
-                customerEmail,
+                customerEmail: billingAddress.email,
               }),
           items: cartItemsSnapshot,
           shippingAddress,
-          billingAddress,
+          billingAddress: {
+            ...billingAddress,
+            type: billingAddress.kind,
+            nip: billingAddress.taxId,
+          },
+          shippingMethod: 1,
           status: 'processing',
           transactions: [transaction.id],
         },

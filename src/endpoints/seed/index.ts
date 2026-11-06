@@ -1,6 +1,6 @@
 import type { CollectionSlug, File, GlobalSlug, Payload, PayloadRequest } from 'payload'
 
-import { Address, BillingAddress, Transaction, VariantOption } from '@/payload-types'
+import { Address, Transaction, VariantOption } from '@/payload-types'
 import { contactFormData } from './contact-form'
 import { contactPageData } from './contact-page'
 import { homePageData } from './home'
@@ -43,15 +43,18 @@ const colorVariantOptions = [
 
 const globals: GlobalSlug[] = ['header', 'footer']
 
-const baseAddressUSData: Omit<BillingAddress, 'id' | 'createdAt' | 'updatedAt'> = {
+const baseAddressUSData: Omit<Address, 'id' | 'createdAt' | 'updatedAt'> = {
   firstName: 'Otto',
   lastName: 'Octavius',
-  type: 'organization',
   companyName: 'Oscorp',
   addressLine1: '123 Main St',
   addressLine2: 'Suite 100',
   city: 'New York',
   postalCode: '10001',
+  customer: 2,
+  email: 'jacek@gmail.com',
+  phone: '123123123',
+  country: 'PL',
 }
 
 const baseAddressUKData: Transaction['billingAddress'] = {

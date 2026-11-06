@@ -1,66 +1,42 @@
 'use client'
 
-import { CreateAddressModal } from '@/components/addresses/CreateAddressModal'
-import type { Address } from '@/payload-types'
+import { supportedCountries } from '@/collections/plugin-ecommerce/supported-countries'
+import { DomainAddress } from '@/features/addresses/domain/types'
 import React from 'react'
 
 type Props = {
-  address: Partial<Omit<Address, 'country'>> & { country?: string } // Allow address to be partial and entirely optional as this is entirely for display purposes
+  address: DomainAddress
   actions?: React.ReactNode
-  beforeActions?: React.ReactNode
-  afterActions?: React.ReactNode
-  hideActions?: boolean
+  label?: React.ReactNode
 }
 
-export const AddressItem: React.FC<Props> = ({
-  address,
-  actions,
-  hideActions = false,
-  beforeActions,
-  afterActions,
-}) => {
-  if (!address) {
-    return null
-  }
-
+export const AddressItem: React.FC<Props> = ({ address, actions, label }) => {
   return (
-    <div className="flex items-center">
+    <div className="border rounded-lg p-4 lg:p-6 flex flex-col items-start">
+      {label}
       <div className="grow">
-        <p className="font-medium">
-          {address.firstName} {address.lastName}
-        </p>
-        <p>{address.phone && <span>{address.phone}</span>}</p>
-        <p>
+        {address.companyName && <p className="mb-4">{address.companyName}</p>}
+        {address.firstName && address.lastName && (
+          <p className="mb-4">
+            {address.firstName} {address.lastName}
+          </p>
+        )}
+        <p className="font-light text-muted-foreground">
           {address.addressLine1}
-          {address.addressLine2 && <>, {address.addressLine2}</>}
+          {address.addressLine2 && <>/{address.addressLine2}</>}
         </p>
-        <p>
-          {address.city}, {address.postalCode}
+        <p className="font-light text-muted-foreground">
+          {address.postalCode}&nbsp;{address.city}
         </p>
-        <p>{address.country}</p>
+        <p className="font-light text-muted-foreground">
+          {supportedCountries.filter((country) => country.value === address.country)[0].label}
+        </p>
+        <p className="font-light text-muted-foreground">
+          tel: {address.phone && <span>{address.phone}</span>}
+        </p>
+        {address.taxId && <p className="font-light text-muted-foreground">NIP: {address.taxId}</p>}
       </div>
-
-      {!hideActions && address.id && (
-        <div className="shrink flex flex-col gap-2">
-          {actions ? (
-            actions
-          ) : (
-            <>
-              {beforeActions}
-              {address.id && (
-                <CreateAddressModal
-                  addressID={address.id}
-                  //@ts-ignore
-                  initialData={address}
-                  buttonText={'Edit'}
-                  modalTitle={'Edit address'}
-                />
-              )}
-              {afterActions}
-            </>
-          )}
-        </div>
-      )}
+      {actions}
     </div>
   )
 }

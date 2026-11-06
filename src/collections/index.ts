@@ -1,5 +1,4 @@
 import { CollectionConfig } from 'payload'
-import { BillingAddresses } from './billing-addresses'
 import { Categories } from './categories'
 import { Inquiries } from './inquiries'
 import { Media } from './media'
@@ -13,7 +12,6 @@ import { ShippingMethods } from './shipping-methods'
 import { Users } from './users'
 
 export const collections: CollectionConfig[] = [
-  BillingAddresses,
   Categories,
   Inquiries,
   Media,
