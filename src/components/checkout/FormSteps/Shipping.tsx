@@ -11,6 +11,7 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { env } from '@/env'
 import { InpostPointInterface } from '@/features/checkout/inpost-geowidget'
+import { DeliveryIcon } from '@/features/checkout/shipping/icons/delivery-icon'
 import { usePayments } from '@payloadcms/plugin-ecommerce/client/react'
 import { ChevronLeft } from 'lucide-react'
 import dynamic from 'next/dynamic'
@@ -114,23 +115,33 @@ export const Shipping = () => {
             <Field className="cursor-pointer">
               <FieldContent>
                 <div className="flex justify-between">
-                  <FieldTitle>{method.name}</FieldTitle>
+                  <FieldTitle>
+                    <div className="flex items-center gap-4">
+                      <div className="min-w-40">
+                        <DeliveryIcon name={method.slug} className="h-4" />
+                      </div>
+                      <span className="whitespace-pre">{method.name}</span>
+                    </div>
+                  </FieldTitle>
                   <FieldDescription>
                     <Price as="span" amount={method.price} />
                   </FieldDescription>
                 </div>
-                {method.slug === 'paczkomat-inpost' && selectedLocker && (
-                  <div>
-                    <div>
-                      <p className="text-xs">{selectedLocker?.name}</p>
-                      <p className="font-bold">
-                        {selectedLocker?.address.line1}, {selectedLocker.address.line2}
-                      </p>
-                      <p>{selectedLocker.location_description}</p>
+                {method.slug === 'paczkomat-inpost' &&
+                  selectedLocker !== undefined &&
+                  shippingMethod &&
+                  shippingMethod?.slug === 'paczkomat-inpost' && (
+                    <div className="mt-2">
+                      <div className="mb-4">
+                        <p className="text-xs mb-1">{selectedLocker?.name}</p>
+                        <p className="font-bold">
+                          {selectedLocker?.address.line1}, {selectedLocker.address.line2}
+                        </p>
+                        <p>{selectedLocker.location_description}</p>
+                      </div>
+                      <Button onClick={() => setDialogOpen(true)}>Zmień</Button>
                     </div>
-                    <Button onClick={() => setDialogOpen(true)}>Zmień</Button>
-                  </div>
-                )}
+                  )}
               </FieldContent>
               <RadioGroupItem value={method.slug} id={method.slug} className="hidden" />
             </Field>

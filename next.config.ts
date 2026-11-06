@@ -46,10 +46,28 @@ const nextConfig: NextConfig = {
       '.mjs': ['.mts', '.mjs'],
     }
 
+    const imageRule = webpackConfig.module.rules.find(
+      (rule) => typeof rule === 'object' && rule.test?.test?.('.svg'),
+    )
+    if (imageRule) {
+      imageRule.exclude = /\.svg$/i
+    }
+
+    webpackConfig.module.rules.push({
+      test: /\.svg$/i,
+      use: ['@svgr/webpack'],
+    })
+
     return webpackConfig
   },
   turbopack: {
     root: path.resolve(dirname),
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
+      },
+    },
   },
 }
 
