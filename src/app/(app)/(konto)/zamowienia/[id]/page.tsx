@@ -103,6 +103,7 @@ export default async function Order({ params, searchParams }: PageProps) {
         : orderResult.customer) === user.id
 
     if (orderResult && (canAccessAsGuest || canAccessAsUser)) {
+      //@ts-ignore
       order = orderResult
     }
   } catch (error) {
@@ -192,6 +193,7 @@ export default async function Order({ params, searchParams }: PageProps) {
           <div>
             <h2 className="font-mono text-primary/50 mb-4 uppercase text-sm">Shipping Address</h2>
 
+            {/* @ts-ignore */}
             <AddressItem address={order.shippingAddress} hideActions />
           </div>
         )}

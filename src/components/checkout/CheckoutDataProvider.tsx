@@ -37,7 +37,7 @@ type PersonalDataStep = {
 type ShippingDataStep = {
   shippingMethods: ShippingMethod[]
   shippingMethod?: ShippingMethod
-  setShippingMethod: (value: ShippingMethod) => void
+  setShippingMethod: Dispatch<SetStateAction<ShippingMethod | undefined>>
 }
 
 type CheckoutDataContext = {

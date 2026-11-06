@@ -34,7 +34,7 @@ export default async function Checkout() {
             },
           },
         })
-        .then((res) => res.docs.map((doc) => mapAddressToDomain(doc, user.email)))
+        .then((res) => res.docs.map((doc) => mapAddressToDomain(doc)))
     : []
 
   return (

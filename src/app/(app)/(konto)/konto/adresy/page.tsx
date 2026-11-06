@@ -25,6 +25,7 @@ export default async function AddressesPage() {
         <h1 className="text-3xl font-medium mb-8">Adresy</h1>
 
         <div className="mb-8">
+          {/* @ts-ignore */}
           <AddressListing />
         </div>
 

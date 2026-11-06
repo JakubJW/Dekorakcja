@@ -3,7 +3,7 @@ import { FORM_STEP, useFormStep } from '@/components/checkout/FormStepProvider'
 import { Message } from '@/components/Message'
 import { Button } from '@/components/ui/button'
 import { env } from '@/env'
-import { DomainAddress, DomainBillingAddress } from '@/features/addresses/domain/types'
+import { DomainAddress } from '@/features/addresses/domain/types'
 import { useEcommerce, usePayments } from '@payloadcms/plugin-ecommerce/client/react'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { useRouter } from 'next/navigation'
@@ -11,7 +11,7 @@ import React, { FormEvent, useCallback } from 'react'
 
 type Props = {
   customerEmail?: string
-  billingAddress?: DomainBillingAddress
+  billingAddress?: DomainAddress
   shippingAddress?: DomainAddress
   setProcessingPayment: (value: boolean) => void
 }
