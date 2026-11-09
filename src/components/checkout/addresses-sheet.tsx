@@ -8,30 +8,36 @@ import { DomainAddress } from '@/features/addresses/domain/types'
 import { useCustomAddresses } from '@/features/addresses/hooks/useCustomAddresses'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { User } from '@/payload-types'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useCheckoutData } from '../CheckoutDataProvider'
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
+import { AddressSheetState } from './steps/addresses'
 
 type ViewState = 'LIST' | 'ADD' | 'EDIT'
 
-type AddressMenuDrawerProps = {
+type AddressSheetProps = {
   user?: User | null
+  addresses: DomainAddress[]
+  billingAddress?: DomainAddress
+  onBilingAddressChange: Dispatch<SetStateAction<DomainAddress | undefined>>
+  shippingAddress?: DomainAddress
+  onShippingAddressChange: Dispatch<SetStateAction<DomainAddress | undefined>>
+  addressSheet: AddressSheetState
+  setAddressSheet: Dispatch<SetStateAction<AddressSheetState>>
+  onIsDifferentBillingChange: Dispatch<SetStateAction<boolean>>
 }
 
-export const AddressMenuDrawer = ({ user }: AddressMenuDrawerProps) => {
+export const AddressesSheet = ({
+  user,
+  addresses,
+  billingAddress,
+  onBilingAddressChange,
+  shippingAddress,
+  onShippingAddressChange,
+  addressSheet,
+  setAddressSheet,
+  onIsDifferentBillingChange,
+}: AddressSheetProps) => {
   const [view, setView] = useState<ViewState>('LIST')
   const [editingAddress, setEditingAddress] = useState<DomainAddress | null>(null)
-  const {
-    personalData: {
-      addressSheet,
-      setAddressSheet,
-      addresses,
-      billingAddress,
-      shippingAddress,
-      setBillingAddress,
-      setShippingAddress,
-    },
-    closeSheet,
-  } = useCheckoutData()
   const { removeAddress, createAddress, updateAddress } = useCustomAddresses()
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
@@ -45,6 +51,15 @@ export const AddressMenuDrawer = ({ user }: AddressMenuDrawerProps) => {
     }
     setEditingAddress(null)
   }, [addressSheet.isOpen, addressSheet.reason, addresses.length])
+
+  const closeSheet = (action: 'success' | 'cancel') => {
+    const wasCheckbox = addressSheet.reason === 'checkbox'
+    setAddressSheet((prev) => ({ ...prev, isOpen: false, reason: null }))
+
+    if (wasCheckbox && action === 'cancel') {
+      onIsDifferentBillingChange(false)
+    }
+  }
 
   const handleSuccess = (address: DomainAddress) => {
     closeSheet('success')
@@ -69,9 +84,9 @@ export const AddressMenuDrawer = ({ user }: AddressMenuDrawerProps) => {
     if (!selectedAddress) return
 
     if (addressSheet.addressToSet === 'shipping') {
-      setShippingAddress(selectedAddress)
+      onShippingAddressChange(selectedAddress)
     } else {
-      setBillingAddress(selectedAddress)
+      onBilingAddressChange(selectedAddress)
     }
 
     closeSheet('success')
@@ -81,14 +96,14 @@ export const AddressMenuDrawer = ({ user }: AddressMenuDrawerProps) => {
     (values: TCreateAddressFormSchema) => {
       if (user) {
         createAddress(values, user.id)
-        setShippingAddress(values)
+        onShippingAddressChange(values)
       } else {
-        setShippingAddress(values)
+        onShippingAddressChange(values)
       }
 
       closeSheet('success')
     },
-    [user, setShippingAddress],
+    [user, onShippingAddressChange],
   )
 
   const handleAddressUpdate = useCallback(
@@ -102,14 +117,14 @@ export const AddressMenuDrawer = ({ user }: AddressMenuDrawerProps) => {
             address.id === updated.id ? updated : address,
           ),
         }))
-        setShippingAddress(values)
+        onShippingAddressChange(values)
       } else {
-        setShippingAddress(values)
+        onShippingAddressChange(values)
       }
 
       closeSheet('success')
     },
-    [editingAddress, setShippingAddress],
+    [editingAddress, onShippingAddressChange],
   )
 
   const selectedValue = useMemo(() => {

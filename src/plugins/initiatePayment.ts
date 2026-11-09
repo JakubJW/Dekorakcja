@@ -1,12 +1,5 @@
-import type { EcommercePluginConfig } from '@payloadcms/plugin-ecommerce/types'
+import type { PaymentAdapter } from '@payloadcms/plugin-ecommerce/types'
 import Stripe from 'stripe'
-
-type PaymentMethod = NonNullable<EcommercePluginConfig['payments']>['paymentMethods'] extends
-  | (infer T)[]
-  | undefined
-  ? T
-  : never
-type InitiatePayment = NonNullable<PaymentMethod['initiatePayment']>
 
 interface StripeProps {
   secretKey: string
@@ -15,12 +8,11 @@ interface StripeProps {
 }
 
 export const initiatePayment =
-  (props: StripeProps): InitiatePayment =>
+  (props: StripeProps): NonNullable<PaymentAdapter['initiatePayment']> =>
   async ({ data, req, transactionsSlug }) => {
-    const payload = req.payload
+    const { payload } = req
     const { apiVersion, appInfo, secretKey } = props || {}
-    const currency = data.currency
-    const cart = data.cart
+    const { cart, currency, billingAddress, shippingAddress } = data
     const amount = cart.subtotal
     const billingAddressFromData = data.billingAddress
     const shippingAddressFromData = data.shippingAddress

@@ -1,5 +1,3 @@
-import { useCheckoutData } from '@/components/checkout/CheckoutDataProvider'
-import { FORM_STEP, useFormStep } from '@/components/checkout/FormStepProvider'
 import { Message } from '@/components/Message'
 import { Button } from '@/components/ui/button'
 import { env } from '@/env'
@@ -14,6 +12,7 @@ type Props = {
   billingAddress?: DomainAddress
   shippingAddress?: DomainAddress
   setProcessingPayment: (value: boolean) => void
+  onCancel: () => void
 }
 
 export const CheckoutForm: React.FC<Props> = ({
@@ -21,11 +20,10 @@ export const CheckoutForm: React.FC<Props> = ({
   billingAddress,
   shippingAddress,
   setProcessingPayment,
+  onCancel,
 }) => {
   const stripe = useStripe()
   const elements = useElements()
-  const { setCurrentStep } = useFormStep()
-  const { setPaymentData } = useCheckoutData()
   const [error, setError] = React.useState<null | string>(null)
   const [isLoading, setIsLoading] = React.useState(false)
   const router = useRouter()
@@ -141,14 +139,7 @@ export const CheckoutForm: React.FC<Props> = ({
         options={{ layout: 'tabs', defaultValues: { billingDetails: { email: customerEmail } } }}
       />
       <div className="mt-8 flex justify-between">
-        <Button
-          variant="link"
-          size="clear"
-          onClick={() => {
-            setCurrentStep(FORM_STEP.SHIPPING)
-            setPaymentData(null)
-          }}
-        >
+        <Button variant="link" size="clear" onClick={onCancel}>
           Anuluj płatność
         </Button>
         <Button disabled={!stripe || isLoading} type="submit" variant="default">

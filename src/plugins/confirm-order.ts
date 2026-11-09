@@ -73,8 +73,6 @@ export const confirmOrder =
         ? JSON.parse(paymentIntent.metadata.billingAddress)
         : undefined
 
-      console.log(billingAddress)
-
       if (!cartID) {
         throw new Error('Cart ID not found in the PaymentIntent metadata')
       }
