@@ -1,6 +1,4 @@
-import { PaymentDataProvider } from '@/components/checkout/CheckoutDataProvider'
 import { CheckoutPage } from '@/components/checkout/CheckoutPage'
-import { FormStepProvider } from '@/components/checkout/FormStepProvider'
 import { env } from '@/env'
 import { mapAddressToDomain } from '@/features/addresses/mapper'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
@@ -64,12 +62,7 @@ export default async function Checkout() {
       )}
 
       <h1 className="sr-only">Checkout</h1>
-
-      <PaymentDataProvider addresses={addresses} shippingMethods={shippingMethods}>
-        <FormStepProvider>
-          <CheckoutPage />
-        </FormStepProvider>
-      </PaymentDataProvider>
+      <CheckoutPage addresses={addresses} shippingMethods={shippingMethods} />
     </div>
   )
 }

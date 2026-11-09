@@ -1,5 +1,3 @@
-'use client'
-
 import { BillingAddressType } from '@/collections/plugin-ecommerce/orders'
 import { AddressItem } from '@/components/addresses/AddressItem'
 import { AddressForm } from '@/components/forms/AddressForm'
@@ -8,40 +6,58 @@ import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
+import { DomainAddress } from '@/features/addresses/domain/types'
 import { useCustomAddresses } from '@/features/addresses/hooks/useCustomAddresses'
 import { useAuth } from '@/providers/Auth'
 import { ReceiptText, User } from 'lucide-react'
-import { useCallback, useMemo } from 'react'
-import { useCheckoutData } from '../CheckoutDataProvider'
-import { FORM_STEP, useFormStep } from '../FormStepProvider'
-import { AddressMenuDrawer } from '../PersonalData/AddressMenuDrawer'
-import { LoginPrompt } from '../PersonalData/LoginPrompt'
+import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
+import { AddressesSheet } from '../addresses-sheet'
 
-export const PersonalDataFormStep = () => {
+type SheetReason = 'edit' | 'checkbox' | null
+type SheetAddressToSet = 'billing' | 'shipping' | null
+
+export type AddressSheetState = {
+  isOpen: boolean
+  addresses: DomainAddress[]
+  reason: SheetReason
+  addressToSet: SheetAddressToSet
+}
+
+type AddressesProps = {
+  addresses: DomainAddress[]
+  shippingAddress?: DomainAddress
+  onShippingAddressChange: Dispatch<SetStateAction<DomainAddress | undefined>>
+  billingAddress?: DomainAddress
+  onBillingAddressChange: Dispatch<SetStateAction<DomainAddress | undefined>>
+  isDifferentBilling: boolean
+  onIsDifferentBillingChange: Dispatch<SetStateAction<boolean>>
+}
+
+export const Addresses = ({
+  addresses,
+  shippingAddress,
+  onShippingAddressChange,
+  billingAddress,
+  onBillingAddressChange,
+  isDifferentBilling,
+  onIsDifferentBillingChange,
+}: AddressesProps) => {
+  const [addressSheet, setAddressSheet] = useState<AddressSheetState>({
+    isOpen: false,
+    addresses,
+    reason: null,
+    addressToSet: null,
+  })
   const { user } = useAuth()
-  const { paymentData } = useCheckoutData()
-  const { setCurrentStep } = useFormStep()
-
-  const {
-    personalData: {
-      shippingAddress,
-      setShippingAddress,
-      billingAddress,
-      setBillingAddress,
-      setIsDifferentBilling,
-      isDifferentBilling,
-    },
-    openSheet,
-  } = useCheckoutData()
   const { createAddress } = useCustomAddresses()
 
   const handleCheckboxChange = (checked: boolean) => {
-    setIsDifferentBilling(checked)
+    onIsDifferentBillingChange(checked)
 
     if (checked) {
       openSheet('checkbox', 'billing')
     } else {
-      setBillingAddress(undefined)
+      onBillingAddressChange(undefined)
     }
   }
 
@@ -49,12 +65,12 @@ export const PersonalDataFormStep = () => {
     (values: TCreateAddressFormSchema) => {
       if (user) {
         createAddress(values, user.id)
-        setShippingAddress(values)
+        onShippingAddressChange(values)
       } else {
-        setShippingAddress(values)
+        onShippingAddressChange(values)
       }
     },
-    [user, setShippingAddress],
+    [user, onShippingAddressChange],
   )
 
   const showBillingAddress = useMemo(() => {
@@ -69,17 +85,12 @@ export const PersonalDataFormStep = () => {
     )
   }
 
-  const handleNextStep = async () => {
-    if (!isDifferentBilling && shippingAddress) {
-      setBillingAddress(shippingAddress)
-    }
-
-    setCurrentStep(FORM_STEP.SHIPPING)
+  const openSheet = (reason: SheetReason, addressToSet: SheetAddressToSet) => {
+    setAddressSheet((prev) => ({ ...prev, isOpen: true, reason, addressToSet }))
   }
 
   return (
     <div className="space-y-6 flex flex-col">
-      {!user && <LoginPrompt />}
       <div className="space-y-6">
         <h2 className="font-medium md:text-2xl">Dane odbiorcy przesyłki</h2>
         {!shippingAddress && (
@@ -153,15 +164,17 @@ export const PersonalDataFormStep = () => {
           </>
         )}
       </div>
-      <AddressMenuDrawer user={user} />
-      <Button
-        disabled={!shippingAddress || (!billingAddress && isDifferentBilling)}
-        onClick={() => {
-          handleNextStep()
-        }}
-      >
-        Przejdź do dostawy
-      </Button>
+      <AddressesSheet
+        user={user}
+        addresses={addresses}
+        addressSheet={addressSheet}
+        setAddressSheet={setAddressSheet}
+        shippingAddress={shippingAddress}
+        billingAddress={billingAddress}
+        onShippingAddressChange={onShippingAddressChange}
+        onBilingAddressChange={onBillingAddressChange}
+        onIsDifferentBillingChange={onIsDifferentBillingChange}
+      />
 
       {/* {!paymentData?.['clientSecret'] && error && (
         <div className="my-8">
