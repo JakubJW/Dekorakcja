@@ -83,16 +83,7 @@ export const InvoiceStatusUi: React.FC = () => {
   const isSuccess = invoice?.status === 'success'
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px',
-        padding: '10px',
-        border: '1px solid #eaeaea',
-        borderRadius: '6px',
-      }}
-    >
+    <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span style={{ fontSize: '13px', fontWeight: '600' }}>Faktura (Subiekt123):</span>
         {renderStatus()}

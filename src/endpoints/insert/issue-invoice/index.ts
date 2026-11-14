@@ -27,6 +27,7 @@ export const generateInvoiceEndpoint: Endpoint = {
       // Przykład (do podmienienia na prawdziwą logikę):
       // await createInvoiceForOrder(orderId, req.payload)
 
+      console.log(res)
       return Response.json({ success: true })
     } catch (error: any) {
       // Zapisujesz błąd do bazy w kolekcji 'invoices' (status: 'failed', lastError: error.message)

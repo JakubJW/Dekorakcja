@@ -43,9 +43,9 @@ export class RestAPIClient {
     })
   }
 
-  async PATCH<T>(endpoint: string, body?: any, options?: RequestInit): Promise<T> {
+  async PUT<T>(endpoint: string, body?: any, options?: RequestInit): Promise<T> {
     return this.request<T>(endpoint, {
-      method: 'PATCH',
+      method: 'PUT',
       body: body ? JSON.stringify(body) : undefined,
       ...options,
     })

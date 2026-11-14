@@ -21,6 +21,8 @@ export const env = createEnv({
     PREVIEW_SECRET: z.string(),
     STRIPE_SECRET_KEY: z.string(),
     VERCEL_PROJECT_PRODUCTION_URL: z.string().optional(),
+    INPOST_SHIPX_SECRET: z.string().optional(),
+    INPOST_APIX_ORG_ID: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_SERVER_URL: z.string(),

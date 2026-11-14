@@ -53,7 +53,7 @@ export const ShopCartTab = () => {
                           <span className="leading-tight">{item.title}</span>
                           {item.isVariant ? (
                             <p className="text-xs text-neutral-500 tracking-widest">
-                              {item.variantOptions?.map((option: any) => option.label).join(', ')}
+                              {item.variantOptions?.map((option: any) => option).join(', ')}
                             </p>
                           ) : null}
                         </div>

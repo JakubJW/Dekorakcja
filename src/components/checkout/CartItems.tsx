@@ -4,7 +4,7 @@ import { Media } from '../Media'
 import { Price } from '../Price'
 
 type CartItemsProps = {
-  shippingMethod?: Partial<ShippingMethod>
+  shippingMethod?: ShippingMethod
 }
 
 export const CartItems = ({ shippingMethod }: CartItemsProps) => {

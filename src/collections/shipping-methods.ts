@@ -18,9 +18,6 @@ export const ShippingMethods: CollectionConfig = {
     useAsTitle: 'name',
     group: 'Sklep',
   },
-  defaultPopulate: {
-    slug: true,
-  },
   fields: [
     {
       name: 'type',

@@ -25,8 +25,16 @@ export const Providers: React.FC<{
       }}
       api={{
         cartsFetchQuery: {
-          depth: 2,
+          depth: 3,
+          select: {
+            shippingMethod: true,
+            lockerData: true,
+          },
           populate: {
+            'shipping-methods': {
+              slug: true,
+              price: true,
+            },
             products: {
               slug: true,
               title: true,

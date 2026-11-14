@@ -1,4 +1,4 @@
-import { BillingAddressType } from '@/collections/plugin-ecommerce/orders'
+import { BillingAddressType } from '@/collections/plugin-ecommerce/transactions'
 import z from 'zod'
 
 const ERROR_MESSAGES = {

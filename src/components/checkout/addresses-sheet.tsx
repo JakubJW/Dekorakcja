@@ -1,4 +1,4 @@
-import { BillingAddressType } from '@/collections/plugin-ecommerce/orders'
+import { BillingAddressType } from '@/collections/plugin-ecommerce/transactions'
 import { AddressListing } from '@/components/addresses/AddressListing'
 import { AddressForm } from '@/components/forms/AddressForm'
 import { TCreateAddressFormSchema } from '@/components/forms/AddressForm/billingAddressFormSchema'

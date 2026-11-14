@@ -1,5 +1,15 @@
 import type { PaymentAdapter } from '@payloadcms/plugin-ecommerce/types'
+import { TypedCollection } from 'payload'
 import Stripe from 'stripe'
+
+type InitiatePaymentArgs = Parameters<NonNullable<PaymentAdapter['initiatePayment']>>[0]
+
+type CustomPaymentData = InitiatePaymentArgs['data'] & {
+  shippingMethodID: string
+  parcelLockerName?: string
+  hasDifferentBillingAddress: boolean
+  shippingAddress: TypedCollection['addresses']
+}
 
 interface StripeProps {
   secretKey: string
@@ -12,10 +22,9 @@ export const initiatePayment =
   async ({ data, req, transactionsSlug }) => {
     const { payload } = req
     const { apiVersion, appInfo, secretKey } = props || {}
-    const { cart, currency, billingAddress, shippingAddress } = data
+    const { cart, currency, billingAddress, shippingAddress } = data as CustomPaymentData
+
     const amount = cart.subtotal
-    const billingAddressFromData = data.billingAddress
-    const shippingAddressFromData = data.shippingAddress
     if (!secretKey) {
       throw new Error('Stripe secret key is required.')
     }
@@ -41,12 +50,12 @@ export const initiatePayment =
     try {
       let customer = (
         await stripe.customers.list({
-          email: billingAddressFromData.email,
+          email: shippingAddress.email,
         })
       ).data[0]
       if (!customer?.id) {
         customer = await stripe.customers.create({
-          email: billingAddressFromData.email,
+          email: shippingAddress.email,
         })
       }
       const flattenedCart = cart.items.map((item) => {
@@ -80,8 +89,6 @@ export const initiatePayment =
         metadata: {
           cartID: cart.id,
           cartItemsSnapshot: JSON.stringify(flattenedCart),
-          shippingAddress: JSON.stringify(shippingAddressFromData),
-          billingAddress: JSON.stringify(billingAddressFromData),
         },
       })
       // Create a transaction for the payment intent in the database
@@ -93,10 +100,10 @@ export const initiatePayment =
                 customer: req.user.id,
               }
             : {
-                customerEmail: billingAddressFromData.email,
+                customerEmail: billingAddress.email,
               }),
           amount: paymentIntent.amount,
-          billingAddress: billingAddressFromData,
+          billingAddress: billingAddress,
           cart: cart.id,
           currency: paymentIntent.currency.toUpperCase() as 'PLN',
           items: flattenedCart,
@@ -105,6 +112,10 @@ export const initiatePayment =
           stripe: {
             customerID: customer.id,
             paymentIntentID: paymentIntent.id,
+          },
+          checkoutData: {
+            shippingAddress: JSON.stringify(shippingAddress),
+            billingAddress: JSON.stringify(billingAddress),
           },
         },
         req,
