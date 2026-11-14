@@ -15,7 +15,7 @@ export class InsertHttpClient {
       'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization: `Bearer ${accessToken}`,
-      'Ocp-Apim-Subscription-Key': env.INSERT_SUBSCRIPTION_KEY || '',
+      'Ocp-Apim-Subscription-Key': env.INSERT_SUBSCRIPTION_KEY,
       ...(options.headers as Record<string, string> | undefined),
     }
 

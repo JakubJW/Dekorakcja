@@ -1,4 +1,4 @@
-import { BillingAddressType } from '@/collections/plugin-ecommerce/orders'
+import { BillingAddressType } from '@/collections/plugin-ecommerce/transactions'
 import { CountryType } from '@payloadcms/plugin-ecommerce/types'
 
 export type BaseAddress = {

@@ -1,4 +1,4 @@
-import { BillingAddressType } from '@/collections/plugin-ecommerce/orders'
+import { BillingAddressType } from '@/collections/plugin-ecommerce/transactions'
 import { Address } from '@/payload-types'
 import { DomainAddress } from './domain/types'
 

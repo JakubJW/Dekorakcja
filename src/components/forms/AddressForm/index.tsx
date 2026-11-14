@@ -1,4 +1,4 @@
-import { BillingAddressType } from '@/collections/plugin-ecommerce/orders'
+import { BillingAddressType } from '@/collections/plugin-ecommerce/transactions'
 import { supportedCountries } from '@/collections/plugin-ecommerce/supported-countries'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'

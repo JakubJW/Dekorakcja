@@ -19,7 +19,7 @@ export const useCustomAddresses = () => {
   }
 
   const updateAddress = async (values: TCreateAddressFormSchema, id: DefaultDocumentIDType) => {
-    const res = await apiClient.PATCH<{ doc: Address }>(`/addresses/${id}?depth=0`, {
+    const res = await apiClient.PUT<{ doc: Address }>(`/addresses/${id}?depth=0`, {
       ...values,
     })
 

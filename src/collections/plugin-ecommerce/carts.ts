@@ -6,5 +6,19 @@ export const carts: EcommercePluginConfig['carts'] = {
     admin: {
       group: 'Sklep',
     },
+    fields: [
+      ...defaultCollection.fields,
+      {
+        name: 'shippingMethod',
+        label: 'Metoda dostawy',
+        type: 'relationship',
+        relationTo: 'shipping-methods',
+      },
+      {
+        name: 'lockerData',
+        label: 'Dane punktu odbioru',
+        type: 'json',
+      },
+    ],
   }),
 }

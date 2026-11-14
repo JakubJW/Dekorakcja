@@ -17,6 +17,7 @@ import { fileURLToPath } from 'url'
 import { collections } from './collections'
 import { Users } from './collections/users'
 import { deleteAddressEndpoint } from './endpoints/addresses/delete'
+import { updateCartEndpoint } from './endpoints/carts/update-shipping-method'
 import { generateInvoiceEndpoint } from './endpoints/insert/issue-invoice'
 import { env } from './env'
 import { globals } from './globals'
@@ -26,6 +27,10 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
+  csrf:
+    env.NODE_ENV === 'development'
+      ? ['http://localhost:3000']
+      : ['https://dekorakcja-dev.vercel.app'],
   i18n: {
     supportedLanguages: {
       pl,
@@ -85,7 +90,7 @@ export default buildConfig({
     },
   }),
   //email: nodemailerAdapter(),
-  endpoints: [generateInvoiceEndpoint, deleteAddressEndpoint],
+  endpoints: [generateInvoiceEndpoint, deleteAddressEndpoint, updateCartEndpoint],
   globals,
   plugins,
   secret: env.PAYLOAD_SECRET,

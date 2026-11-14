@@ -58,7 +58,6 @@ const baseAddressUSData: Omit<Address, 'id' | 'createdAt' | 'updatedAt'> = {
 }
 
 const baseAddressUKData: Transaction['billingAddress'] = {
-  title: 'Mr.',
   firstName: 'Oliver',
   lastName: 'Twist',
   phone: '1234567890',

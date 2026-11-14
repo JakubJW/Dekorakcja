@@ -292,7 +292,14 @@ export interface User {
  */
 export interface Order {
   id: number;
-  shippingMethod: number | ShippingMethod;
+  items?:
+    | {
+        product?: (number | null) | Product;
+        variant?: (number | null) | Variant;
+        quantity: number;
+        id?: string | null;
+      }[]
+    | null;
   shippingAddress: {
     firstName: string;
     lastName: string;
@@ -343,6 +350,13 @@ export interface Order {
       | 'SE'
       | 'CH';
   };
+  customer?: (number | null) | User;
+  customerEmail?: string | null;
+  transactions?: (number | Transaction)[] | null;
+  status?: OrderStatus;
+  amount?: number | null;
+  currency?: 'PLN' | null;
+  shippingMethod: number | ShippingMethod;
   billingAddress: {
     type?: ('person' | 'organization') | null;
     firstName?: string | null;
@@ -396,40 +410,7 @@ export interface Order {
       | 'SE'
       | 'CH';
   };
-  items?:
-    | {
-        product?: (number | null) | Product;
-        variant?: (number | null) | Variant;
-        quantity: number;
-        id?: string | null;
-      }[]
-    | null;
-  amount?: number | null;
-  currency?: 'PLN' | null;
-  customer?: (number | null) | User;
-  customerEmail?: string | null;
-  transactions?: (number | Transaction)[] | null;
-  status?: OrderStatus;
   accessToken?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "shipping-methods".
- */
-export interface ShippingMethod {
-  id: number;
-  type: 'courier' | 'locker';
-  name: string;
-  price: number;
-  enabled?: boolean | null;
-  sortOrder?: number | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -1161,18 +1142,58 @@ export interface Transaction {
     customerID?: string | null;
     paymentIntentID?: string | null;
   };
-  billingAddress?: {
-    title?: string | null;
+  billingAddress: {
+    type?: ('person' | 'organization') | null;
     firstName?: string | null;
     lastName?: string | null;
-    company?: string | null;
-    addressLine1?: string | null;
+    nip?: string | null;
+    companyName?: string | null;
+    addressLine1: string;
     addressLine2?: string | null;
-    city?: string | null;
-    state?: string | null;
-    postalCode?: string | null;
-    country?: string | null;
-    phone?: string | null;
+    city: string;
+    phone: string;
+    postalCode: string;
+    country:
+      | 'US'
+      | 'GB'
+      | 'CA'
+      | 'AU'
+      | 'AT'
+      | 'BE'
+      | 'BR'
+      | 'BG'
+      | 'CY'
+      | 'CZ'
+      | 'DK'
+      | 'EE'
+      | 'FI'
+      | 'FR'
+      | 'DE'
+      | 'GR'
+      | 'HK'
+      | 'HU'
+      | 'IN'
+      | 'IE'
+      | 'IT'
+      | 'JP'
+      | 'LV'
+      | 'LT'
+      | 'LU'
+      | 'MY'
+      | 'MT'
+      | 'MX'
+      | 'NL'
+      | 'NZ'
+      | 'NO'
+      | 'PL'
+      | 'PT'
+      | 'RO'
+      | 'SG'
+      | 'SK'
+      | 'SI'
+      | 'ES'
+      | 'SE'
+      | 'CH';
   };
   status: 'pending' | 'succeeded' | 'failed' | 'cancelled' | 'expired' | 'refunded';
   customer?: (number | null) | User;
@@ -1181,6 +1202,15 @@ export interface Transaction {
   cart?: (number | null) | Cart;
   amount?: number | null;
   currency?: 'PLN' | null;
+  checkoutData?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1204,6 +1234,35 @@ export interface Cart {
   status?: ('active' | 'purchased' | 'abandoned') | null;
   subtotal?: number | null;
   currency?: 'PLN' | null;
+  shippingMethod?: (number | null) | ShippingMethod;
+  lockerData?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shipping-methods".
+ */
+export interface ShippingMethod {
+  id: number;
+  type: 'courier' | 'locker';
+  name: string;
+  price: number;
+  enabled?: boolean | null;
+  sortOrder?: number | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -2189,6 +2248,8 @@ export interface CartsSelect<T extends boolean = true> {
   status?: T;
   subtotal?: T;
   currency?: T;
+  shippingMethod?: T;
+  lockerData?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2197,7 +2258,14 @@ export interface CartsSelect<T extends boolean = true> {
  * via the `definition` "orders_select".
  */
 export interface OrdersSelect<T extends boolean = true> {
-  shippingMethod?: T;
+  items?:
+    | T
+    | {
+        product?: T;
+        variant?: T;
+        quantity?: T;
+        id?: T;
+      };
   shippingAddress?:
     | T
     | {
@@ -2210,6 +2278,13 @@ export interface OrdersSelect<T extends boolean = true> {
         phone?: T;
         country?: T;
       };
+  customer?: T;
+  customerEmail?: T;
+  transactions?: T;
+  status?: T;
+  amount?: T;
+  currency?: T;
+  shippingMethod?: T;
   billingAddress?:
     | T
     | {
@@ -2225,20 +2300,6 @@ export interface OrdersSelect<T extends boolean = true> {
         postalCode?: T;
         country?: T;
       };
-  items?:
-    | T
-    | {
-        product?: T;
-        variant?: T;
-        quantity?: T;
-        id?: T;
-      };
-  amount?: T;
-  currency?: T;
-  customer?: T;
-  customerEmail?: T;
-  transactions?: T;
-  status?: T;
   accessToken?: T;
   invoiceStatus?: T;
   updatedAt?: T;
@@ -2267,17 +2328,17 @@ export interface TransactionsSelect<T extends boolean = true> {
   billingAddress?:
     | T
     | {
-        title?: T;
+        type?: T;
         firstName?: T;
         lastName?: T;
-        company?: T;
+        nip?: T;
+        companyName?: T;
         addressLine1?: T;
         addressLine2?: T;
         city?: T;
-        state?: T;
+        phone?: T;
         postalCode?: T;
         country?: T;
-        phone?: T;
       };
   status?: T;
   customer?: T;
@@ -2286,6 +2347,7 @@ export interface TransactionsSelect<T extends boolean = true> {
   cart?: T;
   amount?: T;
   currency?: T;
+  checkoutData?: T;
   updatedAt?: T;
   createdAt?: T;
 }

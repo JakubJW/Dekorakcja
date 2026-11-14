@@ -2,20 +2,22 @@
 
 import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { DomainAddress } from '@/features/addresses/domain/types'
+import { useCustomCart } from '@/features/cart/use-cart'
 import { getStripePromise } from '@/lib/stripe'
 import { ShippingMethod } from '@/payload-types'
 import { useAuth } from '@/providers/Auth'
-import { useCart, usePayments } from '@payloadcms/plugin-ecommerce/client/react'
+import { usePayments } from '@payloadcms/plugin-ecommerce/client/react'
 import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense, useCallback, useEffect, useState } from 'react'
+import { toast } from 'sonner'
 import { Button } from '../ui/button'
 import { Separator } from '../ui/separator'
 import { CartItems } from './CartItems'
 import { LoginPrompt } from './login-prompt'
 import { Addresses } from './steps/addresses'
 import { PaymentDialog } from './steps/payment-dialog'
-import { SelectedLocker, Shipping } from './steps/shipping'
+import { Locker, Shipping } from './steps/shipping'
 
 type CheckoutPageProps = {
   addresses: DomainAddress[]
@@ -24,9 +26,6 @@ type CheckoutPageProps = {
 
 export const CheckoutPage = ({ addresses, shippingMethods }: CheckoutPageProps) => {
   const [shippingAddress, setShippingAddress] = useState<DomainAddress | undefined>()
-  const [shippingMethod, setShippingMethod] = useState<
-    Partial<ShippingMethod & { lockerDetails?: SelectedLocker }> | undefined
-  >()
 
   const [billingAddress, setBillingAddress] = useState<DomainAddress | undefined>()
   const [isDifferentBilling, setIsDifferentBilling] = useState(false)
@@ -37,7 +36,7 @@ export const CheckoutPage = ({ addresses, shippingMethods }: CheckoutPageProps) 
   const [dialogOpen, setDialogOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const { cart } = useCart()
+  const { cart, updateShipping, refreshCart } = useCustomCart()
   const { user } = useAuth()
   const { initiatePayment } = usePayments()
 
@@ -69,10 +68,7 @@ export const CheckoutPage = ({ addresses, shippingMethods }: CheckoutPageProps) 
           additionalData: {
             billingAddress: billingAddress ?? shippingAddress,
             currency: 'PLN',
-            shipping: {
-              address: shippingAddress,
-              shippingMethod,
-            },
+            shippingAddress,
           },
         })) as Record<string, unknown>
 
@@ -107,6 +103,30 @@ export const CheckoutPage = ({ addresses, shippingMethods }: CheckoutPageProps) 
     setIsLoading(false)
     setDialogOpen(true)
   }
+
+  const handleDeliveryMethodChange = useCallback(
+    async (value: number) => {
+      try {
+        await updateShipping({ methodId: value })
+        await refreshCart()
+      } catch (error) {
+        toast('błąd')
+      }
+    },
+    [updateShipping],
+  )
+
+  const handleLockerChange = useCallback(
+    async (value: Locker) => {
+      try {
+        await updateShipping({ methodId: undefined, lockerData: value })
+        await refreshCart()
+      } catch (error) {
+        toast('błąd')
+      }
+    },
+    [updateShipping],
+  )
 
   if (cartIsEmpty && isProcessingPayment) {
     return (
@@ -145,12 +165,23 @@ export const CheckoutPage = ({ addresses, shippingMethods }: CheckoutPageProps) 
             />
             <Separator />
             <Shipping
-              methods={shippingMethods}
-              shippingMethod={shippingMethod}
-              onShippingMethodChange={setShippingMethod}
+              options={shippingMethods}
+              selectedOption={
+                cart.shippingMethod !== undefined && typeof cart.shippingMethod === 'object'
+                  ? cart.shippingMethod?.id
+                  : undefined
+              }
+              lockerDetails={cart.lockerData as Locker}
+              onDeliveryMethodChange={handleDeliveryMethodChange}
+              onLockerChange={handleLockerChange}
             />
             <Button
-              disabled={!shippingMethod || isLoading}
+              disabled={
+                !cart.shippingMethod ||
+                isLoading ||
+                !shippingAddress ||
+                (isDifferentBilling && !billingAddress)
+              }
               className="self-start"
               onClick={async () => {
                 await handleInitiatePaymentIntent()
@@ -168,7 +199,7 @@ export const CheckoutPage = ({ addresses, shippingMethods }: CheckoutPageProps) 
             />
           </Suspense>
         </div>
-        <CartItems shippingMethod={shippingMethod} />
+        <CartItems shippingMethod={(cart.shippingMethod as ShippingMethod) ?? undefined} />
       </div>
     </div>
   )
