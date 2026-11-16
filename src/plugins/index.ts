@@ -16,6 +16,7 @@ import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/
 import { s3Storage } from '@payloadcms/storage-s3'
 import { Plugin } from 'payload'
 import { confirmOrder } from './confirm-order'
+import { currenciesConfig } from './currencies-config'
 import { initiatePayment } from './initiatePayment'
 
 const generateTitle: GenerateTitle<Product | Page> = ({ doc }) => {
@@ -101,17 +102,7 @@ export const plugins: Plugin[] = [
     },
   }),
   ecommercePlugin({
-    currencies: {
-      defaultCurrency: 'PLN',
-      supportedCurrencies: [
-        {
-          code: 'PLN',
-          label: 'PLN',
-          symbol: 'zł',
-          decimals: 2,
-        },
-      ],
-    },
+    currencies: currenciesConfig,
     access: {
       adminOnlyFieldAccess,
       adminOrPublishedStatus,

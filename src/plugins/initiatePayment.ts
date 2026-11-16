@@ -114,8 +114,8 @@ export const initiatePayment =
             paymentIntentID: paymentIntent.id,
           },
           checkoutData: {
-            shippingAddress: JSON.stringify(shippingAddress),
-            billingAddress: JSON.stringify(billingAddress),
+            shippingAddress: shippingAddress,
+            billingAddress: billingAddress,
           },
         },
         req,

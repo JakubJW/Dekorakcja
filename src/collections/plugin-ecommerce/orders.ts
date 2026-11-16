@@ -9,6 +9,7 @@ export const orders: EcommercePluginConfig['orders'] = {
     ...defaultCollection,
     admin: {
       group: 'Sklep',
+      defaultColumns: ['id', 'items', 'amount', 'status', 'createdAt'],
     },
     fields: [
       ...transformFieldsByName(defaultCollection.fields, {

@@ -2,13 +2,20 @@
 
 import { PopulatedProduct, PopulatedVariant } from '@/utilities/normalizeProduct'
 import { useSearchParams } from 'next/navigation'
-import { createContext, useContext, useMemo } from 'react'
+import { createContext, Dispatch, SetStateAction, useContext, useMemo, useState } from 'react'
 
 type ProductContext = {
   product: PopulatedProduct
   selectedVariant?: PopulatedVariant
   selectedOptions?: Record<string, string>
   amount: number
+  customizations?: CustomizationsState
+  setCustomizations: Dispatch<SetStateAction<CustomizationsState | undefined>>
+}
+
+type CustomizationsState = {
+  id: number
+  value: string
 }
 
 const Context = createContext({} as ProductContext)
@@ -20,6 +27,8 @@ export const ProductProvider = ({
   children: React.ReactNode
   product: PopulatedProduct
 }) => {
+  const [customizations, setCustomizations] = useState<CustomizationsState | undefined>(undefined)
+
   const searchParams = useSearchParams()
 
   const selectedOptions = useMemo(() => {
@@ -49,7 +58,16 @@ export const ProductProvider = ({
   }, [selectedVariant, product])
 
   return (
-    <Context.Provider value={{ selectedVariant, selectedOptions, product, amount }}>
+    <Context.Provider
+      value={{
+        selectedVariant,
+        selectedOptions,
+        product,
+        amount,
+        customizations,
+        setCustomizations,
+      }}
+    >
       {children}
     </Context.Provider>
   )

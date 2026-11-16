@@ -9,6 +9,9 @@ import { CartEmpty } from '../cart-empty'
 import { DeleteItemButton } from '../DeleteItemButton'
 import { EditItemQuantityButton } from '../EditItemQuantityButton'
 
+// personalizacje zrobic na poziomie produktu i dodac personalization fee. nie ma to nic wspolnego z wariantami, a potem
+// do koszyka przekazujemy tylko informacje o tekscie personalizacji
+
 export const ShopCartTab = () => {
   const { cart, removeItem } = useCart()
 

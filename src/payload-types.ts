@@ -82,6 +82,7 @@ export interface Config {
     'shipping-methods': ShippingMethod;
     invoices: Invoice;
     users: User;
+    'product-personalization-options': ProductPersonalizationOption;
     forms: Form;
     'form-submissions': FormSubmission;
     addresses: Address;
@@ -122,6 +123,7 @@ export interface Config {
     'shipping-methods': ShippingMethodsSelect<false> | ShippingMethodsSelect<true>;
     invoices: InvoicesSelect<false> | InvoicesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    'product-personalization-options': ProductPersonalizationOptionsSelect<false> | ProductPersonalizationOptionsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     addresses: AddressesSelect<false> | AddressesSelect<true>;
@@ -444,6 +446,8 @@ export interface Product {
       }[]
     | null;
   layout?: (CallToActionBlock | ContentBlock | MediaBlock)[] | null;
+  allowCustomization?: boolean | null;
+  customizationOptions?: (number | ProductPersonalizationOption)[] | null;
   inventory?: number | null;
   enableVariants?: boolean | null;
   variantTypes?: (number | VariantType)[] | null;
@@ -521,6 +525,7 @@ export interface VariantOption {
    * should be defaulted or dynamic based on label
    */
   value: string;
+  visualization?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
@@ -1088,6 +1093,19 @@ export interface NumberedListsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "product-personalization-options".
+ */
+export interface ProductPersonalizationOption {
+  id: number;
+  name: string;
+  type?: 'text' | null;
+  priceInPLNEnabled?: boolean | null;
+  priceInPLN?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "variants".
  */
 export interface Variant {
@@ -1102,7 +1120,6 @@ export interface Variant {
   inventory?: number | null;
   priceInPLNEnabled?: boolean | null;
   priceInPLN?: number | null;
-  customField?: string | null;
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
@@ -1225,6 +1242,10 @@ export interface Cart {
         product?: (number | null) | Product;
         variant?: (number | null) | Variant;
         quantity: number;
+        /**
+         * Wpisz tekst, który ma zostać wygrawerowany lub nadrukowany.
+         */
+        personalizationText?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -1490,6 +1511,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'product-personalization-options';
+        value: number | ProductPersonalizationOption;
       } | null)
     | ({
         relationTo: 'forms';
@@ -1976,6 +2001,18 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "product-personalization-options_select".
+ */
+export interface ProductPersonalizationOptionsSelect<T extends boolean = true> {
+  name?: T;
+  type?: T;
+  priceInPLNEnabled?: T;
+  priceInPLN?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "forms_select".
  */
 export interface FormsSelect<T extends boolean = true> {
@@ -2155,7 +2192,6 @@ export interface VariantsSelect<T extends boolean = true> {
   inventory?: T;
   priceInPLNEnabled?: T;
   priceInPLN?: T;
-  customField?: T;
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;
@@ -2182,6 +2218,7 @@ export interface VariantOptionsSelect<T extends boolean = true> {
   variantType?: T;
   label?: T;
   value?: T;
+  visualization?: T;
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;
@@ -2207,6 +2244,8 @@ export interface ProductsSelect<T extends boolean = true> {
         content?: T | ContentBlockSelect<T>;
         mediaBlock?: T | MediaBlockSelect<T>;
       };
+  allowCustomization?: T;
+  customizationOptions?: T;
   inventory?: T;
   enableVariants?: T;
   variantTypes?: T;
@@ -2240,6 +2279,7 @@ export interface CartsSelect<T extends boolean = true> {
         product?: T;
         variant?: T;
         quantity?: T;
+        personalizationText?: T;
         id?: T;
       };
   secret?: T;

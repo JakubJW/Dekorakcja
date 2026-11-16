@@ -7,6 +7,7 @@ import { Pages } from './pages'
 import { RentCarts } from './rent-carts'
 // import { RentCartsItems } from './rent-carts-items'
 import { Invoices } from './invoices'
+import { ProductPersonalizationOptions } from './product-personalization-options'
 import { Rentables } from './rentables'
 import { ShippingMethods } from './shipping-methods'
 import { Users } from './users'
@@ -22,4 +23,5 @@ export const collections: CollectionConfig[] = [
   ShippingMethods,
   Invoices,
   Users,
+  ProductPersonalizationOptions,
 ]

@@ -8,6 +8,7 @@ import { useProduct } from '@/providers/ProductProvider'
 import { PopulatedProduct } from '@/utilities/normalizeProduct'
 import { Suspense } from 'react'
 import { VariantSelector } from './VariantSelector'
+import { PersonalizationsSelector } from './personalizations-selector'
 
 export function ProductDescription({ product }: { product: PopulatedProduct }) {
   const { selectedVariant, amount } = useProduct()
@@ -23,6 +24,7 @@ export function ProductDescription({ product }: { product: PopulatedProduct }) {
       {product.variants.length > 0 && (
         <Suspense fallback={null}>
           <VariantSelector product={product} />
+          <PersonalizationsSelector options={product.customizationOptions} />
         </Suspense>
       )}
       <Price amount={amount} />

@@ -1,12 +1,12 @@
-import { VariantOption } from '@/payload-types'
 import { useProduct } from '@/providers/ProductProvider'
 import { createUrl } from '@/utilities/createUrl'
+import { PopulatedVariantOption } from '@/utilities/normalizeProduct'
 import clsx from 'clsx'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '../ui/button'
 
 type Props = {
-  option: VariantOption
+  option: PopulatedVariantOption
   variantTypeName: string
 }
 

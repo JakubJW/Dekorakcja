@@ -7,6 +7,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 type Cart = NonNullable<ReturnType<typeof useCart>['cart']>
 
+export type ExtendedCartItem = {
+  product: string | number
+  variant?: string | number
+  personalizationText?: string
+}
+
 export const useCustomCart = () => {
   const cartApi = useCart()
   const [cartOverride, setCart] = useState<Cart | null>(null)
@@ -19,6 +25,8 @@ export const useCustomCart = () => {
   }, [cartApi.cart])
 
   const cart = useMemo(() => cartOverride ?? cartApi.cart ?? null, [cartOverride, cartApi.cart])
+
+  const addItem = cartApi.addItem as (item: ExtendedCartItem, quantity?: number) => Promise<void>
 
   const cartQuery = useMemo(() => (secret ? `?secret=${secret}` : ''), [secret])
 
@@ -44,6 +52,7 @@ export const useCustomCart = () => {
 
   return {
     ...cartApi,
+    addItem,
     cart,
     refreshCart,
     updateShipping,

@@ -1,19 +1,35 @@
-import type { Media, Product, Variant, VariantOption, VariantType } from '@/payload-types'
+import type {
+  Media,
+  Product,
+  ProductPersonalizationOption,
+  Variant,
+  VariantOption,
+  VariantType,
+} from '@/payload-types'
 
 const isPopulated = <T>(value: T | number | null | undefined): value is T =>
   typeof value === 'object' && value !== null
 
-export type PopulatedVariant = Omit<Variant, 'options'> & { options: VariantOption[] }
-export type PopulatedVariantType = Omit<VariantType, 'options'> & { options: VariantOption[] }
+export type PopulatedVariantOption = Omit<VariantOption, 'visualization'> & {
+  visualization?: Media
+}
+export type PopulatedVariant = Omit<Variant, 'options'> & { options: PopulatedVariantOption[] }
+export type PopulatedVariantType = Omit<VariantType, 'options'> & {
+  options: PopulatedVariantOption[]
+}
+export type PopulatedCustomizationOption = ProductPersonalizationOption
+
 export type PopulatedProduct = Omit<
   Product,
-  'variants' | 'variantTypes' | 'gallery' | 'relatedProducts'
+  'variants' | 'variantTypes' | 'gallery' | 'relatedProducts' | 'customizationOptions'
 > & {
   variants: PopulatedVariant[]
   variantTypes: PopulatedVariantType[]
   gallery: PopulatedGalleryItem[]
   relatedProducts: PopulatedProduct[]
+  customizationOptions: PopulatedCustomizationOption[]
 }
+
 export type GalleryItem = NonNullable<Product['gallery']>[number]
 export type PopulatedGalleryItem = Omit<GalleryItem, 'variantOption' | 'image'> & {
   variantOption?: VariantOption
@@ -43,7 +59,10 @@ export function populateGallery(gallery: Product['gallery']): PopulatedGalleryIt
 export function populateVariants(variants: Product['variants']): PopulatedVariant[] {
   return (variants?.docs ?? []).filter(isPopulated<Variant>).map((variant) => ({
     ...variant,
-    options: (variant.options ?? []).filter(isPopulated<VariantOption>),
+    options: (variant.options ?? []).filter(isPopulated<VariantOption>).map((option) => ({
+      ...option,
+      visualization: isPopulated<Media>(option.visualization) ? option.visualization : undefined,
+    })),
   }))
 }
 
@@ -53,8 +72,17 @@ export function populateVariantTypes(
 ): PopulatedVariantType[] {
   return (variantTypes ?? []).filter(isPopulated<VariantType>).map((type) => ({
     ...type,
-    options: (type.options?.docs ?? []).filter(isPopulated<VariantOption>),
+    options: (type.options?.docs ?? []).filter(isPopulated<VariantOption>).map((option) => ({
+      ...option,
+      visualization: isPopulated<Media>(option.visualization) ? option.visualization : undefined,
+    })),
   }))
+}
+
+export function populateCustomizationOptions(
+  options: Product['customizationOptions'],
+): PopulatedCustomizationOption[] {
+  return (options ?? []).filter(isPopulated<ProductPersonalizationOption>).map((option) => option)
 }
 
 /**
@@ -82,11 +110,14 @@ export function populateRelatedProducts(
  * Unpopulated/dangling references are dropped rather than surfaced as numbers.
  */
 export function normalizeProduct(product: Product, relatedDepth = 1): PopulatedProduct {
+  console.log(product)
+
   return {
     ...product,
     gallery: populateGallery(product.gallery),
     relatedProducts: populateRelatedProducts(product.relatedProducts, relatedDepth),
     variants: populateVariants(product.variants),
     variantTypes: populateVariantTypes(product.variantTypes),
+    customizationOptions: populateCustomizationOptions(product.customizationOptions),
   }
 }

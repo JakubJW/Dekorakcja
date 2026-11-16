@@ -1,5 +1,7 @@
+import { createAddressFormSchema } from '@/components/forms/AddressForm/billingAddressFormSchema'
 import type { EcommercePluginConfig } from '@payloadcms/plugin-ecommerce/types'
 import Stripe from 'stripe'
+import z from 'zod'
 
 type PaymentMethod = NonNullable<EcommercePluginConfig['payments']>['paymentMethods'] extends
   | (infer T)[]
@@ -66,12 +68,21 @@ export const confirmOrder =
       const cartItemsSnapshot = paymentIntent.metadata.cartItemsSnapshot
         ? JSON.parse(paymentIntent.metadata.cartItemsSnapshot)
         : undefined
-      const shippingAddress = paymentIntent.metadata.shippingAddress
-        ? JSON.parse(paymentIntent.metadata.shippingAddress)
-        : undefined
-      const billingAddress = paymentIntent.metadata.billingAddress
-        ? JSON.parse(paymentIntent.metadata.billingAddress)
-        : undefined
+
+      const CheckoutDataSchema = z.object({
+        billingAddress: createAddressFormSchema,
+        shippingAddress: createAddressFormSchema,
+      })
+
+      const parsed = CheckoutDataSchema.safeParse(transaction.checkoutData)
+
+      if (!parsed.success) {
+        throw new Error(`Adresy są niepoprawne, ${parsed.error}`)
+      }
+
+      const {
+        data: { billingAddress, shippingAddress },
+      } = parsed
 
       if (!cartID) {
         throw new Error('Cart ID not found in the PaymentIntent metadata')
@@ -104,12 +115,10 @@ export const confirmOrder =
                 customerEmail: billingAddress.email,
               }),
           items: cartItemsSnapshot,
+          //@ts-ignore
           shippingAddress,
-          billingAddress: {
-            ...billingAddress,
-            type: billingAddress.kind,
-            nip: billingAddress.taxId,
-          },
+          //@ts-ignore
+          billingAddress,
           shippingMethod: 1,
           status: 'processing',
           transactions: [transaction.id],

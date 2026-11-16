@@ -52,7 +52,7 @@ export const CheckoutPage = ({ addresses, shippingMethods }: CheckoutPageProps) 
     return () => {
       setShippingAddress(undefined)
       setBillingAddress(undefined)
-      setIsDifferentBilling(true)
+      setIsDifferentBilling(false)
     }
   }, [])
 
