@@ -1,4 +1,4 @@
-import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
+import { useCustomCart } from '@/features/cart/use-cart'
 import clsx from 'clsx'
 import { XIcon } from 'lucide-react'
 import React from 'react'
@@ -8,7 +8,7 @@ export function DeleteItemButton({
 }: {
   removeItemHandler: () => Promise<void>
 }) {
-  const { isLoading, removeItem } = useCart()
+  const { isLoading, removeItem } = useCustomCart()
 
   return (
     <form>

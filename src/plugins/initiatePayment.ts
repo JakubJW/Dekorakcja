@@ -1,15 +1,5 @@
 import type { PaymentAdapter } from '@payloadcms/plugin-ecommerce/types'
-import { TypedCollection } from 'payload'
 import Stripe from 'stripe'
-
-type InitiatePaymentArgs = Parameters<NonNullable<PaymentAdapter['initiatePayment']>>[0]
-
-type CustomPaymentData = InitiatePaymentArgs['data'] & {
-  shippingMethodID: string
-  parcelLockerName?: string
-  hasDifferentBillingAddress: boolean
-  shippingAddress: TypedCollection['addresses']
-}
 
 interface StripeProps {
   secretKey: string
@@ -22,18 +12,28 @@ export const initiatePayment =
   async ({ data, req, transactionsSlug }) => {
     const { payload } = req
     const { apiVersion, appInfo, secretKey } = props || {}
-    const { cart, currency, billingAddress, shippingAddress } = data as CustomPaymentData
+    const { cart: defaultCart, currency, billingAddress, shippingAddress } = data
 
-    const amount = cart.subtotal
     if (!secretKey) {
       throw new Error('Stripe secret key is required.')
     }
     if (!currency) {
       throw new Error('Currency is required.')
     }
-    if (!cart || !cart.items || cart.items.length === 0) {
+    if (!defaultCart || !defaultCart.items || defaultCart.items.length === 0) {
       throw new Error('Cart is empty or not provided.')
     }
+
+    // nie uzywamy przychodzącego cart, poniewaz nie uwzglenia on zadnych dodanych do koszyka pól np. total, shippingMethod
+    // pobieramy koszyk od nowa i wiemy ze items i variants oraz ich subtotal są zwalidowane - reszta lezy po naszej stronie
+    const cart = await payload.findByID({ collection: 'carts', id: defaultCart.id, depth: 2, req })
+
+    if (!cart) {
+      throw new Error('Cart not found')
+    }
+
+    let amount = cart.total
+
     if (!amount || typeof amount !== 'number' || amount <= 0) {
       throw new Error('A valid amount is required to initiate a payment.')
     }
@@ -86,6 +86,17 @@ export const initiatePayment =
         },
         currency,
         customer: customer.id,
+        shipping: {
+          name: `${shippingAddress.firstName} ${shippingAddress.lastName}`,
+          address: {
+            city: shippingAddress.city,
+            country: shippingAddress.country,
+            line1: shippingAddress.addressLine1,
+            line2: shippingAddress.addressLine2 ?? undefined,
+            postal_code: shippingAddress.postalCode,
+          },
+          carrier: typeof cart.shippingMethod === 'object' ? cart.shippingMethod?.name : undefined,
+        },
         metadata: {
           cartID: cart.id,
           cartItemsSnapshot: JSON.stringify(flattenedCart),

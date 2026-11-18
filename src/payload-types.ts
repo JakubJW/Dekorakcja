@@ -305,6 +305,7 @@ export interface Order {
   shippingAddress: {
     firstName: string;
     lastName: string;
+    email: string;
     addressLine1: string;
     addressLine2?: string | null;
     city: string;
@@ -363,6 +364,7 @@ export interface Order {
     type?: ('person' | 'organization') | null;
     firstName?: string | null;
     lastName?: string | null;
+    email: string;
     nip?: string | null;
     companyName?: string | null;
     addressLine1: string;
@@ -1255,6 +1257,7 @@ export interface Cart {
   status?: ('active' | 'purchased' | 'abandoned') | null;
   subtotal?: number | null;
   currency?: 'PLN' | null;
+  total?: number | null;
   shippingMethod?: (number | null) | ShippingMethod;
   lockerData?:
     | {
@@ -2288,6 +2291,7 @@ export interface CartsSelect<T extends boolean = true> {
   status?: T;
   subtotal?: T;
   currency?: T;
+  total?: T;
   shippingMethod?: T;
   lockerData?: T;
   updatedAt?: T;
@@ -2311,6 +2315,7 @@ export interface OrdersSelect<T extends boolean = true> {
     | {
         firstName?: T;
         lastName?: T;
+        email?: T;
         addressLine1?: T;
         addressLine2?: T;
         city?: T;
@@ -2331,6 +2336,7 @@ export interface OrdersSelect<T extends boolean = true> {
         type?: T;
         firstName?: T;
         lastName?: T;
+        email?: T;
         nip?: T;
         companyName?: T;
         addressLine1?: T;

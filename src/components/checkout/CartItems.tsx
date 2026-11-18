@@ -1,14 +1,9 @@
-import { ShippingMethod } from '@/payload-types'
-import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
+import { useCustomCart } from '@/features/cart/use-cart'
 import { Media } from '../Media'
 import { Price } from '../Price'
 
-type CartItemsProps = {
-  shippingMethod?: ShippingMethod
-}
-
-export const CartItems = ({ shippingMethod }: CartItemsProps) => {
-  const { cart } = useCart()
+export const CartItems = () => {
+  const { cart } = useCustomCart()
 
   return (
     <div className="basis-full lg:basis-1/3 lg:pl-8 p-8 bg-[#F8F2F0] rounded-r-xl">
@@ -80,10 +75,10 @@ export const CartItems = ({ shippingMethod }: CartItemsProps) => {
         })}
         <hr />
         <div>
-          {shippingMethod && (
+          {cart.shippingMethod && typeof cart.shippingMethod === 'object' && (
             <div className="flex justify-between items-center gap-2">
               <span>Dostawa</span>
-              <Price amount={shippingMethod.price || 0} />
+              <Price amount={cart.shippingMethod.price || 0} />
             </div>
           )}
           <div className="flex justify-between items-center gap-2">
@@ -92,10 +87,7 @@ export const CartItems = ({ shippingMethod }: CartItemsProps) => {
           <hr className="my-4" />
           <div className="flex justify-between items-center gap-2">
             <span className="uppercase">Suma</span>{' '}
-            <Price
-              className="text-3xl font-medium"
-              amount={(cart.subtotal || 0) + (shippingMethod?.price || 0)}
-            />
+            <Price className="text-3xl font-medium" amount={cart.total || 0} />
           </div>
         </div>
       </div>

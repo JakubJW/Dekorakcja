@@ -1,13 +1,14 @@
 'use client'
 
 import { LoadingSpinner } from '@/components/LoadingSpinner'
-import { useCart, usePayments } from '@payloadcms/plugin-ecommerce/client/react'
+import { useCustomCart } from '@/features/cart/use-cart'
+import { usePayments } from '@payloadcms/plugin-ecommerce/client/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 
 export const ConfirmOrder: React.FC = () => {
   const { confirmOrder } = usePayments()
-  const { cart } = useCart()
+  const { cart } = useCustomCart()
 
   const searchParams = useSearchParams()
   const router = useRouter()

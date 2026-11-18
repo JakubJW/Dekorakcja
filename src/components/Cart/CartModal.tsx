@@ -1,15 +1,15 @@
 'use client'
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { useCustomCart } from '@/features/cart/use-cart'
 import { useRentalCart } from '@/providers/RentalCartProvider'
-import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { OpenCartButton } from './OpenCart'
 import { SelectCartTypeTabs } from './SelectCartTypeTabs/select-cart-type-tabs'
 
 export function CartModal() {
-  const { cart } = useCart()
+  const { cart } = useCustomCart()
   const { rentalCart } = useRentalCart()
   const [isOpen, setIsOpen] = useState(false)
 

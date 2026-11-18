@@ -31,6 +31,12 @@ export const orders: EcommercePluginConfig['orders'] = {
               required: true,
             },
             {
+              name: 'email',
+              label: 'Adres e-mail',
+              type: 'text',
+              required: true,
+            },
+            {
               name: 'addressLine1',
               label: 'Ulica',
               type: 'text',
@@ -113,6 +119,12 @@ export const orders: EcommercePluginConfig['orders'] = {
             admin: {
               condition: (_, siblingData) => siblingData.type === BillingAddressType.PERSONAL,
             },
+          },
+          {
+            name: 'email',
+            label: 'Adres e-mail',
+            type: 'text',
+            required: true,
           },
           {
             name: 'nip',

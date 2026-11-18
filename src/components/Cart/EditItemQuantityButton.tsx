@@ -1,13 +1,13 @@
 'use client'
 
 import { CartItem } from '@/components/Cart'
-import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
+import { useCustomCart } from '@/features/cart/use-cart'
 import clsx from 'clsx'
 import { MinusIcon, PlusIcon } from 'lucide-react'
 import React, { useMemo } from 'react'
 
 export function EditItemQuantityButton({ type, item }: { item: CartItem; type: 'minus' | 'plus' }) {
-  const { decrementItem, incrementItem, isLoading } = useCart()
+  const { decrementItem, incrementItem, isLoading } = useCustomCart()
 
   const disabled = useMemo(() => {
     if (!item.id) return true

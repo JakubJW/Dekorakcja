@@ -1,5 +1,8 @@
 import { CartItemMatcher } from '@payloadcms/plugin-ecommerce'
 import { EcommercePluginConfig } from '@payloadcms/plugin-ecommerce/types'
+import { calculateSubtotal } from '../carts/hooks/before-change/calculate-subtotal'
+import { calculateTotal } from '../carts/hooks/before-change/calculate-total'
+import { generateCartSecret } from '../carts/hooks/before-change/generate-cart-secret'
 
 const personalizationCartItemMatcher: CartItemMatcher = ({ existingItem, newItem }) => {
   const existingProductID =
@@ -29,6 +32,7 @@ export const carts: EcommercePluginConfig['carts'] = {
     admin: {
       group: 'Sklep',
     },
+    hooks: { beforeChange: [generateCartSecret, calculateSubtotal, calculateTotal] },
     fields: [
       ...defaultCollection.fields.map((field) => {
         if ('name' in field && field.name === 'items' && field.type === 'array') {
@@ -49,6 +53,11 @@ export const carts: EcommercePluginConfig['carts'] = {
         }
         return field
       }),
+      {
+        name: 'total',
+        label: 'Suma',
+        type: 'number',
+      },
       {
         name: 'shippingMethod',
         label: 'Metoda dostawy',
