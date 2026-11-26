@@ -1,6 +1,6 @@
 'use client'
 
-import { useDocumentInfo, usePayloadAPI } from '@payloadcms/ui'
+import { Button, DocumentIcon, useDocumentInfo, usePayloadAPI } from '@payloadcms/ui'
 import React, { useState } from 'react'
 
 export const InvoiceStatusUi: React.FC = () => {
@@ -83,7 +83,7 @@ export const InvoiceStatusUi: React.FC = () => {
   const isSuccess = invoice?.status === 'success'
 
   return (
-    <div>
+    <div className="field-type">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span style={{ fontSize: '13px', fontWeight: '600' }}>Faktura (Subiekt123):</span>
         {renderStatus()}
@@ -135,28 +135,18 @@ export const InvoiceStatusUi: React.FC = () => {
 
       {/* Przycisk akcji */}
       {!isSuccess && (
-        <button
+        <Button
+          icon={<DocumentIcon />}
           onClick={handleGenerateInvoice}
           disabled={isGenerating || invoice?.status === 'processing'}
-          style={{
-            marginTop: '4px',
-            padding: '8px 12px',
-            backgroundColor: showManualOverrideWarning ? '#f59e0b' : '#000',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: isGenerating || invoice?.status === 'processing' ? 'not-allowed' : 'pointer',
-            opacity: isGenerating || invoice?.status === 'processing' ? 0.7 : 1,
-            fontSize: '13px',
-            fontWeight: '500',
-          }}
+          margin={false}
         >
           {isGenerating
             ? 'Wystawianie...'
             : showManualOverrideWarning
               ? 'Wymuś wystawienie (Ręcznie)'
               : 'Wystaw fakturę'}
-        </button>
+        </Button>
       )}
     </div>
   )

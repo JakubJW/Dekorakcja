@@ -12,7 +12,7 @@ export const createShipmentEndpoint: Endpoint = {
 
     try {
       const payload = req.payload
-      const deliveryService = await getDeliveryService()
+      const deliveryService = getDeliveryService()
 
       const params = req.routeParams
       //ten check jest bez sensu, bo w przypadku braku parametru w requescie zwraca not found

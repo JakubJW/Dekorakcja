@@ -55,7 +55,7 @@ export async function createShipmentForOrder(
       },
     },
     receiver: {
-      company_name: order.billingAddress.companyName,
+      company_name: order.shippingAddress.companyName,
       first_name: order.shippingAddress.firstName,
       last_name: order.shippingAddress.lastName,
       email: order.shippingAddress.email,

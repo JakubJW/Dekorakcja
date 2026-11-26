@@ -30,6 +30,7 @@ export const carts: EcommercePluginConfig['carts'] = {
   cartsCollectionOverride: ({ defaultCollection }) => ({
     ...defaultCollection,
     admin: {
+      ...defaultCollection.admin,
       group: 'Sklep',
     },
     hooks: { beforeChange: [generateCartSecret, calculateSubtotal, calculateTotal] },

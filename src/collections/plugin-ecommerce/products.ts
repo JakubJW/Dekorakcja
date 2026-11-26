@@ -23,7 +23,7 @@ export const products: EcommercePluginConfig['products'] = {
   productsCollectionOverride: ({ defaultCollection }) => ({
     ...defaultCollection,
     admin: {
-      ...defaultCollection?.admin,
+      ...defaultCollection.admin,
       group: 'Sklep',
       defaultColumns: ['title', 'enableVariants', '_status', 'variants.variants'],
       livePreview: {

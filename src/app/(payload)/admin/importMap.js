@@ -22,7 +22,7 @@ import { HorizontalRuleFeatureClient as HorizontalRuleFeatureClient_e70f5e05f09f
 import { PriceCell as PriceCell_e27bf7b8cc50640dcdd584767b8eac3c } from '@payloadcms/plugin-ecommerce/client'
 import { PriceInput as PriceInput_b91672ccd6e8b071c11142ab941fedfb } from '@payloadcms/plugin-ecommerce/rsc'
 import { VariantOptionsSelector as VariantOptionsSelector_b91672ccd6e8b071c11142ab941fedfb } from '@payloadcms/plugin-ecommerce/rsc'
-import { InvoiceStatusUi as InvoiceStatusUi_e56c02d5545c4215d3ed26115b72bb2d } from '@/components/admin/order-invoice-status'
+import { ShippingStatusUI as ShippingStatusUI_dfd1e420f0ea7b64ec130c3d4560c5f0 } from '@/components/admin/order-shipping-status'
 import { InsertAuthStatus as InsertAuthStatus_8b29bc3a31afd068cd7c248463ee7589 } from '@/components/admin/insert-auth-status'
 import { BeforeDashboard as BeforeDashboard_1a7510af427896d367a49dbf838d2de6 } from '@/components/BeforeDashboard'
 import { BeforeLogin as BeforeLogin_8a7ab0eb7ab5c511aba12e68480bfe5e } from '@/components/BeforeLogin'
@@ -55,7 +55,7 @@ export const importMap = {
   "@payloadcms/plugin-ecommerce/client#PriceCell": PriceCell_e27bf7b8cc50640dcdd584767b8eac3c,
   "@payloadcms/plugin-ecommerce/rsc#PriceInput": PriceInput_b91672ccd6e8b071c11142ab941fedfb,
   "@payloadcms/plugin-ecommerce/rsc#VariantOptionsSelector": VariantOptionsSelector_b91672ccd6e8b071c11142ab941fedfb,
-  "@/components/admin/order-invoice-status#InvoiceStatusUi": InvoiceStatusUi_e56c02d5545c4215d3ed26115b72bb2d,
+  "@/components/admin/order-shipping-status#ShippingStatusUI": ShippingStatusUI_dfd1e420f0ea7b64ec130c3d4560c5f0,
   "@/components/admin/insert-auth-status#InsertAuthStatus": InsertAuthStatus_8b29bc3a31afd068cd7c248463ee7589,
   "@/components/BeforeDashboard#BeforeDashboard": BeforeDashboard_1a7510af427896d367a49dbf838d2de6,
   "@/components/BeforeLogin#BeforeLogin": BeforeLogin_8a7ab0eb7ab5c511aba12e68480bfe5e,

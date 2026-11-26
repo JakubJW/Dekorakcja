@@ -9,7 +9,7 @@ export const Shipments: CollectionConfig = {
   admin: {
     useAsTitle: 'trackingNumber',
     defaultColumns: ['order', 'provider', 'status', 'trackingNumber', 'createdAt'],
-    group: 'Sklep',
+    group: 'Dostawy',
   },
   access: {
     read: ({ req: { user } }) => Boolean(user),

@@ -304,16 +304,29 @@ export interface Order {
         id?: string | null;
       }[]
     | null;
+  shippingMethod: number | ShippingMethod;
+  additional_data?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   shippingAddress: {
-    firstName: string;
-    lastName: string;
+    kind?: ('person' | 'organization') | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    taxId?: string | null;
+    companyName?: string | null;
     email: string;
     addressLine1: string;
     addressLine2?: string | null;
     city: string;
     postalCode: string;
-    phone: string;
     country: string;
+    phone: string;
   };
   customer?: (number | null) | User;
   customerEmail?: string | null;
@@ -321,21 +334,6 @@ export interface Order {
   status?: OrderStatus;
   amount?: number | null;
   currency?: 'PLN' | null;
-  shippingMethod: number | ShippingMethod;
-  billingAddress: {
-    type?: ('person' | 'organization') | null;
-    firstName?: string | null;
-    lastName?: string | null;
-    email: string;
-    taxId?: string | null;
-    companyName?: string | null;
-    addressLine1: string;
-    addressLine2?: string | null;
-    city: string;
-    phone: string;
-    postalCode: string;
-    country: string;
-  };
   accessToken?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -1066,6 +1064,25 @@ export interface Occasion {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shipping-methods".
+ */
+export interface ShippingMethod {
+  id: number;
+  type: 'courier' | 'locker';
+  name: string;
+  price: number;
+  enabled?: boolean | null;
+  sortOrder?: number | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "transactions".
  */
 export interface Transaction {
@@ -1084,17 +1101,18 @@ export interface Transaction {
     paymentIntentID?: string | null;
   };
   billingAddress: {
-    type?: ('person' | 'organization') | null;
+    kind?: ('person' | 'organization') | null;
     firstName?: string | null;
     lastName?: string | null;
     taxId?: string | null;
     companyName?: string | null;
+    email: string;
     addressLine1: string;
     addressLine2?: string | null;
     city: string;
-    phone: string;
     postalCode: string;
     country: string;
+    phone: string;
   };
   status: 'pending' | 'succeeded' | 'failed' | 'cancelled' | 'expired' | 'refunded';
   customer?: (number | null) | User;
@@ -1155,30 +1173,12 @@ export interface Cart {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "shipping-methods".
- */
-export interface ShippingMethod {
-  id: number;
-  type: 'courier' | 'locker';
-  name: string;
-  price: number;
-  enabled?: boolean | null;
-  sortOrder?: number | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "addresses".
  */
 export interface Address {
   id: number;
-  customer: number | User;
+  customer?: (number | null) | User;
+  kind?: ('person' | 'organization') | null;
   firstName?: string | null;
   lastName?: string | null;
   taxId?: string | null;
@@ -1188,7 +1188,47 @@ export interface Address {
   addressLine2?: string | null;
   city: string;
   postalCode: string;
-  country: string;
+  country:
+    | 'AU'
+    | 'AT'
+    | 'BE'
+    | 'BR'
+    | 'BG'
+    | 'CY'
+    | 'CZ'
+    | 'DK'
+    | 'EE'
+    | 'FI'
+    | 'FR'
+    | 'GR'
+    | 'ES'
+    | 'NL'
+    | 'HK'
+    | 'IN'
+    | 'IE'
+    | 'JP'
+    | 'CA'
+    | 'LT'
+    | 'LU'
+    | 'LV'
+    | 'MY'
+    | 'MT'
+    | 'MX'
+    | 'DE'
+    | 'NO'
+    | 'NZ'
+    | 'PL'
+    | 'PT'
+    | 'RO'
+    | 'SG'
+    | 'SK'
+    | 'SI'
+    | 'US'
+    | 'CH'
+    | 'SE'
+    | 'HU'
+    | 'GB'
+    | 'IT';
   phone: string;
   updatedAt: string;
   createdAt: string;
@@ -2071,6 +2111,7 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
  */
 export interface AddressesSelect<T extends boolean = true> {
   customer?: T;
+  kind?: T;
   firstName?: T;
   lastName?: T;
   taxId?: T;
@@ -2212,18 +2253,23 @@ export interface OrdersSelect<T extends boolean = true> {
         quantity?: T;
         id?: T;
       };
+  shippingMethod?: T;
+  additional_data?: T;
   shippingAddress?:
     | T
     | {
+        kind?: T;
         firstName?: T;
         lastName?: T;
+        taxId?: T;
+        companyName?: T;
         email?: T;
         addressLine1?: T;
         addressLine2?: T;
         city?: T;
         postalCode?: T;
-        phone?: T;
         country?: T;
+        phone?: T;
       };
   customer?: T;
   customerEmail?: T;
@@ -2231,25 +2277,7 @@ export interface OrdersSelect<T extends boolean = true> {
   status?: T;
   amount?: T;
   currency?: T;
-  shippingMethod?: T;
-  billingAddress?:
-    | T
-    | {
-        type?: T;
-        firstName?: T;
-        lastName?: T;
-        email?: T;
-        taxId?: T;
-        companyName?: T;
-        addressLine1?: T;
-        addressLine2?: T;
-        city?: T;
-        phone?: T;
-        postalCode?: T;
-        country?: T;
-      };
   accessToken?: T;
-  invoiceStatus?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2276,17 +2304,18 @@ export interface TransactionsSelect<T extends boolean = true> {
   billingAddress?:
     | T
     | {
-        type?: T;
+        kind?: T;
         firstName?: T;
         lastName?: T;
         taxId?: T;
         companyName?: T;
+        email?: T;
         addressLine1?: T;
         addressLine2?: T;
         city?: T;
-        phone?: T;
         postalCode?: T;
         country?: T;
+        phone?: T;
       };
   status?: T;
   customer?: T;

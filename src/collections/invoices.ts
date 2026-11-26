@@ -4,7 +4,7 @@ export const Invoices: CollectionConfig = {
   slug: 'invoices',
   labels: { singular: 'Faktura', plural: 'Faktury' },
   admin: {
-    group: 'Sklep',
+    group: 'Rozliczenia',
     useAsTitle: 'invoiceNumber',
   },
   fields: [

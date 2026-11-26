@@ -13,7 +13,11 @@ export const Categories: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
-    group: 'Content',
+    group: 'Wypożyczalnia',
+  },
+  labels: {
+    singular: 'Kategoria',
+    plural: 'Kategorie',
   },
   fields: [
     {

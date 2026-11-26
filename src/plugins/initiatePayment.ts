@@ -139,7 +139,6 @@ export const initiatePayment =
           },
           checkoutData: {
             shippingAddress: validated.shippingAddress,
-            billingAddress: validated.billingAddress,
           },
         },
       })

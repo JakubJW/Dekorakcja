@@ -70,7 +70,6 @@ export const confirmOrder =
         : undefined
 
       const CheckoutDataSchema = z.object({
-        billingAddress: addressSchema,
         shippingAddress: addressSchema,
       })
 
@@ -94,11 +93,10 @@ export const confirmOrder =
                 customer: req.user.id,
               }
             : {
-                customerEmail: validated.billingAddress.email,
+                customerEmail: validated.shippingAddress.email,
               }),
           items: cartItemsSnapshot,
           shippingAddress: validated.shippingAddress,
-          billingAddress: validated.billingAddress,
           shippingMethod: 1,
           status: 'processing',
           transactions: [transaction.id],
