@@ -54,6 +54,21 @@ export default buildConfig({
       connectionString: env.DATABASE_URL,
     },
     push: false,
+    beforeSchemaInit: [
+      ({ schema, adapter }) => {
+        for (const tableName in adapter.rawTables) {
+          const table = adapter.rawTables[tableName]
+          for (const fieldName in table.columns) {
+            const column = table.columns[fieldName]
+            if (column.type === 'enum') {
+              //@ts-ignore
+              column.type = 'varchar'
+            }
+          }
+        }
+        return schema
+      },
+    ],
   }),
   editor: lexicalEditor({
     features: () => {
