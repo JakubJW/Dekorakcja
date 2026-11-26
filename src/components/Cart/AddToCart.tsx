@@ -1,9 +1,9 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { useCustomCart } from '@/features/cart/use-cart'
 import { useProduct } from '@/providers/ProductProvider'
 import { PopulatedProduct } from '@/utilities/normalizeProduct'
-import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
 import React, { useCallback, useMemo } from 'react'
 import { toast } from 'sonner'
 
@@ -12,7 +12,7 @@ type Props = {
 }
 
 export function AddToCart({ product }: Props) {
-  const { addItem, cart, isLoading } = useCart()
+  const { addItem, cart, isLoading } = useCustomCart()
   const { selectedVariant } = useProduct()
 
   const addToCart = useCallback(
@@ -22,6 +22,7 @@ export function AddToCart({ product }: Props) {
       addItem({
         product: product.id,
         variant: selectedVariant?.id ?? undefined,
+        personalizationText: 'siema',
       }).then(() => {
         toast.success('Produkt dodany do koszyka')
       })
@@ -29,7 +30,7 @@ export function AddToCart({ product }: Props) {
     [addItem, product, selectedVariant],
   )
 
-  const disabled = useMemo<boolean>(() => {
+  const disabled = useMemo(() => {
     const existingItem = cart?.items?.find((item) => {
       const productID = typeof item.product === 'object' ? item.product?.id : item.product
       const variantID = item.variant

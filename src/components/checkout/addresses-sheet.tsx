@@ -144,20 +144,16 @@ export const AddressesSheet = ({
             <SheetHeader>
               <SheetTitle className="font-sans">Zmień dane</SheetTitle>
             </SheetHeader>
-            <div className="flex flex-col grow justify-between">
-              <div className="space-y-4">
-                <AddressListing
-                  options={addressSheet.addresses}
-                  selectedValue={selectedValue}
-                  onDelete={handleDeleteAddress}
-                  onEdit={handleEditAddress}
-                  onValueChange={handleAddressSelect}
-                />
-              </div>
-              <Button className="mx-4 mb-4" onClick={() => setView('ADD')}>
-                Dodaj nowy adres
-              </Button>
-            </div>
+            <AddressListing
+              options={addressSheet.addresses}
+              selectedValue={selectedValue}
+              onDelete={handleDeleteAddress}
+              onEdit={handleEditAddress}
+              onValueChange={handleAddressSelect}
+            />
+            <Button className="mx-4 mb-4" onClick={() => setView('ADD')}>
+              Dodaj nowy adres
+            </Button>
           </>
         )}
         {view === 'ADD' && (

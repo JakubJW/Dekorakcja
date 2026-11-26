@@ -1,7 +1,7 @@
 import { Price } from '@/components/Price'
 import { Button } from '@/components/ui/button'
+import { useCustomCart } from '@/features/cart/use-cart'
 import { normalizeCartItems } from '@/utilities/normalize-cart'
-import { useCart } from '@payloadcms/plugin-ecommerce/client/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -9,8 +9,11 @@ import { CartEmpty } from '../cart-empty'
 import { DeleteItemButton } from '../DeleteItemButton'
 import { EditItemQuantityButton } from '../EditItemQuantityButton'
 
+// personalizacje zrobic na poziomie produktu i dodac personalization fee. nie ma to nic wspolnego z wariantami, a potem
+// do koszyka przekazujemy tylko informacje o tekscie personalizacji
+
 export const ShopCartTab = () => {
-  const { cart, removeItem } = useCart()
+  const { cart, removeItem } = useCustomCart()
 
   return (
     <>

@@ -52,7 +52,7 @@ export const CheckoutPage = ({ addresses, shippingMethods }: CheckoutPageProps) 
     return () => {
       setShippingAddress(undefined)
       setBillingAddress(undefined)
-      setIsDifferentBilling(true)
+      setIsDifferentBilling(false)
     }
   }, [])
 
@@ -105,9 +105,9 @@ export const CheckoutPage = ({ addresses, shippingMethods }: CheckoutPageProps) 
   }
 
   const handleDeliveryMethodChange = useCallback(
-    async (value: number) => {
+    async (value: string) => {
       try {
-        await updateShipping({ methodId: value })
+        await updateShipping({ methodSlug: value })
         await refreshCart()
       } catch (error) {
         toast('błąd')
@@ -119,7 +119,7 @@ export const CheckoutPage = ({ addresses, shippingMethods }: CheckoutPageProps) 
   const handleLockerChange = useCallback(
     async (value: Locker) => {
       try {
-        await updateShipping({ methodId: undefined, lockerData: value })
+        await updateShipping({ methodSlug: 'paczkomat-inpost', lockerData: value })
         await refreshCart()
       } catch (error) {
         toast('błąd')
@@ -168,7 +168,7 @@ export const CheckoutPage = ({ addresses, shippingMethods }: CheckoutPageProps) 
               options={shippingMethods}
               selectedOption={
                 cart.shippingMethod !== undefined && typeof cart.shippingMethod === 'object'
-                  ? cart.shippingMethod?.id
+                  ? cart.shippingMethod?.slug
                   : undefined
               }
               lockerDetails={cart.lockerData as Locker}
@@ -199,7 +199,7 @@ export const CheckoutPage = ({ addresses, shippingMethods }: CheckoutPageProps) 
             />
           </Suspense>
         </div>
-        <CartItems shippingMethod={(cart.shippingMethod as ShippingMethod) ?? undefined} />
+        <CartItems />
       </div>
     </div>
   )

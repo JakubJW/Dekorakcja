@@ -5,6 +5,6 @@ import type { FC, SVGProps } from 'react'
 type IconComponent = FC<SVGProps<SVGSVGElement>>
 
 export const DELIVERY_ICONS: Record<string, IconComponent> = {
-  'paczkomat-inpost': InpostParcelLockerSvg,
+  inpost_locker_standard: InpostParcelLockerSvg,
   'kurier-inpost': InpostCourierSvg,
 }

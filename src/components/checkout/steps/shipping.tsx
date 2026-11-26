@@ -22,9 +22,9 @@ const InPostGeowidget = dynamic(() => import('@/features/checkout/inpost-geowidg
 
 type ShippingProps = {
   options: ShippingMethod[]
-  selectedOption?: number
+  selectedOption?: string
   lockerDetails?: Locker
-  onDeliveryMethodChange: (value: number) => void
+  onDeliveryMethodChange: (value: string) => void
   onLockerChange: (value: Locker) => void
 }
 
@@ -42,8 +42,8 @@ export const Shipping = ({
   const [dialogOpen, setDialogOpen] = useState(false)
 
   const isLocker = useCallback(
-    (value: number) => {
-      const option = options.find((option) => option.id === Number(value))
+    (value: string) => {
+      const option = options.find((option) => option.slug === value)
 
       if (!option) return undefined
 
@@ -52,12 +52,13 @@ export const Shipping = ({
     [options],
   )
 
-  const handleDeliveryOptionChange = (value: number) => {
-    onDeliveryMethodChange(value)
-
+  const handleDeliveryOptionChange = (value: string) => {
     if (isLocker(value) && !lockerDetails && !dialogOpen) {
       setDialogOpen(true)
+      return
     }
+
+    onDeliveryMethodChange(value)
   }
 
   const handleShippingPointSelect = (point: InpostPointInterface) => {
@@ -74,11 +75,11 @@ export const Shipping = ({
     <div className="space-y-6">
       <h2 className="font-medium text-2xl">Sposób dostawy</h2>
       <RadioGroup
-        value={String(selectedOption)}
-        onValueChange={(value) => handleDeliveryOptionChange(Number(value))}
+        value={selectedOption}
+        onValueChange={(value) => handleDeliveryOptionChange(value)}
       >
         {options.map((option) => (
-          <FieldLabel htmlFor={String(option.id)} key={option.id}>
+          <FieldLabel htmlFor={option.slug} key={option.id}>
             <Field className="cursor-pointer">
               <FieldContent>
                 <div className="flex justify-between">
@@ -95,7 +96,7 @@ export const Shipping = ({
                   </FieldDescription>
                 </div>
                 {option.slug === 'paczkomat-inpost' &&
-                  selectedOption === option.id &&
+                  selectedOption === option.slug &&
                   lockerDetails && (
                     <div className="mt-2">
                       <div className="mb-4">
@@ -109,7 +110,7 @@ export const Shipping = ({
                     </div>
                   )}
               </FieldContent>
-              <RadioGroupItem value={String(option.id)} id={String(option.id)} className="hidden" />
+              <RadioGroupItem value={option.slug} id={option.slug} className="hidden" />
             </Field>
           </FieldLabel>
         ))}

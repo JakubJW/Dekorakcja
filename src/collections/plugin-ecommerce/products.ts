@@ -4,18 +4,18 @@ import { MediaBlock } from '@/blocks/MediaBlock/config'
 import { generatePreviewPath } from '@/utilities/generatePreviewPath'
 import { EcommercePluginConfig } from '@payloadcms/plugin-ecommerce/types'
 import {
-    MetaDescriptionField,
-    MetaImageField,
-    MetaTitleField,
-    OverviewField,
-    PreviewField,
+  MetaDescriptionField,
+  MetaImageField,
+  MetaTitleField,
+  OverviewField,
+  PreviewField,
 } from '@payloadcms/plugin-seo/fields'
 import {
-    FixedToolbarFeature,
-    HeadingFeature,
-    HorizontalRuleFeature,
-    InlineToolbarFeature,
-    lexicalEditor,
+  FixedToolbarFeature,
+  HeadingFeature,
+  HorizontalRuleFeature,
+  InlineToolbarFeature,
+  lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 import { DefaultDocumentIDType, Field, NumberField, Where, slugField } from 'payload'
 
@@ -23,7 +23,7 @@ export const products: EcommercePluginConfig['products'] = {
   productsCollectionOverride: ({ defaultCollection }) => ({
     ...defaultCollection,
     admin: {
-      ...defaultCollection?.admin,
+      ...defaultCollection.admin,
       group: 'Sklep',
       defaultColumns: ['title', 'enableVariants', '_status', 'variants.variants'],
       livePreview: {
@@ -55,15 +55,16 @@ export const products: EcommercePluginConfig['products'] = {
       meta: true,
     },
     fields: [
-      { name: 'title', type: 'text', required: true },
+      { name: 'title', label: 'Nazwa', type: 'text', required: true },
       {
         type: 'tabs',
         tabs: [
           {
+            label: 'Karta produktu',
             fields: [
-              // 1. Przełącznik typu produktu
               {
                 name: 'description',
+                label: 'Opis',
                 type: 'richText',
                 editor: lexicalEditor({
                   features: ({ rootFeatures }) => {
@@ -76,22 +77,24 @@ export const products: EcommercePluginConfig['products'] = {
                     ]
                   },
                 }),
-                label: false,
                 required: false,
               },
               {
                 name: 'gallery',
+                label: 'Galeria',
                 type: 'array',
                 minRows: 1,
                 fields: [
                   {
                     name: 'image',
+                    label: 'Obraz',
                     type: 'upload',
                     relationTo: 'media',
                     required: true,
                   },
                   {
                     name: 'variantOption',
+                    label: 'Powiązany wariant',
                     type: 'relationship',
                     relationTo: 'variantOptions',
                     admin: {
@@ -134,20 +137,37 @@ export const products: EcommercePluginConfig['products'] = {
                   },
                 ],
               },
-
               {
                 name: 'layout',
+                label: 'Układ',
                 type: 'blocks',
                 blocks: [CallToAction, Content, MediaBlock],
               },
             ],
-            label: 'Content',
           },
           {
+            label: 'Szczegóły',
             fields: [
+              {
+                name: 'allowCustomization',
+                label: 'Włącz mozliwość personalizacji',
+                type: 'checkbox',
+                defaultValue: false,
+              },
+              {
+                name: 'customizationOptions',
+                label: 'Dostępne personalizacje',
+                type: 'relationship',
+                hasMany: true,
+                relationTo: 'product-personalization-options',
+                admin: {
+                  condition: (_, siblingData) => siblingData.allowCustomization,
+                },
+              },
               ...defaultCollection.fields,
               {
                 name: 'relatedProducts',
+                label: 'Powiązane produkty',
                 type: 'relationship',
                 filterOptions: ({ id }) => {
                   if (id) {
@@ -169,7 +189,6 @@ export const products: EcommercePluginConfig['products'] = {
                 relationTo: 'products',
               },
             ],
-            label: 'Product Details',
           },
           {
             name: 'meta',
@@ -221,7 +240,15 @@ export const products: EcommercePluginConfig['products'] = {
     }),
     variantOptionsCollectionOverride: ({ defaultCollection }) => ({
       ...defaultCollection,
-      fields: [...defaultCollection.fields],
+      fields: [
+        ...defaultCollection.fields,
+        {
+          label: 'Reprezentacja wizualna',
+          name: 'visualization',
+          type: 'relationship',
+          relationTo: 'media',
+        },
+      ],
     }),
     variantsCollectionOverride: ({ defaultCollection }) => ({
       ...defaultCollection,
@@ -247,11 +274,6 @@ export const products: EcommercePluginConfig['products'] = {
           }
           return [field]
         }),
-        {
-          name: 'customField',
-          label: 'Custom Field',
-          type: 'text',
-        },
       ],
     }),
   },

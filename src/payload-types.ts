@@ -82,6 +82,8 @@ export interface Config {
     'shipping-methods': ShippingMethod;
     invoices: Invoice;
     users: User;
+    'product-personalization-options': ProductPersonalizationOption;
+    shipments: Shipment;
     forms: Form;
     'form-submissions': FormSubmission;
     addresses: Address;
@@ -122,6 +124,8 @@ export interface Config {
     'shipping-methods': ShippingMethodsSelect<false> | ShippingMethodsSelect<true>;
     invoices: InvoicesSelect<false> | InvoicesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    'product-personalization-options': ProductPersonalizationOptionsSelect<false> | ProductPersonalizationOptionsSelect<true>;
+    shipments: ShipmentsSelect<false> | ShipmentsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     addresses: AddressesSelect<false> | AddressesSelect<true>;
@@ -300,55 +304,29 @@ export interface Order {
         id?: string | null;
       }[]
     | null;
+  shippingMethod: number | ShippingMethod;
+  additional_data?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   shippingAddress: {
-    firstName: string;
-    lastName: string;
+    kind?: ('person' | 'organization') | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    taxId?: string | null;
+    companyName?: string | null;
+    email: string;
     addressLine1: string;
     addressLine2?: string | null;
     city: string;
     postalCode: string;
+    country: string;
     phone: string;
-    country:
-      | 'US'
-      | 'GB'
-      | 'CA'
-      | 'AU'
-      | 'AT'
-      | 'BE'
-      | 'BR'
-      | 'BG'
-      | 'CY'
-      | 'CZ'
-      | 'DK'
-      | 'EE'
-      | 'FI'
-      | 'FR'
-      | 'DE'
-      | 'GR'
-      | 'HK'
-      | 'HU'
-      | 'IN'
-      | 'IE'
-      | 'IT'
-      | 'JP'
-      | 'LV'
-      | 'LT'
-      | 'LU'
-      | 'MY'
-      | 'MT'
-      | 'MX'
-      | 'NL'
-      | 'NZ'
-      | 'NO'
-      | 'PL'
-      | 'PT'
-      | 'RO'
-      | 'SG'
-      | 'SK'
-      | 'SI'
-      | 'ES'
-      | 'SE'
-      | 'CH';
   };
   customer?: (number | null) | User;
   customerEmail?: string | null;
@@ -356,60 +334,6 @@ export interface Order {
   status?: OrderStatus;
   amount?: number | null;
   currency?: 'PLN' | null;
-  shippingMethod: number | ShippingMethod;
-  billingAddress: {
-    type?: ('person' | 'organization') | null;
-    firstName?: string | null;
-    lastName?: string | null;
-    nip?: string | null;
-    companyName?: string | null;
-    addressLine1: string;
-    addressLine2?: string | null;
-    city: string;
-    phone: string;
-    postalCode: string;
-    country:
-      | 'US'
-      | 'GB'
-      | 'CA'
-      | 'AU'
-      | 'AT'
-      | 'BE'
-      | 'BR'
-      | 'BG'
-      | 'CY'
-      | 'CZ'
-      | 'DK'
-      | 'EE'
-      | 'FI'
-      | 'FR'
-      | 'DE'
-      | 'GR'
-      | 'HK'
-      | 'HU'
-      | 'IN'
-      | 'IE'
-      | 'IT'
-      | 'JP'
-      | 'LV'
-      | 'LT'
-      | 'LU'
-      | 'MY'
-      | 'MT'
-      | 'MX'
-      | 'NL'
-      | 'NZ'
-      | 'NO'
-      | 'PL'
-      | 'PT'
-      | 'RO'
-      | 'SG'
-      | 'SK'
-      | 'SI'
-      | 'ES'
-      | 'SE'
-      | 'CH';
-  };
   accessToken?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -444,6 +368,8 @@ export interface Product {
       }[]
     | null;
   layout?: (CallToActionBlock | ContentBlock | MediaBlock)[] | null;
+  allowCustomization?: boolean | null;
+  customizationOptions?: (number | ProductPersonalizationOption)[] | null;
   inventory?: number | null;
   enableVariants?: boolean | null;
   variantTypes?: (number | VariantType)[] | null;
@@ -521,6 +447,7 @@ export interface VariantOption {
    * should be defaulted or dynamic based on label
    */
   value: string;
+  visualization?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
@@ -1088,6 +1015,19 @@ export interface NumberedListsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "product-personalization-options".
+ */
+export interface ProductPersonalizationOption {
+  id: number;
+  name: string;
+  type?: 'text' | null;
+  priceInPLNEnabled?: boolean | null;
+  priceInPLN?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "variants".
  */
 export interface Variant {
@@ -1102,7 +1042,6 @@ export interface Variant {
   inventory?: number | null;
   priceInPLNEnabled?: boolean | null;
   priceInPLN?: number | null;
-  customField?: string | null;
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
@@ -1115,6 +1054,25 @@ export interface Variant {
 export interface Occasion {
   id: number;
   name: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shipping-methods".
+ */
+export interface ShippingMethod {
+  id: number;
+  type: 'courier' | 'locker';
+  name: string;
+  price: number;
+  enabled?: boolean | null;
+  sortOrder?: number | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -1143,57 +1101,18 @@ export interface Transaction {
     paymentIntentID?: string | null;
   };
   billingAddress: {
-    type?: ('person' | 'organization') | null;
+    kind?: ('person' | 'organization') | null;
     firstName?: string | null;
     lastName?: string | null;
-    nip?: string | null;
+    taxId?: string | null;
     companyName?: string | null;
+    email: string;
     addressLine1: string;
     addressLine2?: string | null;
     city: string;
-    phone: string;
     postalCode: string;
-    country:
-      | 'US'
-      | 'GB'
-      | 'CA'
-      | 'AU'
-      | 'AT'
-      | 'BE'
-      | 'BR'
-      | 'BG'
-      | 'CY'
-      | 'CZ'
-      | 'DK'
-      | 'EE'
-      | 'FI'
-      | 'FR'
-      | 'DE'
-      | 'GR'
-      | 'HK'
-      | 'HU'
-      | 'IN'
-      | 'IE'
-      | 'IT'
-      | 'JP'
-      | 'LV'
-      | 'LT'
-      | 'LU'
-      | 'MY'
-      | 'MT'
-      | 'MX'
-      | 'NL'
-      | 'NZ'
-      | 'NO'
-      | 'PL'
-      | 'PT'
-      | 'RO'
-      | 'SG'
-      | 'SK'
-      | 'SI'
-      | 'ES'
-      | 'SE'
-      | 'CH';
+    country: string;
+    phone: string;
   };
   status: 'pending' | 'succeeded' | 'failed' | 'cancelled' | 'expired' | 'refunded';
   customer?: (number | null) | User;
@@ -1225,6 +1144,10 @@ export interface Cart {
         product?: (number | null) | Product;
         variant?: (number | null) | Variant;
         quantity: number;
+        /**
+         * Wpisz tekst, który ma zostać wygrawerowany lub nadrukowany.
+         */
+        personalizationText?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -1234,6 +1157,7 @@ export interface Cart {
   status?: ('active' | 'purchased' | 'abandoned') | null;
   subtotal?: number | null;
   currency?: 'PLN' | null;
+  total?: number | null;
   shippingMethod?: (number | null) | ShippingMethod;
   lockerData?:
     | {
@@ -1249,30 +1173,12 @@ export interface Cart {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "shipping-methods".
- */
-export interface ShippingMethod {
-  id: number;
-  type: 'courier' | 'locker';
-  name: string;
-  price: number;
-  enabled?: boolean | null;
-  sortOrder?: number | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "addresses".
  */
 export interface Address {
   id: number;
-  customer: number | User;
+  customer?: (number | null) | User;
+  kind?: ('person' | 'organization') | null;
   firstName?: string | null;
   lastName?: string | null;
   taxId?: string | null;
@@ -1283,9 +1189,6 @@ export interface Address {
   city: string;
   postalCode: string;
   country:
-    | 'US'
-    | 'GB'
-    | 'CA'
     | 'AU'
     | 'AT'
     | 'BE'
@@ -1297,32 +1200,35 @@ export interface Address {
     | 'EE'
     | 'FI'
     | 'FR'
-    | 'DE'
     | 'GR'
+    | 'ES'
+    | 'NL'
     | 'HK'
-    | 'HU'
     | 'IN'
     | 'IE'
-    | 'IT'
     | 'JP'
-    | 'LV'
+    | 'CA'
     | 'LT'
     | 'LU'
+    | 'LV'
     | 'MY'
     | 'MT'
     | 'MX'
-    | 'NL'
-    | 'NZ'
+    | 'DE'
     | 'NO'
+    | 'NZ'
     | 'PL'
     | 'PT'
     | 'RO'
     | 'SG'
     | 'SK'
     | 'SI'
-    | 'ES'
+    | 'US'
+    | 'CH'
     | 'SE'
-    | 'CH';
+    | 'HU'
+    | 'GB'
+    | 'IT';
   phone: string;
   updatedAt: string;
   createdAt: string;
@@ -1412,6 +1318,46 @@ export interface Invoice {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shipments".
+ */
+export interface Shipment {
+  id: number;
+  order: number | Order;
+  provider: 'inpost' | 'dhl';
+  /**
+   * ID przesyłki w systemie kuriera (np. InPost ID)
+   */
+  providerShipmentId: string;
+  /**
+   * Numer śledzenia paczki
+   */
+  trackingNumber?: string | null;
+  status?: ('created' | 'confirmed' | 'in_transit' | 'delivered' | 'cancelled') | null;
+  /**
+   * Etykieta nadawcza w formacie PDF
+   */
+  label?: (number | null) | Media;
+  /**
+   * Czy to przesyłka zwrotna?
+   */
+  isReturn?: boolean | null;
+  /**
+   * Pełna odpowiedź z API (do celów audytowych/debugowania)
+   */
+  rawResponse?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
@@ -1490,6 +1436,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'product-personalization-options';
+        value: number | ProductPersonalizationOption;
+      } | null)
+    | ({
+        relationTo: 'shipments';
+        value: number | Shipment;
       } | null)
     | ({
         relationTo: 'forms';
@@ -1976,6 +1930,34 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "product-personalization-options_select".
+ */
+export interface ProductPersonalizationOptionsSelect<T extends boolean = true> {
+  name?: T;
+  type?: T;
+  priceInPLNEnabled?: T;
+  priceInPLN?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shipments_select".
+ */
+export interface ShipmentsSelect<T extends boolean = true> {
+  order?: T;
+  provider?: T;
+  providerShipmentId?: T;
+  trackingNumber?: T;
+  status?: T;
+  label?: T;
+  isReturn?: T;
+  rawResponse?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "forms_select".
  */
 export interface FormsSelect<T extends boolean = true> {
@@ -2129,6 +2111,7 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
  */
 export interface AddressesSelect<T extends boolean = true> {
   customer?: T;
+  kind?: T;
   firstName?: T;
   lastName?: T;
   taxId?: T;
@@ -2155,7 +2138,6 @@ export interface VariantsSelect<T extends boolean = true> {
   inventory?: T;
   priceInPLNEnabled?: T;
   priceInPLN?: T;
-  customField?: T;
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;
@@ -2182,6 +2164,7 @@ export interface VariantOptionsSelect<T extends boolean = true> {
   variantType?: T;
   label?: T;
   value?: T;
+  visualization?: T;
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;
@@ -2207,6 +2190,8 @@ export interface ProductsSelect<T extends boolean = true> {
         content?: T | ContentBlockSelect<T>;
         mediaBlock?: T | MediaBlockSelect<T>;
       };
+  allowCustomization?: T;
+  customizationOptions?: T;
   inventory?: T;
   enableVariants?: T;
   variantTypes?: T;
@@ -2240,6 +2225,7 @@ export interface CartsSelect<T extends boolean = true> {
         product?: T;
         variant?: T;
         quantity?: T;
+        personalizationText?: T;
         id?: T;
       };
   secret?: T;
@@ -2248,6 +2234,7 @@ export interface CartsSelect<T extends boolean = true> {
   status?: T;
   subtotal?: T;
   currency?: T;
+  total?: T;
   shippingMethod?: T;
   lockerData?: T;
   updatedAt?: T;
@@ -2266,17 +2253,23 @@ export interface OrdersSelect<T extends boolean = true> {
         quantity?: T;
         id?: T;
       };
+  shippingMethod?: T;
+  additional_data?: T;
   shippingAddress?:
     | T
     | {
+        kind?: T;
         firstName?: T;
         lastName?: T;
+        taxId?: T;
+        companyName?: T;
+        email?: T;
         addressLine1?: T;
         addressLine2?: T;
         city?: T;
         postalCode?: T;
-        phone?: T;
         country?: T;
+        phone?: T;
       };
   customer?: T;
   customerEmail?: T;
@@ -2284,24 +2277,7 @@ export interface OrdersSelect<T extends boolean = true> {
   status?: T;
   amount?: T;
   currency?: T;
-  shippingMethod?: T;
-  billingAddress?:
-    | T
-    | {
-        type?: T;
-        firstName?: T;
-        lastName?: T;
-        nip?: T;
-        companyName?: T;
-        addressLine1?: T;
-        addressLine2?: T;
-        city?: T;
-        phone?: T;
-        postalCode?: T;
-        country?: T;
-      };
   accessToken?: T;
-  invoiceStatus?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2328,17 +2304,18 @@ export interface TransactionsSelect<T extends boolean = true> {
   billingAddress?:
     | T
     | {
-        type?: T;
+        kind?: T;
         firstName?: T;
         lastName?: T;
-        nip?: T;
+        taxId?: T;
         companyName?: T;
+        email?: T;
         addressLine1?: T;
         addressLine2?: T;
         city?: T;
-        phone?: T;
         postalCode?: T;
         country?: T;
+        phone?: T;
       };
   status?: T;
   customer?: T;

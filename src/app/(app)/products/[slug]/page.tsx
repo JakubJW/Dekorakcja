@@ -50,6 +50,24 @@ const queryProductBySlug = async ({ slug }: { slug: string }) => {
         inventory: true,
         options: true,
       },
+      variantOptions: {
+        value: true,
+        label: true,
+        visualization: true,
+      },
+      media: {
+        alt: true,
+        url: true,
+        thumbnailURL: true,
+        filename: true,
+        width: true,
+        height: true,
+      },
+      'product-personalization-options': {
+        type: true,
+        name: true,
+        priceInPLN: true,
+      },
     },
   })
 

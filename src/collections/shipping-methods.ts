@@ -5,7 +5,7 @@ import { slugField } from 'payload'
 export const ShippingMethods: CollectionConfig = {
   slug: 'shipping-methods',
   labels: {
-    plural: 'Metody dostawy',
+    plural: 'Metody dostaw',
     singular: 'Metoda dostawy',
   },
   access: {
@@ -16,7 +16,7 @@ export const ShippingMethods: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'name',
-    group: 'Sklep',
+    group: 'Dostawy',
   },
   fields: [
     {

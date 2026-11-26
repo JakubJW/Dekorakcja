@@ -9,13 +9,19 @@ export const nonEmptyString = z.string().trim().min(1, { message: ERROR_MESSAGES
 
 const baseAddressShape = {
   id: z.number().optional(),
-  phone: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
+  phone: z
+    .string({ message: ERROR_MESSAGES.required })
+    .min(1, 'Numer telefonu jest wymagany')
+    .regex(/^\d{3}-\d{3}-\d{3}$/, 'Nieprawidłowy numer telefonu'),
   email: z.email({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
   addressLine1: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
   addressLine2: z.string().optional(),
   city: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
   country: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
-  postalCode: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
+  postalCode: z
+    .string({ message: ERROR_MESSAGES.required })
+    .min(1, 'Kod pocztowy jest wymagany')
+    .regex(/^\d{2}-\d{3}$/, 'Nieprawidłowy kod pocztowy'),
 }
 
 const personSchema = z.object({

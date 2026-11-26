@@ -1,4 +1,5 @@
 import { env } from '@/env'
+import { CustomCartProvider } from '@/features/cart/use-cart'
 import { AuthProvider } from '@/providers/Auth'
 import { SonnerProvider } from '@/providers/Sonner'
 import { EcommerceProvider } from '@payloadcms/plugin-ecommerce/client/react'
@@ -29,6 +30,7 @@ export const Providers: React.FC<{
           select: {
             shippingMethod: true,
             lockerData: true,
+            total: true,
           },
           populate: {
             'shipping-methods': {
@@ -54,10 +56,12 @@ export const Providers: React.FC<{
         }),
       ]}
     >
-      <SonnerProvider />
-      <AuthProvider>
-        <RentalCartProvider>{children}</RentalCartProvider>
-      </AuthProvider>
+      <CustomCartProvider>
+        <SonnerProvider />
+        <AuthProvider>
+          <RentalCartProvider>{children}</RentalCartProvider>
+        </AuthProvider>
+      </CustomCartProvider>
     </EcommerceProvider>
   )
 }

@@ -1,7 +1,9 @@
 import { supportedCountries } from '@/collections/plugin-ecommerce/supported-countries'
 import { DomainAddress } from '@/features/addresses/domain/types'
+import { useMemo, useState } from 'react'
 import { Button } from '../ui/button'
 import { Field, FieldContent, FieldLabel } from '../ui/field'
+import { Label } from '../ui/label'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 
 type AddressListingProps = {
@@ -19,70 +21,107 @@ export const AddressListing = ({
   onEdit,
   onDelete,
 }: AddressListingProps) => {
+  const [filter, setFilter] = useState<'organization' | 'person'>('person')
+
   if (!options || options.length === 0) {
     return <p>Nie znaleziono adresów.</p>
   }
 
+  const filteredOptions = useMemo(() => {
+    return options.filter((option) => option.kind === filter)
+  }, [options, filter])
+
   return (
-    <RadioGroup
-      defaultValue={String(selectedValue)}
-      onValueChange={onValueChange}
-      className="px-4 gap-4"
-    >
-      {options.map((address) => (
-        <FieldLabel
-          htmlFor={String(address.id)}
-          key={address.id}
-          className="has-data-[state=checked]:bg-white has-data-[state=checked]:border-primary dark:has-data-[state=checked]:bg-white [&>[data-slot=field]]:p-6 has-[>[data-slot=field]]:rounded-lg"
-        >
-          <Field className="cursor-pointer">
-            <FieldContent>
-              <div>
-                <div className="grow">
-                  {address.firstName && address.lastName && (
-                    <p className="font-medium mb-4">
-                      {address.firstName} {address.lastName}
-                    </p>
-                  )}
-                  {address.companyName && <p className="font-medium mb-4">{address.companyName}</p>}
-                  <p className="font-light">
-                    {address.addressLine1}
-                    {address.addressLine2 && <>/{address.addressLine2}</>}
-                  </p>
-                  <p className="font-light">
-                    {address.postalCode}&nbsp;{address.city}
-                  </p>
-                  <p className="font-light">
-                    {
-                      supportedCountries.filter((country) => country.value === address.country)[0]
-                        .label
-                    }
-                  </p>
-                  <p className="font-light">tel: {address.phone && <span>{address.phone}</span>}</p>
-                  {address.taxId && <p className="font-light">NIP: {address.taxId}</p>}
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant={'link'}
-                    className="p-0 underline"
-                    onClick={() => onEdit(address.id!)}
-                  >
-                    Edytuj
-                  </Button>
-                  <Button
-                    variant={'link'}
-                    className="p-0 underline"
-                    onClick={() => onDelete(address.id!)}
-                  >
-                    Usuń
-                  </Button>
-                </div>
-              </div>
-            </FieldContent>
-            <RadioGroupItem value={String(address.id)} id={String(address.id)} className="hidden" />
-          </Field>
-        </FieldLabel>
-      ))}
-    </RadioGroup>
+    <div className="flex flex-col grow gap-4 px-4">
+      <RadioGroup
+        className="flex"
+        value={filter}
+        onValueChange={(value) => setFilter(value as 'organization' | 'person')}
+      >
+        <div className="flex-1 flex items-center gap-3">
+          <RadioGroupItem className="cursor-pointer" id="person" value="person" />
+          <Label className="cursor-pointer" htmlFor="person">
+            Osoba prywatna
+          </Label>
+        </div>
+        <div className="flex-1 flex items-center gap-3">
+          <RadioGroupItem className="cursor-pointer" id="organization" value="organization" />
+          <Label className="cursor-pointer" htmlFor="organization">
+            Firma
+          </Label>
+        </div>
+      </RadioGroup>
+      <RadioGroup
+        defaultValue={String(selectedValue)}
+        onValueChange={onValueChange}
+        className="gap-4"
+      >
+        <div className="space-y-4">
+          {filteredOptions.map((address) => (
+            <FieldLabel
+              htmlFor={String(address.id)}
+              key={address.id}
+              className="has-data-[state=checked]:bg-white has-data-[state=checked]:border-primary dark:has-data-[state=checked]:bg-white [&>[data-slot=field]]:p-6 has-[>[data-slot=field]]:rounded-lg"
+            >
+              <Field className="cursor-pointer">
+                <FieldContent>
+                  <div>
+                    <div className="grow">
+                      {address.firstName && address.lastName && (
+                        <p className="font-medium mb-4">
+                          {address.firstName} {address.lastName}
+                        </p>
+                      )}
+                      {address.companyName && (
+                        <p className="font-medium mb-4">{address.companyName}</p>
+                      )}
+                      <p className="font-light">
+                        {address.addressLine1}
+                        {address.addressLine2 && <>/{address.addressLine2}</>}
+                      </p>
+                      <p className="font-light">
+                        {address.postalCode}&nbsp;{address.city}
+                      </p>
+                      <p className="font-light">
+                        {
+                          supportedCountries.filter(
+                            (country) => country.value === address.country,
+                          )[0].label
+                        }
+                      </p>
+                      <p className="font-light">
+                        tel: {address.phone && <span>{address.phone}</span>}
+                      </p>
+                      {address.taxId && <p className="font-light">NIP: {address.taxId}</p>}
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        variant={'link'}
+                        className="p-0 underline"
+                        onClick={() => onEdit(address.id!)}
+                      >
+                        Edytuj
+                      </Button>
+                      <Button
+                        variant={'link'}
+                        className="p-0 underline"
+                        onClick={() => onDelete(address.id!)}
+                      >
+                        Usuń
+                      </Button>
+                    </div>
+                  </div>
+                </FieldContent>
+                <RadioGroupItem
+                  value={String(address.id)}
+                  id={String(address.id)}
+                  className="hidden"
+                />
+              </Field>
+            </FieldLabel>
+          ))}
+        </div>
+      </RadioGroup>
+    </div>
   )
 }
