@@ -23,7 +23,7 @@ const shippingSchema = z.discriminatedUnion('methodSlug', [courierSchema, locker
 
 export const updateCartEndpoint: Endpoint = {
   path: `/actions/carts/:id/update-shipping-method`,
-  method: 'put',
+  method: 'patch',
   handler: async (req) => {
     await addDataAndFileToRequest(req)
     const params = req.routeParams

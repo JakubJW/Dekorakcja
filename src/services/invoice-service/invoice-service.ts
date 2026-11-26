@@ -36,7 +36,7 @@ export class InvoiceService {
       issueDate: new Date().toISOString().split('T')[0],
       contractor: {
         name: order.billingAddress.firstName,
-        taxId: order.billingAddress?.nip,
+        taxId: order.billingAddress?.taxId,
       },
       positions: order.items?.map((item: any) => ({
         name: item.productName,

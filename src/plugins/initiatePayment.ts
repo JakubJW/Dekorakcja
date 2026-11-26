@@ -1,5 +1,6 @@
 import type { PaymentAdapter } from '@payloadcms/plugin-ecommerce/types'
 import Stripe from 'stripe'
+import { initiatePaymentDataSchema } from './schemas'
 
 interface StripeProps {
   secretKey: string
@@ -8,18 +9,25 @@ interface StripeProps {
 }
 
 export const initiatePayment =
-  (props: StripeProps): NonNullable<PaymentAdapter['initiatePayment']> =>
-  async ({ data, req, transactionsSlug }) => {
+  ({
+    apiVersion,
+    appInfo,
+    secretKey,
+  }: StripeProps): NonNullable<PaymentAdapter['initiatePayment']> =>
+  async ({ data, req }) => {
     const { payload } = req
-    const { apiVersion, appInfo, secretKey } = props || {}
     const { cart: defaultCart, currency, billingAddress, shippingAddress } = data
 
     if (!secretKey) {
       throw new Error('Stripe secret key is required.')
     }
-    if (!currency) {
-      throw new Error('Currency is required.')
-    }
+
+    const validated = initiatePaymentDataSchema.parse({
+      currency,
+      billingAddress,
+      shippingAddress,
+    })
+
     if (!defaultCart || !defaultCart.items || defaultCart.items.length === 0) {
       throw new Error('Cart is empty or not provided.')
     }
@@ -47,17 +55,20 @@ export const initiatePayment =
         url: 'https://payloadcms.com',
       },
     })
+
     try {
-      let customer = (
+      let [customer] = (
         await stripe.customers.list({
-          email: shippingAddress.email,
+          email: validated.shippingAddress.email,
         })
-      ).data[0]
-      if (!customer?.id) {
+      ).data
+
+      if (!customer) {
         customer = await stripe.customers.create({
-          email: shippingAddress.email,
+          email: validated.shippingAddress.email,
         })
       }
+
       const flattenedCart = cart.items.map((item) => {
         const productID = typeof item.product === 'object' ? item.product.id : item.product
         const variantID = item.variant
@@ -79,6 +90,7 @@ export const initiatePayment =
             : {}),
         }
       })
+
       const paymentIntent = await stripe.paymentIntents.create({
         amount,
         automatic_payment_methods: {
@@ -87,13 +99,13 @@ export const initiatePayment =
         currency,
         customer: customer.id,
         shipping: {
-          name: `${shippingAddress.firstName} ${shippingAddress.lastName}`,
+          name: `${validated.shippingAddress.firstName} ${validated.shippingAddress.lastName}`,
           address: {
-            city: shippingAddress.city,
-            country: shippingAddress.country,
-            line1: shippingAddress.addressLine1,
-            line2: shippingAddress.addressLine2 ?? undefined,
-            postal_code: shippingAddress.postalCode,
+            city: validated.shippingAddress.city,
+            country: validated.shippingAddress.country,
+            line1: validated.shippingAddress.addressLine1,
+            line2: validated.shippingAddress.addressLine2,
+            postal_code: validated.shippingAddress.postalCode,
           },
           carrier: typeof cart.shippingMethod === 'object' ? cart.shippingMethod?.name : undefined,
         },
@@ -102,19 +114,20 @@ export const initiatePayment =
           cartItemsSnapshot: JSON.stringify(flattenedCart),
         },
       })
-      // Create a transaction for the payment intent in the database
-      const transaction = await payload.create({
-        collection: transactionsSlug as 'transactions',
+
+      await payload.create({
+        collection: 'transactions',
+        req,
         data: {
           ...(req.user
             ? {
                 customer: req.user.id,
               }
             : {
-                customerEmail: billingAddress.email,
+                customerEmail: validated.billingAddress.email,
               }),
           amount: paymentIntent.amount,
-          billingAddress: billingAddress,
+          billingAddress: validated.billingAddress,
           cart: cart.id,
           currency: paymentIntent.currency.toUpperCase() as 'PLN',
           items: flattenedCart,
@@ -125,18 +138,17 @@ export const initiatePayment =
             paymentIntentID: paymentIntent.id,
           },
           checkoutData: {
-            shippingAddress: shippingAddress,
-            billingAddress: billingAddress,
+            shippingAddress: validated.shippingAddress,
+            billingAddress: validated.billingAddress,
           },
         },
-        req,
       })
-      const returnData = {
+
+      return {
         clientSecret: paymentIntent.client_secret || '',
         message: 'Payment initiated successfully',
         paymentIntentID: paymentIntent.id,
       }
-      return returnData
     } catch (error) {
       payload.logger.error({
         err: error,

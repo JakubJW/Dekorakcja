@@ -1,7 +1,7 @@
-import { createAddressFormSchema } from '@/components/forms/AddressForm/billingAddressFormSchema'
 import type { EcommercePluginConfig } from '@payloadcms/plugin-ecommerce/types'
 import Stripe from 'stripe'
 import z from 'zod'
+import { addressSchema } from './schemas'
 
 type PaymentMethod = NonNullable<EcommercePluginConfig['payments']>['paymentMethods'] extends
   | (infer T)[]
@@ -70,35 +70,17 @@ export const confirmOrder =
         : undefined
 
       const CheckoutDataSchema = z.object({
-        billingAddress: createAddressFormSchema,
-        shippingAddress: createAddressFormSchema,
+        billingAddress: addressSchema,
+        shippingAddress: addressSchema,
       })
 
-      const parsed = CheckoutDataSchema.safeParse(transaction.checkoutData)
-
-      if (!parsed.success) {
-        throw new Error(`Adresy są niepoprawne, ${parsed.error}`)
-      }
-
-      const {
-        data: { billingAddress, shippingAddress },
-      } = parsed
+      const validated = CheckoutDataSchema.parse(transaction.checkoutData)
 
       if (!cartID) {
         throw new Error('Cart ID not found in the PaymentIntent metadata')
       }
       if (!cartItemsSnapshot || !Array.isArray(cartItemsSnapshot)) {
         throw new Error('Cart items snapshot not found or invalid in the PaymentIntent metadata')
-      }
-      let customer = (
-        await stripe.customers.list({
-          email: billingAddress.email,
-        })
-      ).data[0]
-      if (!customer?.id) {
-        customer = await stripe.customers.create({
-          email: billingAddress.email,
-        })
       }
 
       const order = await payload.create({
@@ -112,13 +94,11 @@ export const confirmOrder =
                 customer: req.user.id,
               }
             : {
-                customerEmail: billingAddress.email,
+                customerEmail: validated.billingAddress.email,
               }),
           items: cartItemsSnapshot,
-          //@ts-ignore
-          shippingAddress,
-          //@ts-ignore
-          billingAddress,
+          shippingAddress: validated.shippingAddress,
+          billingAddress: validated.billingAddress,
           shippingMethod: 1,
           status: 'processing',
           transactions: [transaction.id],

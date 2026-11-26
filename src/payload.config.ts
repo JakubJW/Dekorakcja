@@ -19,6 +19,7 @@ import { Users } from './collections/users'
 import { deleteAddressEndpoint } from './endpoints/addresses/delete'
 import { updateCartEndpoint } from './endpoints/carts/update-shipping-method'
 import { generateInvoiceEndpoint } from './endpoints/insert/issue-invoice'
+import { inPostWebhookEndpoint } from './endpoints/webhooks/in-post'
 import { env } from './env'
 import { globals } from './globals'
 import { plugins } from './plugins'
@@ -90,7 +91,12 @@ export default buildConfig({
     },
   }),
   //email: nodemailerAdapter(),
-  endpoints: [generateInvoiceEndpoint, deleteAddressEndpoint, updateCartEndpoint],
+  endpoints: [
+    generateInvoiceEndpoint,
+    deleteAddressEndpoint,
+    updateCartEndpoint,
+    inPostWebhookEndpoint,
+  ],
   globals,
   plugins,
   secret: env.PAYLOAD_SECRET,

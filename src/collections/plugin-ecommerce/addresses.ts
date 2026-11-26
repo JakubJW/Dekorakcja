@@ -1,4 +1,3 @@
-import { defaultCountries } from '@payloadcms/plugin-ecommerce/client/react'
 import { EcommercePluginConfig } from '@payloadcms/plugin-ecommerce/types'
 import { APIError } from 'payload'
 import { supportedCountries } from './supported-countries'
@@ -79,9 +78,8 @@ export const addresses: EcommercePluginConfig['addresses'] = {
       },
       {
         name: 'country',
-        type: 'select',
+        type: 'text',
         label: 'Kraj',
-        options: defaultCountries,
         required: true,
       },
       {

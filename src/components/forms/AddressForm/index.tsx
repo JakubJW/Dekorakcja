@@ -1,5 +1,6 @@
-import { BillingAddressType } from '@/collections/plugin-ecommerce/transactions'
 import { supportedCountries } from '@/collections/plugin-ecommerce/supported-countries'
+import { BillingAddressType } from '@/collections/plugin-ecommerce/transactions'
+import { MaskInput } from '@/components/ui-extended/mask-input'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -14,6 +15,7 @@ import {
 import { DomainAddress } from '@/features/addresses/domain/types'
 import { cn } from '@/utilities/cn'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { format } from '@react-input/mask'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { FormError } from '../FormError'
@@ -40,7 +42,10 @@ function toFormValues(initial: Partial<DomainAddress> | undefined): TCreateAddre
     addressLine2: initial?.addressLine2,
     city: initial?.city ?? '',
     postalCode: initial?.postalCode ?? '',
-    phone: initial?.phone ?? '',
+    phone:
+      initial?.phone && initial.phone
+        ? format(initial.phone, { mask: '___-___-___', replacement: { _: /\d/ } })
+        : '',
     country: 'PL' as const,
   }
 
@@ -93,7 +98,9 @@ export const AddressForm: React.FC<Props> = ({
 
   return (
     <form
-      onSubmit={form.handleSubmit(onSubmit)}
+      onSubmit={form.handleSubmit((values) =>
+        onSubmit({ ...values, phone: values.phone.replace(/\D/g, '') }),
+      )}
       className={cn('flex flex-col grow', formClassName)}
     >
       {mode === 'create' && (
@@ -102,8 +109,11 @@ export const AddressForm: React.FC<Props> = ({
           control={form.control}
           render={({ field }) => (
             <FormItem className="mb-4">
+              <Label htmlFor={field.name}>Typ adresu</Label>
               <RadioGroup
                 className="flex gap-4"
+                name={field.name}
+                id={field.name}
                 onValueChange={field.onChange}
                 defaultValue={field.value}
               >
@@ -184,13 +194,27 @@ export const AddressForm: React.FC<Props> = ({
             </FormItem>
           </React.Fragment>
         )}
-        <FormItem>
-          <Label htmlFor="phone">Nr telefonu</Label>
-          <Input type="tel" id="phone" autoComplete="mobile tel" {...form.register('phone')} />
-          {form.formState.errors.phone && (
-            <FormError message={form.formState.errors.phone.message} />
+        <Controller
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <FormItem>
+              <Label htmlFor="phone">Nr telefonu</Label>
+              <MaskInput
+                id="phone"
+                name={field.name}
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                autoComplete="mobile tel"
+                mask="___-___-___"
+              />
+              {form.formState.errors.phone && (
+                <FormError message={form.formState.errors.phone.message} />
+              )}
+            </FormItem>
           )}
-        </FormItem>
+        />
         <FormItem>
           <Label htmlFor="email">Adres e-mail*</Label>
           <Input
@@ -234,42 +258,49 @@ export const AddressForm: React.FC<Props> = ({
           />
           {form.formState.errors.city && <FormError message={form.formState.errors.city.message} />}
         </FormItem>
-        <FormItem>
-          <Label htmlFor="postalCode">Kod pocztowy*</Label>
-          <Input
-            id="postalCode"
-            {...form.register('postalCode', { required: 'Kod pocztowy jest wymagany.' })}
-          />
-          {form.formState.errors.postalCode && (
-            <FormError message={form.formState.errors.postalCode.message} />
+        <Controller
+          control={form.control}
+          name="postalCode"
+          render={({ field }) => (
+            <FormItem>
+              <Label htmlFor="postalCode">Kod pocztowy*</Label>
+              <MaskInput
+                id="postalCode"
+                name={field.name}
+                value={field.value}
+                onChange={field.onChange}
+                mask={'__-___'}
+              />
+              {form.formState.errors.postalCode && (
+                <FormError message={form.formState.errors.postalCode.message} />
+              )}
+            </FormItem>
           )}
-        </FormItem>
-        <FormItem>
-          <Controller
-            name="country"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <Label htmlFor={field.name}>Kraj*</Label>
-                <Select defaultValue={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger className="w-full h-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {supportedCountries.map((country) => (
-                      <SelectItem id={country.value} key={country.value} value={country.value}>
-                        {country.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {form.formState.errors.country && (
-                  <FormError message={form.formState.errors.country.message} />
-                )}
-              </FormItem>
-            )}
-          />
-        </FormItem>
+        />
+        <Controller
+          name="country"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <Label htmlFor={field.name}>Kraj*</Label>
+              <Select defaultValue={field.value} onValueChange={field.onChange}>
+                <SelectTrigger className="w-full h-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {supportedCountries.map((country) => (
+                    <SelectItem id={country.value} key={country.value} value={country.value}>
+                      {country.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {form.formState.errors.country && (
+                <FormError message={form.formState.errors.country.message} />
+              )}
+            </FormItem>
+          )}
+        />
       </div>
       <div className="flex gap-4 mt-4">
         <Button type="submit" className="flex-1">

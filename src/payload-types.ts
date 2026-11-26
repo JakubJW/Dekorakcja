@@ -83,6 +83,7 @@ export interface Config {
     invoices: Invoice;
     users: User;
     'product-personalization-options': ProductPersonalizationOption;
+    shipments: Shipment;
     forms: Form;
     'form-submissions': FormSubmission;
     addresses: Address;
@@ -124,6 +125,7 @@ export interface Config {
     invoices: InvoicesSelect<false> | InvoicesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'product-personalization-options': ProductPersonalizationOptionsSelect<false> | ProductPersonalizationOptionsSelect<true>;
+    shipments: ShipmentsSelect<false> | ShipmentsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     addresses: AddressesSelect<false> | AddressesSelect<true>;
@@ -311,47 +313,7 @@ export interface Order {
     city: string;
     postalCode: string;
     phone: string;
-    country:
-      | 'US'
-      | 'GB'
-      | 'CA'
-      | 'AU'
-      | 'AT'
-      | 'BE'
-      | 'BR'
-      | 'BG'
-      | 'CY'
-      | 'CZ'
-      | 'DK'
-      | 'EE'
-      | 'FI'
-      | 'FR'
-      | 'DE'
-      | 'GR'
-      | 'HK'
-      | 'HU'
-      | 'IN'
-      | 'IE'
-      | 'IT'
-      | 'JP'
-      | 'LV'
-      | 'LT'
-      | 'LU'
-      | 'MY'
-      | 'MT'
-      | 'MX'
-      | 'NL'
-      | 'NZ'
-      | 'NO'
-      | 'PL'
-      | 'PT'
-      | 'RO'
-      | 'SG'
-      | 'SK'
-      | 'SI'
-      | 'ES'
-      | 'SE'
-      | 'CH';
+    country: string;
   };
   customer?: (number | null) | User;
   customerEmail?: string | null;
@@ -365,54 +327,14 @@ export interface Order {
     firstName?: string | null;
     lastName?: string | null;
     email: string;
-    nip?: string | null;
+    taxId?: string | null;
     companyName?: string | null;
     addressLine1: string;
     addressLine2?: string | null;
     city: string;
     phone: string;
     postalCode: string;
-    country:
-      | 'US'
-      | 'GB'
-      | 'CA'
-      | 'AU'
-      | 'AT'
-      | 'BE'
-      | 'BR'
-      | 'BG'
-      | 'CY'
-      | 'CZ'
-      | 'DK'
-      | 'EE'
-      | 'FI'
-      | 'FR'
-      | 'DE'
-      | 'GR'
-      | 'HK'
-      | 'HU'
-      | 'IN'
-      | 'IE'
-      | 'IT'
-      | 'JP'
-      | 'LV'
-      | 'LT'
-      | 'LU'
-      | 'MY'
-      | 'MT'
-      | 'MX'
-      | 'NL'
-      | 'NZ'
-      | 'NO'
-      | 'PL'
-      | 'PT'
-      | 'RO'
-      | 'SG'
-      | 'SK'
-      | 'SI'
-      | 'ES'
-      | 'SE'
-      | 'CH';
+    country: string;
   };
   accessToken?: string | null;
   updatedAt: string;
@@ -1165,54 +1087,14 @@ export interface Transaction {
     type?: ('person' | 'organization') | null;
     firstName?: string | null;
     lastName?: string | null;
-    nip?: string | null;
+    taxId?: string | null;
     companyName?: string | null;
     addressLine1: string;
     addressLine2?: string | null;
     city: string;
     phone: string;
     postalCode: string;
-    country:
-      | 'US'
-      | 'GB'
-      | 'CA'
-      | 'AU'
-      | 'AT'
-      | 'BE'
-      | 'BR'
-      | 'BG'
-      | 'CY'
-      | 'CZ'
-      | 'DK'
-      | 'EE'
-      | 'FI'
-      | 'FR'
-      | 'DE'
-      | 'GR'
-      | 'HK'
-      | 'HU'
-      | 'IN'
-      | 'IE'
-      | 'IT'
-      | 'JP'
-      | 'LV'
-      | 'LT'
-      | 'LU'
-      | 'MY'
-      | 'MT'
-      | 'MX'
-      | 'NL'
-      | 'NZ'
-      | 'NO'
-      | 'PL'
-      | 'PT'
-      | 'RO'
-      | 'SG'
-      | 'SK'
-      | 'SI'
-      | 'ES'
-      | 'SE'
-      | 'CH';
+    country: string;
   };
   status: 'pending' | 'succeeded' | 'failed' | 'cancelled' | 'expired' | 'refunded';
   customer?: (number | null) | User;
@@ -1306,47 +1188,7 @@ export interface Address {
   addressLine2?: string | null;
   city: string;
   postalCode: string;
-  country:
-    | 'US'
-    | 'GB'
-    | 'CA'
-    | 'AU'
-    | 'AT'
-    | 'BE'
-    | 'BR'
-    | 'BG'
-    | 'CY'
-    | 'CZ'
-    | 'DK'
-    | 'EE'
-    | 'FI'
-    | 'FR'
-    | 'DE'
-    | 'GR'
-    | 'HK'
-    | 'HU'
-    | 'IN'
-    | 'IE'
-    | 'IT'
-    | 'JP'
-    | 'LV'
-    | 'LT'
-    | 'LU'
-    | 'MY'
-    | 'MT'
-    | 'MX'
-    | 'NL'
-    | 'NZ'
-    | 'NO'
-    | 'PL'
-    | 'PT'
-    | 'RO'
-    | 'SG'
-    | 'SK'
-    | 'SI'
-    | 'ES'
-    | 'SE'
-    | 'CH';
+  country: string;
   phone: string;
   updatedAt: string;
   createdAt: string;
@@ -1436,6 +1278,46 @@ export interface Invoice {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shipments".
+ */
+export interface Shipment {
+  id: number;
+  order: number | Order;
+  provider: 'inpost' | 'dhl';
+  /**
+   * ID przesyłki w systemie kuriera (np. InPost ID)
+   */
+  providerShipmentId: string;
+  /**
+   * Numer śledzenia paczki
+   */
+  trackingNumber?: string | null;
+  status?: ('created' | 'confirmed' | 'in_transit' | 'delivered' | 'cancelled') | null;
+  /**
+   * Etykieta nadawcza w formacie PDF
+   */
+  label?: (number | null) | Media;
+  /**
+   * Czy to przesyłka zwrotna?
+   */
+  isReturn?: boolean | null;
+  /**
+   * Pełna odpowiedź z API (do celów audytowych/debugowania)
+   */
+  rawResponse?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
@@ -1518,6 +1400,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'product-personalization-options';
         value: number | ProductPersonalizationOption;
+      } | null)
+    | ({
+        relationTo: 'shipments';
+        value: number | Shipment;
       } | null)
     | ({
         relationTo: 'forms';
@@ -2016,6 +1902,22 @@ export interface ProductPersonalizationOptionsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "shipments_select".
+ */
+export interface ShipmentsSelect<T extends boolean = true> {
+  order?: T;
+  provider?: T;
+  providerShipmentId?: T;
+  trackingNumber?: T;
+  status?: T;
+  label?: T;
+  isReturn?: T;
+  rawResponse?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "forms_select".
  */
 export interface FormsSelect<T extends boolean = true> {
@@ -2337,7 +2239,7 @@ export interface OrdersSelect<T extends boolean = true> {
         firstName?: T;
         lastName?: T;
         email?: T;
-        nip?: T;
+        taxId?: T;
         companyName?: T;
         addressLine1?: T;
         addressLine2?: T;
@@ -2377,7 +2279,7 @@ export interface TransactionsSelect<T extends boolean = true> {
         type?: T;
         firstName?: T;
         lastName?: T;
-        nip?: T;
+        taxId?: T;
         companyName?: T;
         addressLine1?: T;
         addressLine2?: T;

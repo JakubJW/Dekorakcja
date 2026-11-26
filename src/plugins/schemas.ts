@@ -1,27 +1,49 @@
+import { nonEmptyString } from '@/components/forms/AddressForm/billingAddressFormSchema'
 import { z } from 'zod'
 
-const addressSchema = z.object({
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  line1: z.string().min(1, 'Adres jest wymagany'),
-  line2: z.string().optional(),
-  city: z.string().min(1, 'Miasto jest wymagane'),
-  postalCode: z.string().min(1, 'Kod pocztowy jest wymagany'),
-  country: z.string().length(2),
+const ERROR_MESSAGES = {
+  required: 'To pole jest wymagane',
+}
+
+const baseAddressShape = {
+  id: z.number().optional(),
+  phone: z
+    .string({ message: ERROR_MESSAGES.required })
+    .min(1, 'Numer telefonu jest wymagany')
+    .regex(/^\d{9}$/, 'Nieprawidłowy numer telefonu'),
+  email: z.email({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
+  addressLine1: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
+  addressLine2: z.string().optional(),
+  city: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
+  country: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
+  postalCode: z
+    .string({ message: ERROR_MESSAGES.required })
+    .min(1, 'Kod pocztowy jest wymagany')
+    .regex(/^\d{2}-\d{3}$/, 'Nieprawidłowy kod pocztowy'),
+}
+
+const personSchema = z.object({
+  ...baseAddressShape,
+  kind: z.literal('person'),
+  firstName: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
+  lastName: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
   companyName: z.string().optional(),
   taxId: z.string().optional(),
-  email: z.string().email().optional(),
 })
 
+const organizationSchema = z.object({
+  ...baseAddressShape,
+  kind: z.literal('organization'),
+  companyName: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
+  taxId: z.string({ message: ERROR_MESSAGES.required }).pipe(nonEmptyString),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+})
+
+export const addressSchema = z.discriminatedUnion('kind', [organizationSchema, personSchema])
+
 export const initiatePaymentDataSchema = z.object({
-  cartID: z.string(),
-  currency: z
-    .string()
-    .length(3)
-    .transform((v) => v.toLowerCase()),
-  shippingAddress: addressSchema,
-  hasDifferentBillingAddress: z.boolean(),
-  billingAddress: addressSchema.optional(),
-  shippingMethodID: z.string(),
-  parcelLockerName: z.string().optional(), // np. dla InPost
+  currency: z.string().length(3),
+  shippingAddress: personSchema,
+  billingAddress: addressSchema,
 })

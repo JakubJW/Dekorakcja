@@ -1,16 +1,18 @@
 import { transformFieldsByName } from '@/utilities/transformField'
-import { defaultCountries } from '@payloadcms/plugin-ecommerce/client/react'
 import { EcommercePluginConfig } from '@payloadcms/plugin-ecommerce/types'
 import crypto from 'crypto'
+import { createShipmentEndpoint } from './orders/endpoints/create-shipment-endpoint'
 import { BillingAddressType } from './transactions'
 
 export const orders: EcommercePluginConfig['orders'] = {
   ordersCollectionOverride: ({ defaultCollection }) => ({
     ...defaultCollection,
     admin: {
+      ...defaultCollection.admin,
       group: 'Sklep',
       defaultColumns: ['id', 'items', 'amount', 'status', 'createdAt'],
     },
+    endpoints: [createShipmentEndpoint],
     fields: [
       ...transformFieldsByName(defaultCollection.fields, {
         shippingAddress: () => ({
@@ -67,9 +69,8 @@ export const orders: EcommercePluginConfig['orders'] = {
             },
             {
               name: 'country',
-              type: 'select',
+              type: 'text',
               label: 'Kraj',
-              options: defaultCountries,
               required: true,
             },
           ],
@@ -127,7 +128,7 @@ export const orders: EcommercePluginConfig['orders'] = {
             required: true,
           },
           {
-            name: 'nip',
+            name: 'taxId',
             type: 'text',
             label: 'NIP',
             admin: {
@@ -173,9 +174,8 @@ export const orders: EcommercePluginConfig['orders'] = {
           },
           {
             name: 'country',
-            type: 'select',
+            type: 'text',
             required: true,
-            options: defaultCountries,
             label: 'Kraj',
           },
         ],

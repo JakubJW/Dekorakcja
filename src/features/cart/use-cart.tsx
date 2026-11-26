@@ -49,7 +49,7 @@ export const CustomCartProvider = ({ children }: { children: React.ReactNode }) 
 
   const updateShipping = useCallback(
     async ({ methodSlug, lockerData }: { methodSlug?: string; lockerData?: Locker }) => {
-      const res = await apiClient.PUT<void>(
+      const res = await apiClient.PATCH<void>(
         `/actions/carts/${cart.id}/update-shipping-method${cartQuery}`,
         { methodSlug, lockerData },
       )

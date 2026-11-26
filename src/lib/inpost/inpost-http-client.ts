@@ -1,54 +1,47 @@
 import { env } from '@/env'
 
+interface CustomRequestInit extends RequestInit {
+  responseType?: 'json' | 'buffer'
+}
+
 export class InPostHttpClient {
   private readonly baseUrl: string
   private readonly accessToken: string
 
   constructor() {
-    const { INPOST_APIX_ORG_ID, INPOST_SHIPX_SECRET } = env
+    const { INPOST_SHIPX_SECRET } = env
 
-    const missing: string[] = []
-    if (!INPOST_APIX_ORG_ID) missing.push('INPOST_APIX_ORG_ID')
-    if (!INPOST_SHIPX_SECRET) missing.push('INPOST_SHIPX_SECRET')
-
-    if (missing.length > 0) {
-      throw new Error(`Brakuje: ${missing.join(', ')}`)
-    }
-
-    if (!INPOST_APIX_ORG_ID || !INPOST_SHIPX_SECRET) {
+    if (!INPOST_SHIPX_SECRET) {
       throw new Error('Unreachable')
     }
 
-    this.baseUrl = `https://sandbox-api-shipx-pl.easypack24.net/v1/${INPOST_APIX_ORG_ID}`
+    this.baseUrl = `https://sandbox-api-shipx-pl.easypack24.net/v1`
     this.accessToken = INPOST_SHIPX_SECRET
   }
 
-  async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+  async request<T>(endpoint: string, options: CustomRequestInit = {}): Promise<T> {
+    const { responseType = 'json', ...fetchOptions } = options
+
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      Accept: 'application/json',
+      Accept: responseType === 'buffer' ? 'application/pdf' : 'application/json',
       Authorization: `Bearer ${this.accessToken}`,
-      ...(options.headers as Record<string, string> | undefined),
+      ...(fetchOptions.headers as Record<string, string> | undefined),
     }
 
-    let response = await fetch(`${this.baseUrl}${endpoint}`, {
-      ...options,
+    const response = await fetch(`${this.baseUrl}${endpoint}`, {
+      ...fetchOptions,
       headers,
     })
-
-    // if (response.status === 401) {
-    //   const newAccessToken = await this.tokenManager.refreshTokens()
-    //   headers['Authorization'] = `Bearer ${newAccessToken}`
-
-    //   response = await fetch(`${this.baseUrl}${endpoint}`, {
-    //     ...options,
-    //     headers,
-    //   })
-    // }
 
     if (!response.ok) {
       const errorBody = await response.text()
       throw new Error(`InPost ShipX API Error [${response.status}]: ${errorBody}`)
+    }
+
+    if (responseType === 'buffer') {
+      const arrayBuffer = await response.arrayBuffer()
+      return Buffer.from(arrayBuffer) as unknown as T
     }
 
     return response.json() as Promise<T>

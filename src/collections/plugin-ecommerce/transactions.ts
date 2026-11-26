@@ -1,5 +1,4 @@
 import { transformFieldsByName } from '@/utilities/transformField'
-import { defaultCountries } from '@payloadcms/plugin-ecommerce/client/react'
 import { EcommercePluginConfig } from '@payloadcms/plugin-ecommerce/types'
 
 export enum BillingAddressType {
@@ -56,7 +55,7 @@ export const transactions: EcommercePluginConfig['transactions'] = {
               },
             },
             {
-              name: 'nip',
+              name: 'taxId',
               type: 'text',
               label: 'NIP',
               admin: {
@@ -104,9 +103,8 @@ export const transactions: EcommercePluginConfig['transactions'] = {
             },
             {
               name: 'country',
-              type: 'select',
+              type: 'text',
               required: true,
-              options: defaultCountries,
               label: 'Kraj',
             },
           ],
