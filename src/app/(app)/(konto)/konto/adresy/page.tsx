@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 
-import { AddressListing } from '@/components/addresses/AddressListing'
 import { CreateAddressModal } from '@/components/addresses/CreateAddressModal'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import configPromise from '@payload-config'
@@ -26,7 +25,7 @@ export default async function AddressesPage() {
 
         <div className="mb-8">
           {/* @ts-ignore */}
-          <AddressListing />
+          {/* <AddressListing />/ */}
         </div>
 
         <CreateAddressModal />

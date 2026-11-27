@@ -35,7 +35,9 @@ export class InvoiceService {
     const insertPayload = {
       issueDate: new Date().toISOString().split('T')[0],
       contractor: {
+        //@ts-ignore
         name: order.billingAddress.firstName,
+        //@ts-ignore
         taxId: order.billingAddress?.taxId,
       },
       positions: order.items?.map((item: any) => ({
