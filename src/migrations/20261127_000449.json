@@ -500,8 +500,7 @@
         },
         "link_type": {
           "name": "link_type",
-          "type": "enum_pages_hero_links_link_type",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'reference'"
@@ -526,8 +525,7 @@
         },
         "link_appearance": {
           "name": "link_appearance",
-          "type": "enum_pages_hero_links_link_appearance",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'default'"
@@ -610,8 +608,7 @@
         },
         "link_type": {
           "name": "link_type",
-          "type": "enum_pages_blocks_cta_links_link_type",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'reference'"
@@ -636,8 +633,7 @@
         },
         "link_appearance": {
           "name": "link_appearance",
-          "type": "enum_pages_blocks_cta_links_link_appearance",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'default'"
@@ -829,8 +825,7 @@
         },
         "size": {
           "name": "size",
-          "type": "enum_pages_blocks_content_columns_size",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'oneThird'"
@@ -849,8 +844,7 @@
         },
         "link_type": {
           "name": "link_type",
-          "type": "enum_pages_blocks_content_columns_link_type",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'reference'"
@@ -875,8 +869,7 @@
         },
         "link_appearance": {
           "name": "link_appearance",
-          "type": "enum_pages_blocks_content_columns_link_appearance",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'default'"
@@ -1211,16 +1204,14 @@
         },
         "populate_by": {
           "name": "populate_by",
-          "type": "enum_pages_blocks_archive_populate_by",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'collection'"
         },
         "relation_to": {
           "name": "relation_to",
-          "type": "enum_pages_blocks_archive_relation_to",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'products'"
@@ -1337,16 +1328,14 @@
         },
         "populate_by": {
           "name": "populate_by",
-          "type": "enum_pages_blocks_carousel_populate_by",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'collection'"
         },
         "relation_to": {
           "name": "relation_to",
-          "type": "enum_pages_blocks_carousel_relation_to",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'products'"
@@ -1572,8 +1561,7 @@
         },
         "style": {
           "name": "style",
-          "type": "enum_pages_blocks_banner_style",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'info'"
@@ -2505,8 +2493,7 @@
         },
         "hero_type": {
           "name": "hero_type",
-          "type": "enum_pages_hero_type",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'lowImpact'"
@@ -2570,8 +2557,7 @@
         },
         "_status": {
           "name": "_status",
-          "type": "enum_pages_status",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'draft'"
@@ -2926,8 +2912,7 @@
         },
         "link_type": {
           "name": "link_type",
-          "type": "enum__pages_v_version_hero_links_link_type",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'reference'"
@@ -2952,8 +2937,7 @@
         },
         "link_appearance": {
           "name": "link_appearance",
-          "type": "enum__pages_v_version_hero_links_link_appearance",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'default'"
@@ -3042,8 +3026,7 @@
         },
         "link_type": {
           "name": "link_type",
-          "type": "enum__pages_v_blocks_cta_links_link_type",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'reference'"
@@ -3068,8 +3051,7 @@
         },
         "link_appearance": {
           "name": "link_appearance",
-          "type": "enum__pages_v_blocks_cta_links_link_appearance",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'default'"
@@ -3273,8 +3255,7 @@
         },
         "size": {
           "name": "size",
-          "type": "enum__pages_v_blocks_content_columns_size",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'oneThird'"
@@ -3293,8 +3274,7 @@
         },
         "link_type": {
           "name": "link_type",
-          "type": "enum__pages_v_blocks_content_columns_link_type",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'reference'"
@@ -3319,8 +3299,7 @@
         },
         "link_appearance": {
           "name": "link_appearance",
-          "type": "enum__pages_v_blocks_content_columns_link_appearance",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'default'"
@@ -3673,16 +3652,14 @@
         },
         "populate_by": {
           "name": "populate_by",
-          "type": "enum__pages_v_blocks_archive_populate_by",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'collection'"
         },
         "relation_to": {
           "name": "relation_to",
-          "type": "enum__pages_v_blocks_archive_relation_to",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'products'"
@@ -3805,16 +3782,14 @@
         },
         "populate_by": {
           "name": "populate_by",
-          "type": "enum__pages_v_blocks_carousel_populate_by",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'collection'"
         },
         "relation_to": {
           "name": "relation_to",
-          "type": "enum__pages_v_blocks_carousel_relation_to",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'products'"
@@ -4052,8 +4027,7 @@
         },
         "style": {
           "name": "style",
-          "type": "enum__pages_v_blocks_banner_style",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'info'"
@@ -5045,8 +5019,7 @@
         },
         "version_hero_type": {
           "name": "version_hero_type",
-          "type": "enum__pages_v_version_hero_type",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'lowImpact'"
@@ -5108,8 +5081,7 @@
         },
         "version__status": {
           "name": "version__status",
-          "type": "enum__pages_v_version_status",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'draft'"
@@ -5943,8 +5915,7 @@
         },
         "link_type": {
           "name": "link_type",
-          "type": "enum_rentables_blocks_cta_links_link_type",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'reference'"
@@ -5969,8 +5940,7 @@
         },
         "link_appearance": {
           "name": "link_appearance",
-          "type": "enum_rentables_blocks_cta_links_link_appearance",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'default'"
@@ -6162,8 +6132,7 @@
         },
         "size": {
           "name": "size",
-          "type": "enum_rentables_blocks_content_columns_size",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'oneThird'"
@@ -6182,8 +6151,7 @@
         },
         "link_type": {
           "name": "link_type",
-          "type": "enum_rentables_blocks_content_columns_link_type",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'reference'"
@@ -6208,8 +6176,7 @@
         },
         "link_appearance": {
           "name": "link_appearance",
-          "type": "enum_rentables_blocks_content_columns_link_appearance",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'default'"
@@ -6870,8 +6837,7 @@
         },
         "type": {
           "name": "type",
-          "type": "enum_shipping_methods_type",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -7100,8 +7066,7 @@
         },
         "status": {
           "name": "status",
-          "type": "enum_invoices_status",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true,
           "default": "'pending'"
@@ -7250,8 +7215,7 @@
         },
         "value": {
           "name": "value",
-          "type": "enum_users_roles",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
@@ -7525,6 +7489,266 @@
         }
       },
       "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.product_personalization_options": {
+      "name": "product_personalization_options",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "price_in_p_l_n_enabled": {
+          "name": "price_in_p_l_n_enabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "price_in_p_l_n": {
+          "name": "price_in_p_l_n",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "product_personalization_options_updated_at_idx": {
+          "name": "product_personalization_options_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "product_personalization_options_created_at_idx": {
+          "name": "product_personalization_options_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.shipments": {
+      "name": "shipments",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "order_id": {
+          "name": "order_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider": {
+          "name": "provider",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'inpost'"
+        },
+        "provider_shipment_id": {
+          "name": "provider_shipment_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tracking_number": {
+          "name": "tracking_number",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'created'"
+        },
+        "label_id": {
+          "name": "label_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_return": {
+          "name": "is_return",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "raw_response": {
+          "name": "raw_response",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "shipments_order_idx": {
+          "name": "shipments_order_idx",
+          "columns": [
+            {
+              "expression": "order_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "shipments_label_idx": {
+          "name": "shipments_label_idx",
+          "columns": [
+            {
+              "expression": "label_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "shipments_updated_at_idx": {
+          "name": "shipments_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "shipments_created_at_idx": {
+          "name": "shipments_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "shipments_order_id_orders_id_fk": {
+          "name": "shipments_order_id_orders_id_fk",
+          "tableFrom": "shipments",
+          "tableTo": "orders",
+          "columnsFrom": [
+            "order_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "shipments_label_id_media_id_fk": {
+          "name": "shipments_label_id_media_id_fk",
+          "tableFrom": "shipments",
+          "tableTo": "media",
+          "columnsFrom": [
+            "label_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -8923,8 +9147,7 @@
         },
         "confirmation_type": {
           "name": "confirmation_type",
-          "type": "enum_forms_confirmation_type",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'message'"
@@ -9196,7 +9419,14 @@
           "name": "customer_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "kind": {
+          "name": "kind",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'person'"
         },
         "first_name": {
           "name": "first_name",
@@ -9254,8 +9484,7 @@
         },
         "country": {
           "name": "country",
-          "type": "enum_addresses_country",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -9395,12 +9624,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "custom_field": {
-          "name": "custom_field",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -9423,8 +9646,7 @@
         },
         "_status": {
           "name": "_status",
-          "type": "enum_variants_status",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'draft'"
@@ -9712,12 +9934,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "version_custom_field": {
-          "name": "version_custom_field",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
         "version_updated_at": {
           "name": "version_updated_at",
           "type": "timestamp(3) with time zone",
@@ -9738,8 +9954,7 @@
         },
         "version__status": {
           "name": "version__status",
-          "type": "enum__variants_v_version_status",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'draft'"
@@ -10219,6 +10434,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "visualization_id": {
+          "name": "visualization_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -10261,6 +10482,21 @@
           "columns": [
             {
               "expression": "variant_type_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "variant_options_visualization_idx": {
+          "name": "variant_options_visualization_idx",
+          "columns": [
+            {
+              "expression": "visualization_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -10324,6 +10560,19 @@
           "tableTo": "variant_types",
           "columnsFrom": [
             "variant_type_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "variant_options_visualization_id_media_id_fk": {
+          "name": "variant_options_visualization_id_media_id_fk",
+          "tableFrom": "variant_options",
+          "tableTo": "media",
+          "columnsFrom": [
+            "visualization_id"
           ],
           "columnsTo": [
             "id"
@@ -10506,8 +10755,7 @@
         },
         "link_type": {
           "name": "link_type",
-          "type": "enum_products_blocks_cta_links_link_type",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'reference'"
@@ -10532,8 +10780,7 @@
         },
         "link_appearance": {
           "name": "link_appearance",
-          "type": "enum_products_blocks_cta_links_link_appearance",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'default'"
@@ -10725,8 +10972,7 @@
         },
         "size": {
           "name": "size",
-          "type": "enum_products_blocks_content_columns_size",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'oneThird'"
@@ -10745,8 +10991,7 @@
         },
         "link_type": {
           "name": "link_type",
-          "type": "enum_products_blocks_content_columns_link_type",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'reference'"
@@ -10771,8 +11016,7 @@
         },
         "link_appearance": {
           "name": "link_appearance",
-          "type": "enum_products_blocks_content_columns_link_appearance",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'default'"
@@ -11093,6 +11337,13 @@
           "primaryKey": false,
           "notNull": false
         },
+        "allow_customization": {
+          "name": "allow_customization",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
         "inventory": {
           "name": "inventory",
           "type": "numeric",
@@ -11171,8 +11422,7 @@
         },
         "_status": {
           "name": "_status",
-          "type": "enum_products_status",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'draft'"
@@ -11325,6 +11575,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "product_personalization_options_id": {
+          "name": "product_personalization_options_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "variant_types_id": {
           "name": "variant_types_id",
           "type": "integer",
@@ -11405,6 +11661,21 @@
           "method": "btree",
           "with": {}
         },
+        "products_rels_product_personalization_options_id_idx": {
+          "name": "products_rels_product_personalization_options_id_idx",
+          "columns": [
+            {
+              "expression": "product_personalization_options_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "products_rels_variant_types_id_idx": {
           "name": "products_rels_variant_types_id_idx",
           "columns": [
@@ -11471,6 +11742,19 @@
           "tableTo": "pages",
           "columnsFrom": [
             "pages_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "products_rels_product_personalization_options_fk": {
+          "name": "products_rels_product_personalization_options_fk",
+          "tableFrom": "products_rels",
+          "tableTo": "product_personalization_options",
+          "columnsFrom": [
+            "product_personalization_options_id"
           ],
           "columnsTo": [
             "id"
@@ -11698,8 +11982,7 @@
         },
         "link_type": {
           "name": "link_type",
-          "type": "enum__products_v_blocks_cta_links_link_type",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'reference'"
@@ -11724,8 +12007,7 @@
         },
         "link_appearance": {
           "name": "link_appearance",
-          "type": "enum__products_v_blocks_cta_links_link_appearance",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'default'"
@@ -11929,8 +12211,7 @@
         },
         "size": {
           "name": "size",
-          "type": "enum__products_v_blocks_content_columns_size",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'oneThird'"
@@ -11949,8 +12230,7 @@
         },
         "link_type": {
           "name": "link_type",
-          "type": "enum__products_v_blocks_content_columns_link_type",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'reference'"
@@ -11975,8 +12255,7 @@
         },
         "link_appearance": {
           "name": "link_appearance",
-          "type": "enum__products_v_blocks_content_columns_link_appearance",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'default'"
@@ -12321,6 +12600,13 @@
           "primaryKey": false,
           "notNull": false
         },
+        "version_allow_customization": {
+          "name": "version_allow_customization",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
         "version_inventory": {
           "name": "version_inventory",
           "type": "numeric",
@@ -12397,8 +12683,7 @@
         },
         "version__status": {
           "name": "version__status",
-          "type": "enum__products_v_version_status",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'draft'"
@@ -12665,6 +12950,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "product_personalization_options_id": {
+          "name": "product_personalization_options_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "variant_types_id": {
           "name": "variant_types_id",
           "type": "integer",
@@ -12745,6 +13036,21 @@
           "method": "btree",
           "with": {}
         },
+        "_products_v_rels_product_personalization_options_id_idx": {
+          "name": "_products_v_rels_product_personalization_options_id_idx",
+          "columns": [
+            {
+              "expression": "product_personalization_options_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "_products_v_rels_variant_types_id_idx": {
           "name": "_products_v_rels_variant_types_id_idx",
           "columns": [
@@ -12811,6 +13117,19 @@
           "tableTo": "pages",
           "columnsFrom": [
             "pages_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "_products_v_rels_product_personalization_options_fk": {
+          "name": "_products_v_rels_product_personalization_options_fk",
+          "tableFrom": "_products_v_rels",
+          "tableTo": "product_personalization_options",
+          "columnsFrom": [
+            "product_personalization_options_id"
           ],
           "columnsTo": [
             "id"
@@ -12904,6 +13223,12 @@
           "primaryKey": false,
           "notNull": true,
           "default": 1
+        },
+        "personalization_text": {
+          "name": "personalization_text",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
@@ -13051,11 +13376,16 @@
         },
         "currency": {
           "name": "currency",
-          "type": "enum_carts_currency",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'PLN'"
+        },
+        "total": {
+          "name": "total",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
         },
         "shipping_method_id": {
           "name": "shipping_method_id",
@@ -13356,14 +13686,51 @@
           "primaryKey": true,
           "notNull": true
         },
+        "shipping_method_id": {
+          "name": "shipping_method_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "additional_data": {
+          "name": "additional_data",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "shipping_address_kind": {
+          "name": "shipping_address_kind",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'person'"
+        },
         "shipping_address_first_name": {
           "name": "shipping_address_first_name",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "shipping_address_last_name": {
           "name": "shipping_address_last_name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "shipping_address_tax_id": {
+          "name": "shipping_address_tax_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "shipping_address_company_name": {
+          "name": "shipping_address_company_name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "shipping_address_email": {
+          "name": "shipping_address_email",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
@@ -13392,16 +13759,15 @@
           "primaryKey": false,
           "notNull": true
         },
-        "shipping_address_phone": {
-          "name": "shipping_address_phone",
+        "shipping_address_country": {
+          "name": "shipping_address_country",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
-        "shipping_address_country": {
-          "name": "shipping_address_country",
-          "type": "enum_orders_shipping_address_country",
-          "typeSchema": "public",
+        "shipping_address_phone": {
+          "name": "shipping_address_phone",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -13419,8 +13785,7 @@
         },
         "status": {
           "name": "status",
-          "type": "enum_orders_status",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'processing'"
@@ -13433,86 +13798,10 @@
         },
         "currency": {
           "name": "currency",
-          "type": "enum_orders_currency",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'PLN'"
-        },
-        "shipping_method_id": {
-          "name": "shipping_method_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "billing_address_type": {
-          "name": "billing_address_type",
-          "type": "enum_orders_billing_address_type",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'person'"
-        },
-        "billing_address_first_name": {
-          "name": "billing_address_first_name",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "billing_address_last_name": {
-          "name": "billing_address_last_name",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "billing_address_nip": {
-          "name": "billing_address_nip",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "billing_address_company_name": {
-          "name": "billing_address_company_name",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "billing_address_address_line1": {
-          "name": "billing_address_address_line1",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "billing_address_address_line2": {
-          "name": "billing_address_address_line2",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "billing_address_city": {
-          "name": "billing_address_city",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "billing_address_phone": {
-          "name": "billing_address_phone",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "billing_address_postal_code": {
-          "name": "billing_address_postal_code",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "billing_address_country": {
-          "name": "billing_address_country",
-          "type": "enum_orders_billing_address_country",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
         },
         "access_token": {
           "name": "access_token",
@@ -13536,11 +13825,11 @@
         }
       },
       "indexes": {
-        "orders_customer_idx": {
-          "name": "orders_customer_idx",
+        "orders_shipping_method_idx": {
+          "name": "orders_shipping_method_idx",
           "columns": [
             {
-              "expression": "customer_id",
+              "expression": "shipping_method_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -13551,11 +13840,11 @@
           "method": "btree",
           "with": {}
         },
-        "orders_shipping_method_idx": {
-          "name": "orders_shipping_method_idx",
+        "orders_customer_idx": {
+          "name": "orders_customer_idx",
           "columns": [
             {
-              "expression": "shipping_method_id",
+              "expression": "customer_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -13613,12 +13902,12 @@
         }
       },
       "foreignKeys": {
-        "orders_customer_id_users_id_fk": {
-          "name": "orders_customer_id_users_id_fk",
+        "orders_shipping_method_id_shipping_methods_id_fk": {
+          "name": "orders_shipping_method_id_shipping_methods_id_fk",
           "tableFrom": "orders",
-          "tableTo": "users",
+          "tableTo": "shipping_methods",
           "columnsFrom": [
-            "customer_id"
+            "shipping_method_id"
           ],
           "columnsTo": [
             "id"
@@ -13626,12 +13915,12 @@
           "onDelete": "set null",
           "onUpdate": "no action"
         },
-        "orders_shipping_method_id_shipping_methods_id_fk": {
-          "name": "orders_shipping_method_id_shipping_methods_id_fk",
+        "orders_customer_id_users_id_fk": {
+          "name": "orders_customer_id_users_id_fk",
           "tableFrom": "orders",
-          "tableTo": "shipping_methods",
+          "tableTo": "users",
           "columnsFrom": [
-            "shipping_method_id"
+            "customer_id"
           ],
           "columnsTo": [
             "id"
@@ -13940,8 +14229,7 @@
         },
         "payment_method": {
           "name": "payment_method",
-          "type": "enum_transactions_payment_method",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
@@ -13957,10 +14245,9 @@
           "primaryKey": false,
           "notNull": false
         },
-        "billing_address_type": {
-          "name": "billing_address_type",
-          "type": "enum_transactions_billing_address_type",
-          "typeSchema": "public",
+        "billing_address_kind": {
+          "name": "billing_address_kind",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'person'"
@@ -13977,8 +14264,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "billing_address_nip": {
-          "name": "billing_address_nip",
+        "billing_address_tax_id": {
+          "name": "billing_address_tax_id",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
@@ -13988,6 +14275,12 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
+        },
+        "billing_address_email": {
+          "name": "billing_address_email",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
         },
         "billing_address_address_line1": {
           "name": "billing_address_address_line1",
@@ -14007,12 +14300,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "billing_address_phone": {
-          "name": "billing_address_phone",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
         "billing_address_postal_code": {
           "name": "billing_address_postal_code",
           "type": "varchar",
@@ -14021,15 +14308,19 @@
         },
         "billing_address_country": {
           "name": "billing_address_country",
-          "type": "enum_transactions_billing_address_country",
-          "typeSchema": "public",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "billing_address_phone": {
+          "name": "billing_address_phone",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
         "status": {
           "name": "status",
-          "type": "enum_transactions_status",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true,
           "default": "'pending'"
@@ -14066,8 +14357,7 @@
         },
         "currency": {
           "name": "currency",
-          "type": "enum_transactions_currency",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'PLN'"
@@ -14437,6 +14727,18 @@
           "primaryKey": false,
           "notNull": false
         },
+        "product_personalization_options_id": {
+          "name": "product_personalization_options_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "shipments_id": {
+          "name": "shipments_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "forms_id": {
           "name": "forms_id",
           "type": "integer",
@@ -14684,6 +14986,36 @@
           "columns": [
             {
               "expression": "users_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "payload_locked_documents_rels_product_personalization_op_idx": {
+          "name": "payload_locked_documents_rels_product_personalization_op_idx",
+          "columns": [
+            {
+              "expression": "product_personalization_options_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "payload_locked_documents_rels_shipments_id_idx": {
+          "name": "payload_locked_documents_rels_shipments_id_idx",
+          "columns": [
+            {
+              "expression": "shipments_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -14982,6 +15314,32 @@
           "tableTo": "users",
           "columnsFrom": [
             "users_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "payload_locked_documents_rels_product_personalization_opt_fk": {
+          "name": "payload_locked_documents_rels_product_personalization_opt_fk",
+          "tableFrom": "payload_locked_documents_rels",
+          "tableTo": "product_personalization_options",
+          "columnsFrom": [
+            "product_personalization_options_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "payload_locked_documents_rels_shipments_fk": {
+          "name": "payload_locked_documents_rels_shipments_fk",
+          "tableFrom": "payload_locked_documents_rels",
+          "tableTo": "shipments",
+          "columnsFrom": [
+            "shipments_id"
           ],
           "columnsTo": [
             "id"
@@ -15504,8 +15862,7 @@
         },
         "link_type": {
           "name": "link_type",
-          "type": "enum_header_nav_items_link_type",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'reference'"
@@ -15768,8 +16125,7 @@
         },
         "link_type": {
           "name": "link_type",
-          "type": "enum_footer_nav_group1_links_link_type",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'reference'"
@@ -15870,8 +16226,7 @@
         },
         "link_type": {
           "name": "link_type",
-          "type": "enum_footer_nav_group2_links_link_type",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'reference'"
@@ -15972,8 +16327,7 @@
         },
         "contact_type": {
           "name": "contact_type",
-          "type": "enum_footer_contact_group_links_contact_type",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'email'"
@@ -16231,716 +16585,7 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {
-    "public.enum_pages_hero_links_link_type": {
-      "name": "enum_pages_hero_links_link_type",
-      "schema": "public",
-      "values": [
-        "reference",
-        "custom"
-      ]
-    },
-    "public.enum_pages_hero_links_link_appearance": {
-      "name": "enum_pages_hero_links_link_appearance",
-      "schema": "public",
-      "values": [
-        "default",
-        "outline"
-      ]
-    },
-    "public.enum_pages_blocks_cta_links_link_type": {
-      "name": "enum_pages_blocks_cta_links_link_type",
-      "schema": "public",
-      "values": [
-        "reference",
-        "custom"
-      ]
-    },
-    "public.enum_pages_blocks_cta_links_link_appearance": {
-      "name": "enum_pages_blocks_cta_links_link_appearance",
-      "schema": "public",
-      "values": [
-        "default",
-        "outline"
-      ]
-    },
-    "public.enum_pages_blocks_content_columns_size": {
-      "name": "enum_pages_blocks_content_columns_size",
-      "schema": "public",
-      "values": [
-        "oneThird",
-        "half",
-        "twoThirds",
-        "full"
-      ]
-    },
-    "public.enum_pages_blocks_content_columns_link_type": {
-      "name": "enum_pages_blocks_content_columns_link_type",
-      "schema": "public",
-      "values": [
-        "reference",
-        "custom"
-      ]
-    },
-    "public.enum_pages_blocks_content_columns_link_appearance": {
-      "name": "enum_pages_blocks_content_columns_link_appearance",
-      "schema": "public",
-      "values": [
-        "default",
-        "outline"
-      ]
-    },
-    "public.enum_pages_blocks_archive_populate_by": {
-      "name": "enum_pages_blocks_archive_populate_by",
-      "schema": "public",
-      "values": [
-        "collection",
-        "selection"
-      ]
-    },
-    "public.enum_pages_blocks_archive_relation_to": {
-      "name": "enum_pages_blocks_archive_relation_to",
-      "schema": "public",
-      "values": [
-        "products"
-      ]
-    },
-    "public.enum_pages_blocks_carousel_populate_by": {
-      "name": "enum_pages_blocks_carousel_populate_by",
-      "schema": "public",
-      "values": [
-        "collection",
-        "selection"
-      ]
-    },
-    "public.enum_pages_blocks_carousel_relation_to": {
-      "name": "enum_pages_blocks_carousel_relation_to",
-      "schema": "public",
-      "values": [
-        "products",
-        "rentables"
-      ]
-    },
-    "public.enum_pages_blocks_banner_style": {
-      "name": "enum_pages_blocks_banner_style",
-      "schema": "public",
-      "values": [
-        "info",
-        "warning",
-        "error",
-        "success"
-      ]
-    },
-    "public.enum_pages_hero_type": {
-      "name": "enum_pages_hero_type",
-      "schema": "public",
-      "values": [
-        "none",
-        "highImpact",
-        "mediumImpact",
-        "lowImpact"
-      ]
-    },
-    "public.enum_pages_status": {
-      "name": "enum_pages_status",
-      "schema": "public",
-      "values": [
-        "draft",
-        "published"
-      ]
-    },
-    "public.enum__pages_v_version_hero_links_link_type": {
-      "name": "enum__pages_v_version_hero_links_link_type",
-      "schema": "public",
-      "values": [
-        "reference",
-        "custom"
-      ]
-    },
-    "public.enum__pages_v_version_hero_links_link_appearance": {
-      "name": "enum__pages_v_version_hero_links_link_appearance",
-      "schema": "public",
-      "values": [
-        "default",
-        "outline"
-      ]
-    },
-    "public.enum__pages_v_blocks_cta_links_link_type": {
-      "name": "enum__pages_v_blocks_cta_links_link_type",
-      "schema": "public",
-      "values": [
-        "reference",
-        "custom"
-      ]
-    },
-    "public.enum__pages_v_blocks_cta_links_link_appearance": {
-      "name": "enum__pages_v_blocks_cta_links_link_appearance",
-      "schema": "public",
-      "values": [
-        "default",
-        "outline"
-      ]
-    },
-    "public.enum__pages_v_blocks_content_columns_size": {
-      "name": "enum__pages_v_blocks_content_columns_size",
-      "schema": "public",
-      "values": [
-        "oneThird",
-        "half",
-        "twoThirds",
-        "full"
-      ]
-    },
-    "public.enum__pages_v_blocks_content_columns_link_type": {
-      "name": "enum__pages_v_blocks_content_columns_link_type",
-      "schema": "public",
-      "values": [
-        "reference",
-        "custom"
-      ]
-    },
-    "public.enum__pages_v_blocks_content_columns_link_appearance": {
-      "name": "enum__pages_v_blocks_content_columns_link_appearance",
-      "schema": "public",
-      "values": [
-        "default",
-        "outline"
-      ]
-    },
-    "public.enum__pages_v_blocks_archive_populate_by": {
-      "name": "enum__pages_v_blocks_archive_populate_by",
-      "schema": "public",
-      "values": [
-        "collection",
-        "selection"
-      ]
-    },
-    "public.enum__pages_v_blocks_archive_relation_to": {
-      "name": "enum__pages_v_blocks_archive_relation_to",
-      "schema": "public",
-      "values": [
-        "products"
-      ]
-    },
-    "public.enum__pages_v_blocks_carousel_populate_by": {
-      "name": "enum__pages_v_blocks_carousel_populate_by",
-      "schema": "public",
-      "values": [
-        "collection",
-        "selection"
-      ]
-    },
-    "public.enum__pages_v_blocks_carousel_relation_to": {
-      "name": "enum__pages_v_blocks_carousel_relation_to",
-      "schema": "public",
-      "values": [
-        "products",
-        "rentables"
-      ]
-    },
-    "public.enum__pages_v_blocks_banner_style": {
-      "name": "enum__pages_v_blocks_banner_style",
-      "schema": "public",
-      "values": [
-        "info",
-        "warning",
-        "error",
-        "success"
-      ]
-    },
-    "public.enum__pages_v_version_hero_type": {
-      "name": "enum__pages_v_version_hero_type",
-      "schema": "public",
-      "values": [
-        "none",
-        "highImpact",
-        "mediumImpact",
-        "lowImpact"
-      ]
-    },
-    "public.enum__pages_v_version_status": {
-      "name": "enum__pages_v_version_status",
-      "schema": "public",
-      "values": [
-        "draft",
-        "published"
-      ]
-    },
-    "public.enum_rentables_blocks_cta_links_link_type": {
-      "name": "enum_rentables_blocks_cta_links_link_type",
-      "schema": "public",
-      "values": [
-        "reference",
-        "custom"
-      ]
-    },
-    "public.enum_rentables_blocks_cta_links_link_appearance": {
-      "name": "enum_rentables_blocks_cta_links_link_appearance",
-      "schema": "public",
-      "values": [
-        "default",
-        "outline"
-      ]
-    },
-    "public.enum_rentables_blocks_content_columns_size": {
-      "name": "enum_rentables_blocks_content_columns_size",
-      "schema": "public",
-      "values": [
-        "oneThird",
-        "half",
-        "twoThirds",
-        "full"
-      ]
-    },
-    "public.enum_rentables_blocks_content_columns_link_type": {
-      "name": "enum_rentables_blocks_content_columns_link_type",
-      "schema": "public",
-      "values": [
-        "reference",
-        "custom"
-      ]
-    },
-    "public.enum_rentables_blocks_content_columns_link_appearance": {
-      "name": "enum_rentables_blocks_content_columns_link_appearance",
-      "schema": "public",
-      "values": [
-        "default",
-        "outline"
-      ]
-    },
-    "public.enum_shipping_methods_type": {
-      "name": "enum_shipping_methods_type",
-      "schema": "public",
-      "values": [
-        "courier",
-        "locker"
-      ]
-    },
-    "public.enum_invoices_status": {
-      "name": "enum_invoices_status",
-      "schema": "public",
-      "values": [
-        "pending",
-        "processing",
-        "success",
-        "failed"
-      ]
-    },
-    "public.enum_users_roles": {
-      "name": "enum_users_roles",
-      "schema": "public",
-      "values": [
-        "admin",
-        "customer"
-      ]
-    },
-    "public.enum_forms_confirmation_type": {
-      "name": "enum_forms_confirmation_type",
-      "schema": "public",
-      "values": [
-        "message",
-        "redirect"
-      ]
-    },
-    "public.enum_addresses_country": {
-      "name": "enum_addresses_country",
-      "schema": "public",
-      "values": [
-        "US",
-        "GB",
-        "CA",
-        "AU",
-        "AT",
-        "BE",
-        "BR",
-        "BG",
-        "CY",
-        "CZ",
-        "DK",
-        "EE",
-        "FI",
-        "FR",
-        "DE",
-        "GR",
-        "HK",
-        "HU",
-        "IN",
-        "IE",
-        "IT",
-        "JP",
-        "LV",
-        "LT",
-        "LU",
-        "MY",
-        "MT",
-        "MX",
-        "NL",
-        "NZ",
-        "NO",
-        "PL",
-        "PT",
-        "RO",
-        "SG",
-        "SK",
-        "SI",
-        "ES",
-        "SE",
-        "CH"
-      ]
-    },
-    "public.enum_variants_status": {
-      "name": "enum_variants_status",
-      "schema": "public",
-      "values": [
-        "draft",
-        "published"
-      ]
-    },
-    "public.enum__variants_v_version_status": {
-      "name": "enum__variants_v_version_status",
-      "schema": "public",
-      "values": [
-        "draft",
-        "published"
-      ]
-    },
-    "public.enum_products_blocks_cta_links_link_type": {
-      "name": "enum_products_blocks_cta_links_link_type",
-      "schema": "public",
-      "values": [
-        "reference",
-        "custom"
-      ]
-    },
-    "public.enum_products_blocks_cta_links_link_appearance": {
-      "name": "enum_products_blocks_cta_links_link_appearance",
-      "schema": "public",
-      "values": [
-        "default",
-        "outline"
-      ]
-    },
-    "public.enum_products_blocks_content_columns_size": {
-      "name": "enum_products_blocks_content_columns_size",
-      "schema": "public",
-      "values": [
-        "oneThird",
-        "half",
-        "twoThirds",
-        "full"
-      ]
-    },
-    "public.enum_products_blocks_content_columns_link_type": {
-      "name": "enum_products_blocks_content_columns_link_type",
-      "schema": "public",
-      "values": [
-        "reference",
-        "custom"
-      ]
-    },
-    "public.enum_products_blocks_content_columns_link_appearance": {
-      "name": "enum_products_blocks_content_columns_link_appearance",
-      "schema": "public",
-      "values": [
-        "default",
-        "outline"
-      ]
-    },
-    "public.enum_products_status": {
-      "name": "enum_products_status",
-      "schema": "public",
-      "values": [
-        "draft",
-        "published"
-      ]
-    },
-    "public.enum__products_v_blocks_cta_links_link_type": {
-      "name": "enum__products_v_blocks_cta_links_link_type",
-      "schema": "public",
-      "values": [
-        "reference",
-        "custom"
-      ]
-    },
-    "public.enum__products_v_blocks_cta_links_link_appearance": {
-      "name": "enum__products_v_blocks_cta_links_link_appearance",
-      "schema": "public",
-      "values": [
-        "default",
-        "outline"
-      ]
-    },
-    "public.enum__products_v_blocks_content_columns_size": {
-      "name": "enum__products_v_blocks_content_columns_size",
-      "schema": "public",
-      "values": [
-        "oneThird",
-        "half",
-        "twoThirds",
-        "full"
-      ]
-    },
-    "public.enum__products_v_blocks_content_columns_link_type": {
-      "name": "enum__products_v_blocks_content_columns_link_type",
-      "schema": "public",
-      "values": [
-        "reference",
-        "custom"
-      ]
-    },
-    "public.enum__products_v_blocks_content_columns_link_appearance": {
-      "name": "enum__products_v_blocks_content_columns_link_appearance",
-      "schema": "public",
-      "values": [
-        "default",
-        "outline"
-      ]
-    },
-    "public.enum__products_v_version_status": {
-      "name": "enum__products_v_version_status",
-      "schema": "public",
-      "values": [
-        "draft",
-        "published"
-      ]
-    },
-    "public.enum_carts_currency": {
-      "name": "enum_carts_currency",
-      "schema": "public",
-      "values": [
-        "PLN"
-      ]
-    },
-    "public.enum_orders_shipping_address_country": {
-      "name": "enum_orders_shipping_address_country",
-      "schema": "public",
-      "values": [
-        "US",
-        "GB",
-        "CA",
-        "AU",
-        "AT",
-        "BE",
-        "BR",
-        "BG",
-        "CY",
-        "CZ",
-        "DK",
-        "EE",
-        "FI",
-        "FR",
-        "DE",
-        "GR",
-        "HK",
-        "HU",
-        "IN",
-        "IE",
-        "IT",
-        "JP",
-        "LV",
-        "LT",
-        "LU",
-        "MY",
-        "MT",
-        "MX",
-        "NL",
-        "NZ",
-        "NO",
-        "PL",
-        "PT",
-        "RO",
-        "SG",
-        "SK",
-        "SI",
-        "ES",
-        "SE",
-        "CH"
-      ]
-    },
-    "public.enum_orders_status": {
-      "name": "enum_orders_status",
-      "schema": "public",
-      "values": [
-        "processing",
-        "completed",
-        "cancelled",
-        "refunded"
-      ]
-    },
-    "public.enum_orders_currency": {
-      "name": "enum_orders_currency",
-      "schema": "public",
-      "values": [
-        "PLN"
-      ]
-    },
-    "public.enum_orders_billing_address_type": {
-      "name": "enum_orders_billing_address_type",
-      "schema": "public",
-      "values": [
-        "person",
-        "organization"
-      ]
-    },
-    "public.enum_orders_billing_address_country": {
-      "name": "enum_orders_billing_address_country",
-      "schema": "public",
-      "values": [
-        "US",
-        "GB",
-        "CA",
-        "AU",
-        "AT",
-        "BE",
-        "BR",
-        "BG",
-        "CY",
-        "CZ",
-        "DK",
-        "EE",
-        "FI",
-        "FR",
-        "DE",
-        "GR",
-        "HK",
-        "HU",
-        "IN",
-        "IE",
-        "IT",
-        "JP",
-        "LV",
-        "LT",
-        "LU",
-        "MY",
-        "MT",
-        "MX",
-        "NL",
-        "NZ",
-        "NO",
-        "PL",
-        "PT",
-        "RO",
-        "SG",
-        "SK",
-        "SI",
-        "ES",
-        "SE",
-        "CH"
-      ]
-    },
-    "public.enum_transactions_payment_method": {
-      "name": "enum_transactions_payment_method",
-      "schema": "public",
-      "values": [
-        "stripe"
-      ]
-    },
-    "public.enum_transactions_billing_address_type": {
-      "name": "enum_transactions_billing_address_type",
-      "schema": "public",
-      "values": [
-        "person",
-        "organization"
-      ]
-    },
-    "public.enum_transactions_billing_address_country": {
-      "name": "enum_transactions_billing_address_country",
-      "schema": "public",
-      "values": [
-        "US",
-        "GB",
-        "CA",
-        "AU",
-        "AT",
-        "BE",
-        "BR",
-        "BG",
-        "CY",
-        "CZ",
-        "DK",
-        "EE",
-        "FI",
-        "FR",
-        "DE",
-        "GR",
-        "HK",
-        "HU",
-        "IN",
-        "IE",
-        "IT",
-        "JP",
-        "LV",
-        "LT",
-        "LU",
-        "MY",
-        "MT",
-        "MX",
-        "NL",
-        "NZ",
-        "NO",
-        "PL",
-        "PT",
-        "RO",
-        "SG",
-        "SK",
-        "SI",
-        "ES",
-        "SE",
-        "CH"
-      ]
-    },
-    "public.enum_transactions_status": {
-      "name": "enum_transactions_status",
-      "schema": "public",
-      "values": [
-        "pending",
-        "succeeded",
-        "failed",
-        "cancelled",
-        "expired",
-        "refunded"
-      ]
-    },
-    "public.enum_transactions_currency": {
-      "name": "enum_transactions_currency",
-      "schema": "public",
-      "values": [
-        "PLN"
-      ]
-    },
-    "public.enum_header_nav_items_link_type": {
-      "name": "enum_header_nav_items_link_type",
-      "schema": "public",
-      "values": [
-        "reference",
-        "custom"
-      ]
-    },
-    "public.enum_footer_nav_group1_links_link_type": {
-      "name": "enum_footer_nav_group1_links_link_type",
-      "schema": "public",
-      "values": [
-        "reference",
-        "custom"
-      ]
-    },
-    "public.enum_footer_nav_group2_links_link_type": {
-      "name": "enum_footer_nav_group2_links_link_type",
-      "schema": "public",
-      "values": [
-        "reference",
-        "custom"
-      ]
-    },
-    "public.enum_footer_contact_group_links_contact_type": {
-      "name": "enum_footer_contact_group_links_contact_type",
-      "schema": "public",
-      "values": [
-        "email",
-        "phone"
-      ]
-    }
-  },
+  "enums": {},
   "schemas": {},
   "sequences": {},
   "roles": {},
@@ -16951,6 +16596,6 @@
     "tables": {},
     "columns": {}
   },
-  "id": "f7051579-8e1e-4cfc-93e1-484e25cc30fd",
+  "id": "f8c1e2da-b25b-4733-b4b5-6c6afb55c51f",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }
