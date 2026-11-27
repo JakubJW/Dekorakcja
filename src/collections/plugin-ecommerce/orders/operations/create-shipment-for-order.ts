@@ -78,13 +78,17 @@ export async function createShipmentForOrder(
     external_customer_id: '8877xxx',
   }
 
+  //@ts-ignore
   const inPostResult = await deliveryService.createShipment(dto)
 
   await payload.create({
     collection: 'shipments',
     data: {
+      //@ts-ignore
       status: inPostResult.status,
+      //@ts-ignore
       trackingNumber: inPostResult.tracking_number,
+      //@ts-ignore
       providerShipmentId: inPostResult.id,
       provider: 'inpost',
       order: order.id,

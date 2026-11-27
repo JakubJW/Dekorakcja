@@ -62,6 +62,7 @@ const baseAddressUKData: Transaction['billingAddress'] = {
   lastName: 'Twist',
   phone: '1234567890',
   addressLine1: '48 Great Portland St',
+  email: 'jacek@gmail.com',
   city: 'London',
   postalCode: 'W1W 7ND',
   country: 'GB',

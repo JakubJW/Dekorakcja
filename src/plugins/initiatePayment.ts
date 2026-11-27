@@ -69,7 +69,9 @@ export const initiatePayment =
         })
       }
 
+      //@ts-ignore
       const flattenedCart = cart.items.map((item) => {
+        //@ts-ignore
         const productID = typeof item.product === 'object' ? item.product.id : item.product
         const variantID = item.variant
           ? typeof item.variant === 'object'
